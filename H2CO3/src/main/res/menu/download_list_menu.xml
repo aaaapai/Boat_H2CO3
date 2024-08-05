@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_minecraftVersion"
+            android:title="@string/title_minecraftVersion" />
+
+        <item
+            android:id="@+id/navigation_modList"
+            android:title="@string/title_modList" />
+
+        <item
+            android:id="@+id/navigation_modPackList"
+            android:title="@string/title_modPackList" />
+
+        <item
+            android:id="@+id/navigation_resourcesPack"
+            android:title="@string/title_resourcesPack" />
+    </group>
+</menu>

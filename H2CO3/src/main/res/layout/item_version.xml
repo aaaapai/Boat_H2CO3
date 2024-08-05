@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
+        android:id="@+id/download_ver_item"
+        style="@style/Theme.H2CO3.CardViewOutlined"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                style="@style/Theme.H2CO3.IconMaterial"
+                android:layout_width="@dimen/app_40dp"
+                android:layout_height="@dimen/app_40dp"
+                android:duplicateParentState="true"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/ic_btm_install_normal" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <org.koishi.launcher.h2co3.resources.component.H2CO3TextView
+                    android:id="@+id/id"
+                    style="@style/Theme.H2CO3.CardTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textSize="16sp" />
+
+                <org.koishi.launcher.h2co3.resources.component.H2CO3TextView
+                    android:id="@+id/type"
+                    style="@style/Theme.H2CO3.CardTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </org.koishi.launcher.h2co3.resources.component.H2CO3CardView>
+
+</RelativeLayout>
+

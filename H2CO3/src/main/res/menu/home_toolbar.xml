@@ -1,0 +1,24 @@
+<!--
+  ~ //
+  ~ // Created by cainiaohh on 2024-03-31.
+  ~ //
+  -->
+
+<!--
+  ~ //
+  ~ // Created by cainiaohh on 2024-03-31.
+  ~ //
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_item_home"
+        android:icon="@drawable/ic_menu_home"
+        android:showAsAction="ifRoom"
+        android:title="@string/app_name" />
+    <item
+        android:id="@+id/action_item_setting"
+        android:icon="@drawable/ic_menu_settings"
+        android:showAsAction="ifRoom"
+        android:title="@string/title_global_setting" />
+</menu>

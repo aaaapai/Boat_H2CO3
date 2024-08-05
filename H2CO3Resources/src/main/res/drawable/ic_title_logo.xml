@@ -1,0 +1,20 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="?attr/colorControlNormal" />
+            <stroke
+                android:width="25dp"
+                android:color="?attr/colorControlNormal" />
+            <size
+                android:width="40dp"
+                android:height="40dp" />
+        </shape>
+    </item>
+    <item
+        android:width="40dp"
+        android:height="40dp">
+        <inset
+            android:drawable="@drawable/ic_h2co3_low_px"
+            android:inset="5dp" />
+    </item>
+</layer-list>
