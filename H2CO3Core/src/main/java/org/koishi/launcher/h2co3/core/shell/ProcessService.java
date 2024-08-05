@@ -35,85 +35,54 @@ public class ProcessService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent.getExtras() == null) {
+            return super.onStartCommand(intent, flags, startId);
+        }
         String[] command = intent.getExtras().getStringArray("command");
         int java = intent.getExtras().getInt("java");
         String jre = "jre" + java;
-        startProcess();
+        startProcess(command, jre);
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void startProcess() {
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int screenHeight = getResources().getDisplayMetrics().heightPixels;
-        H2CO3LauncherBridge bridge = H2CO3LauncherHelper.launchAPIInstaller(H2CO3Tools.CONTEXT, screenWidth, screenHeight);
+    public void startProcess(String[] command, String jre) {
+        H2CO3LauncherBridge bridge = H2CO3LauncherHelper.launchAPIInstaller(H2CO3Tools.CONTEXT, command, jre);
         H2CO3LauncherBridgeCallBack callback = new H2CO3LauncherBridgeCallBack() {
-            /**
-             * @param surface
-             * @param width
-             * @param height
-             */
             @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-
-            }
-
-            /**
-             * @param surface
-             * @param width
-             * @param height
-             */
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-            }
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {}
 
             @Override
-            public void onCursorModeChange(int mode) {
-                // Ignore
-            }
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {}
 
             @Override
-            public void onHitResultTypeChange(int type) {
-                // Ignore
-            }
+            public void onCursorModeChange(int mode) {}
+
+            @Override
+            public void onHitResultTypeChange(int type) {}
 
             @Override
             public void onLog(String log) {
                 try {
+                    File logFile = new File(bridge.getLogPath());
                     if (firstLog) {
-                        FileTools.writeText(new File(bridge.getLogPath()), log + "\n");
+                        FileTools.writeText(logFile, log + "\n");
                         firstLog = false;
                     } else {
-                        FileTools.writeTextWithAppendMode(new File(bridge.getLogPath()), log + "\n");
+                        FileTools.writeTextWithAppendMode(logFile, log + "\n");
                     }
                 } catch (IOException e) {
-                    Logging.LOG.log(Level.WARNING, "Can't log game log to target file", e.getMessage());
+                    Logging.LOG.log(Level.WARNING, "Can't log game log to target file", e);
                 }
             }
 
-            /**
-             *
-             */
             @Override
-            public void onStart() {
+            public void onStart() {}
 
-            }
-
-            /**
-             *
-             */
             @Override
-            public void onPicOutput() {
+            public void onPicOutput() {}
 
-            }
-
-            /**
-             * @param e
-             */
             @Override
-            public void onError(Exception e) {
-
-            }
+            public void onError(Exception e) {}
 
             @Override
             public void onExit(int code) {
@@ -125,21 +94,19 @@ public class ProcessService extends Service {
             try {
                 bridge.execute(null, callback);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                Logging.LOG.log(Level.SEVERE, "Execution failed", e);
             }
         }, 1000);
     }
 
     private void sendCode(int code) {
-        try {
-            DatagramSocket socket = new DatagramSocket();
+        try (DatagramSocket socket = new DatagramSocket()) {
             socket.connect(new InetSocketAddress("127.0.0.1", PROCESS_SERVICE_PORT));
-            byte[] data = (code + "").getBytes();
+            byte[] data = String.valueOf(code).getBytes();
             DatagramPacket packet = new DatagramPacket(data, data.length);
             socket.send(packet);
-            socket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            Logging.LOG.log(Level.SEVERE, "Failed to send code", e);
         }
         stopSelf();
     }

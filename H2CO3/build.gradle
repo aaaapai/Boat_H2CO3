@@ -135,6 +135,9 @@ dependencies {
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.webkit:webkit:1.10.0'
 
+
+
+
     // Activity Permissions
     implementation 'com.github.getActivity:XXPermissions:16.8'
 
