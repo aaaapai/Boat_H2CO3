@@ -52,4 +52,5 @@ open class H2CO3Activity : MaterialActivity() {
             CookieManager.getInstance().removeAllCookies(null)
         }
     }
+
 }
