@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.util.Optional;
 import java.util.logging.Level;
 
 public class ProcessService extends Service {
@@ -35,10 +36,10 @@ public class ProcessService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getExtras() == null) {
+        if (intent == null || intent.getExtras() == null) {
             return super.onStartCommand(intent, flags, startId);
         }
-        String[] command = intent.getExtras().getStringArray("command");
+        String[] command = Optional.ofNullable(intent.getExtras().getStringArray("command")).orElse(new String[0]);
         int java = intent.getExtras().getInt("java");
         String jre = "jre" + java;
         startProcess(command, jre);
@@ -62,17 +63,7 @@ public class ProcessService extends Service {
 
             @Override
             public void onLog(String log) {
-                try {
-                    File logFile = new File(bridge.getLogPath());
-                    if (firstLog) {
-                        FileTools.writeText(logFile, log + "\n");
-                        firstLog = false;
-                    } else {
-                        FileTools.writeTextWithAppendMode(logFile, log + "\n");
-                    }
-                } catch (IOException e) {
-                    Logging.LOG.log(Level.WARNING, "Can't log game log to target file", e);
-                }
+                writeLog(bridge.getLogPath(), log);
             }
 
             @Override
@@ -97,6 +88,20 @@ public class ProcessService extends Service {
                 Logging.LOG.log(Level.SEVERE, "Execution failed", e);
             }
         }, 1000);
+    }
+
+    private void writeLog(String logPath, String log) {
+        try {
+            File logFile = new File(logPath);
+            if (firstLog) {
+                FileTools.writeText(logFile, log + "\n");
+                firstLog = false;
+            } else {
+                FileTools.writeTextWithAppendMode(logFile, log + "\n");
+            }
+        } catch (IOException e) {
+            Logging.LOG.log(Level.WARNING, "Can't log game log to target file", e);
+        }
     }
 
     private void sendCode(int code) {
