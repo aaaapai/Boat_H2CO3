@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +54,7 @@ public class H2CO3LauncherHelper {
         printTaskTitle(bridge, "Start " + task);
         bridge.getCallback().onLog("Architecture: " + Architecture.archAsString(Architecture.getDeviceArchitecture()));
         bridge.getCallback().onLog("CPU:" + Build.HARDWARE);
+        bridge.getCallback().onLog("Device info:" + Build.DEVICE + "\n " + Build.MODEL + "\n " + Build.PRODUCT + "\n " + Build.BOARD + "\n " + Build.BRAND + "\n " + Build.FINGERPRINT);
     }
 
     public static Map<String, String> readJREReleaseProperties(String javaPath) throws IOException {
@@ -122,6 +124,13 @@ public class H2CO3LauncherHelper {
         return argList.toArray(new String[0]);
     }
 
+    public static String[] rebaseApiArgs(Context context, String[] command, String jre) throws IOException {
+        String javaPath = H2CO3Tools.JAVA_PATH + "/" + jre + "/bin/java";
+        List<String> argList = new ArrayList<>(Arrays.asList(command));
+        argList.add(0, javaPath);
+        return argList.toArray(new String[0]);
+    }
+
     public static void addCommonEnv(Context context, HashMap<String, String> envMap) {
         envMap.put("HOME", H2CO3Tools.LOG_DIR);
         envMap.put("JAVA_HOME", H2CO3GameHelper.getJavaPath());
@@ -182,10 +191,12 @@ public class H2CO3LauncherHelper {
         envMap.put("LIBGL_NOERROR", libglNoerror);
     }
 
-    public static void setEnv(Context context, H2CO3LauncherBridge bridge, String render) throws IOException {
+    public static void setEnv(Context context, H2CO3LauncherBridge bridge, boolean isRender) throws IOException {
         HashMap<String, String> envMap = new HashMap<>(8);
         addCommonEnv(context, envMap);
-        addRendererEnv(context, envMap, H2CO3GameHelper.getRender());
+        if (isRender) {
+            addRendererEnv(context, envMap, H2CO3GameHelper.getRender());
+        }
         printTaskTitle(bridge, "Env Map");
         envMap.forEach((key, value) -> {
             try {
@@ -266,7 +277,7 @@ public class H2CO3LauncherHelper {
                 logStartInfo(bridge, "Minecraft");
 
                 // env
-                setEnv(context, bridge, H2CO3GameHelper.getRender());
+                setEnv(context, bridge, true);
 
                 // setup java runtime
                 setUpJavaRuntime(context, bridge);
@@ -302,7 +313,7 @@ public class H2CO3LauncherHelper {
                 logStartInfo(bridge, "Jar Executor");
 
                 // env
-                setEnv(context, bridge, H2CO3GameHelper.getRender());
+                setEnv(context, bridge, true);
 
                 // setup java runtime
                 setUpJavaRuntime(context, bridge);
@@ -326,7 +337,25 @@ public class H2CO3LauncherHelper {
         return bridge;
     }
 
-    public static H2CO3LauncherBridge launchAPIInstaller(Context context, int width, int height) {
+    public static void apiLaunch(Context context, H2CO3LauncherBridge bridge, String[] command, String jre, String task) throws IOException {
+        printTaskTitle(bridge, task + " Arguments");
+        String[] args = rebaseApiArgs(context, command, jre);
+        for (String arg : args) {
+            bridge.getCallback().onLog(task + " argument: " + arg + "\n");
+        }
+        bridge.setupJLI();
+        bridge.setLdLibraryPath(getLibraryPath(context, H2CO3Tools.JAVA_PATH + "/" + jre));
+        printTaskTitle(bridge, task + " Arguments");
+        bridge.getCallback().onLog("");
+        printTaskTitle(bridge, task + " Logs");
+        bridge.getCallback().onLog("Hook exit " + (bridge.setupExitTrap(bridge) == 0 ? "success" : "failed"));
+        int exitCode = bridge.jliLaunch(args);
+        Log.e(TAG, "Jvm Exited With Code:" + exitCode);
+        bridge.onExit(exitCode);
+        printTaskTitle(bridge, task + " Logs");
+    }
+
+    public static H2CO3LauncherBridge launchAPIInstaller(Context context, String[] command, String jre) {
 
         // initialize H2CO3LAUNCHERBridge
         H2CO3LauncherBridge bridge = new H2CO3LauncherBridge();
@@ -337,7 +366,7 @@ public class H2CO3LauncherHelper {
                 logStartInfo(bridge, "API Installer");
 
                 // env
-                setEnv(context, bridge, H2CO3GameHelper.getRender());
+                setEnv(context, bridge, false);
 
                 // setup java runtime
                 setUpJavaRuntime(context, bridge);
@@ -347,7 +376,7 @@ public class H2CO3LauncherHelper {
                 bridge.chdir(H2CO3GameHelper.getGameDirectory());
 
                 // launch api installer
-                launch(context, bridge, width, height, "API Installer");
+                apiLaunch(context, bridge, command, jre, "API Installer");
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -1,7 +1,6 @@
-<!-- Base application theme. -->
 <resources>
 
-    <style name="Theme.H2CO3.Material" parent="Theme.Material3.Light.Rikka">
+    <style name="Theme.H2CO3.Material" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
@@ -28,59 +27,45 @@
         <item name="colorOnSurfaceInverse">@color/md_theme_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/md_theme_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_inversePrimary</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">?android:colorBackground</item>
     </style>
 
     <style name="Theme.H2CO3.Base" parent="Theme.H2CO3.Material">
-        <!--    Colors    -->
         <item name="android:textCursorDrawable">@drawable/textfield_cursor</item>
-
-        <!--    Font    -->
         <item name="fontFamily">@font/josefin_sans</item>
-        <item name="android:fontFamily">@font/josefin_sans</item>
     </style>
 
     <style name="Theme.H2CO3.Styled" parent="Theme.H2CO3.Base">
-        <item name="switchPreferenceCompatStyle">@style/PreferenceThemeOverlay.Rikka.Material3
-        </item>
+        <item name="switchPreferenceCompatStyle">@style/PreferenceThemeOverlay.Rikka.Material3</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.Rikka.Material3</item>
         <item name="shapeAppearanceLargeComponent">@style/AppTheme.ShapeOverlay.Large</item>
         <item name="textAppearanceBodySmall">@style/TextAppearance.H2CO3.BodySmall</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <style name="Theme.H2CO3" parent="Theme.H2CO3.Styled" />
 
-    <!---DynamicColors-->
-
     <style name="Theme.H2CO3.Material.DynamicColors" parent="Theme.Material3.DynamicColors.Light.Rikka">
-        <!--    Colors    -->
         <item name="android:textCursorDrawable">@drawable/textfield_cursor</item>
-
-        <!--    Font    -->
         <item name="fontFamily">@font/josefin_sans</item>
-        <item name="android:fontFamily">@font/josefin_sans</item>
         <item name="android:statusBarColor">?android:colorBackground</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Theme.H2CO3.Base.DynamicColors" parent="Theme.H2CO3.Material.DynamicColors">
-        <!--    Colors    -->
         <item name="android:textCursorDrawable">@drawable/textfield_cursor</item>
-        <!--    Font    -->
         <item name="fontFamily">@font/josefin_sans</item>
-        <item name="android:fontFamily">@font/josefin_sans</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <style name="Theme.H2CO3.Styled.DynamicColors" parent="Theme.H2CO3.Base.DynamicColors">
-        <item name="switchPreferenceCompatStyle">@style/PreferenceThemeOverlay.Rikka.Material3
-        </item>
+        <item name="switchPreferenceCompatStyle">@style/PreferenceThemeOverlay.Rikka.Material3</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.Rikka.Material3</item>
         <item name="shapeAppearanceLargeComponent">@style/AppTheme.ShapeOverlay.Large</item>
         <item name="textAppearanceBodySmall">@style/TextAppearance.H2CO3.BodySmall</item>
@@ -91,6 +76,10 @@
     <style name="FullScreen" parent="Theme.H2CO3">
         <item name="android:windowBackground">?android:colorBackground</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>

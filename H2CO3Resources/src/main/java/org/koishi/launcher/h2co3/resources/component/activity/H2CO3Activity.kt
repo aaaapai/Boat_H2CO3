@@ -9,6 +9,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.webkit.CookieManager
 import org.koishi.launcher.h2co3.core.H2CO3Tools
 import org.koishi.launcher.h2co3.core.utils.file.FileTools
@@ -20,7 +21,6 @@ import java.io.IOException
 open class H2CO3Activity : MaterialActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //EdgeToEdge.enable(this);
         if (Build.VERSION.SDK_INT >= 31) {
             val spIsAuth = H2CO3Tools.getH2CO3Value("enable_monet", true, Boolean::class.java)
             if (spIsAuth) {
@@ -52,4 +52,5 @@ open class H2CO3Activity : MaterialActivity() {
             CookieManager.getInstance().removeAllCookies(null)
         }
     }
+
 }

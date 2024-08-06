@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.util.Optional;
 import java.util.logging.Level;
 
 public class ProcessService extends Service {
@@ -35,85 +36,44 @@ public class ProcessService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String[] command = intent.getExtras().getStringArray("command");
+        if (intent == null || intent.getExtras() == null) {
+            return super.onStartCommand(intent, flags, startId);
+        }
+        String[] command = Optional.ofNullable(intent.getExtras().getStringArray("command")).orElse(new String[0]);
         int java = intent.getExtras().getInt("java");
         String jre = "jre" + java;
-        startProcess();
+        startProcess(command, jre);
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void startProcess() {
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int screenHeight = getResources().getDisplayMetrics().heightPixels;
-        H2CO3LauncherBridge bridge = H2CO3LauncherHelper.launchAPIInstaller(H2CO3Tools.CONTEXT, screenWidth, screenHeight);
+    public void startProcess(String[] command, String jre) {
+        H2CO3LauncherBridge bridge = H2CO3LauncherHelper.launchAPIInstaller(H2CO3Tools.CONTEXT, command, jre);
         H2CO3LauncherBridgeCallBack callback = new H2CO3LauncherBridgeCallBack() {
-            /**
-             * @param surface
-             * @param width
-             * @param height
-             */
             @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-
-            }
-
-            /**
-             * @param surface
-             * @param width
-             * @param height
-             */
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
-            }
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {}
 
             @Override
-            public void onCursorModeChange(int mode) {
-                // Ignore
-            }
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {}
 
             @Override
-            public void onHitResultTypeChange(int type) {
-                // Ignore
-            }
+            public void onCursorModeChange(int mode) {}
+
+            @Override
+            public void onHitResultTypeChange(int type) {}
 
             @Override
             public void onLog(String log) {
-                try {
-                    if (firstLog) {
-                        FileTools.writeText(new File(bridge.getLogPath()), log + "\n");
-                        firstLog = false;
-                    } else {
-                        FileTools.writeTextWithAppendMode(new File(bridge.getLogPath()), log + "\n");
-                    }
-                } catch (IOException e) {
-                    Logging.LOG.log(Level.WARNING, "Can't log game log to target file", e.getMessage());
-                }
+                writeLog(bridge.getLogPath(), log);
             }
 
-            /**
-             *
-             */
             @Override
-            public void onStart() {
+            public void onStart() {}
 
-            }
-
-            /**
-             *
-             */
             @Override
-            public void onPicOutput() {
+            public void onPicOutput() {}
 
-            }
-
-            /**
-             * @param e
-             */
             @Override
-            public void onError(Exception e) {
-
-            }
+            public void onError(Exception e) {}
 
             @Override
             public void onExit(int code) {
@@ -125,21 +85,33 @@ public class ProcessService extends Service {
             try {
                 bridge.execute(null, callback);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                Logging.LOG.log(Level.SEVERE, "Execution failed", e);
             }
         }, 1000);
     }
 
-    private void sendCode(int code) {
+    private void writeLog(String logPath, String log) {
         try {
-            DatagramSocket socket = new DatagramSocket();
+            File logFile = new File(logPath);
+            if (firstLog) {
+                FileTools.writeText(logFile, log + "\n");
+                firstLog = false;
+            } else {
+                FileTools.writeTextWithAppendMode(logFile, log + "\n");
+            }
+        } catch (IOException e) {
+            Logging.LOG.log(Level.WARNING, "Can't log game log to target file", e);
+        }
+    }
+
+    private void sendCode(int code) {
+        try (DatagramSocket socket = new DatagramSocket()) {
             socket.connect(new InetSocketAddress("127.0.0.1", PROCESS_SERVICE_PORT));
-            byte[] data = (code + "").getBytes();
+            byte[] data = String.valueOf(code).getBytes();
             DatagramPacket packet = new DatagramPacket(data, data.length);
             socket.send(packet);
-            socket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            Logging.LOG.log(Level.SEVERE, "Failed to send code", e);
         }
         stopSelf();
     }

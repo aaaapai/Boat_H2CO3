@@ -1,6 +1,7 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.H2CO3.Material" parent="Theme.Material3.Dark.Rikka">
+        <!-- Colors -->
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
@@ -27,28 +28,32 @@
         <item name="colorOnSurfaceInverse">@color/md_theme_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/md_theme_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_inversePrimary</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">?android:colorBackground</item>
     </style>
 
-    <style name="Theme.H2CO3" parent="Theme.H2CO3.Styled"></style>
-
-    <style name="Theme.H2CO3.DynamicColors" parent="Theme.H2CO3.Styled.DynamicColors"></style>
-
-    <style name="Theme.H2CO3.Material.DynamicColors" parent="Theme.Material3.DynamicColors.Dark.Rikka">
-        <!--    Colors    -->
-        <item name="android:textCursorDrawable">@drawable/textfield_cursor</item>
-
-        <!--    Font    -->
-        <item name="fontFamily">@font/josefin_sans</item>
-        <item name="android:fontFamily">@font/josefin_sans</item>
-        <item name="android:statusBarColor">?android:colorBackground</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
+    <style name="Theme.H2CO3" parent="Theme.H2CO3.Styled">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="Theme.H2CO3.DynamicColors" parent="Theme.H2CO3.Styled.DynamicColors">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="Theme.H2CO3.Material.DynamicColors" parent="Theme.Material3.DynamicColors.Dark.Rikka">
+        <item name="android:textCursorDrawable">@drawable/textfield_cursor</item>
+        <item name="fontFamily">@font/josefin_sans</item>
+        <item name="android:fontFamily">@font/josefin_sans</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 </resources>

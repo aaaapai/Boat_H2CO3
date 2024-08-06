@@ -85,6 +85,11 @@
                 android:value="h2co3Launcher" />
         </activity>
 
+        <service
+            android:name=".core.shell.ProcessService"
+            android:process=":processService"
+            android:enabled="true"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="@string/file_browser_provider"
