@@ -2,8 +2,8 @@ package org.koishi.launcher.h2co3.core.game;
 
 import static org.koishi.launcher.h2co3.core.utils.gson.JsonUtils.GSON;
 
-import org.koishi.launcher.h2co3.core.download.Library;
-import org.koishi.launcher.h2co3.core.download.Version;
+import org.koishi.launcher.h2co3.core.game.download.Library;
+import org.koishi.launcher.h2co3.core.game.download.Version;
 
 import java.util.ArrayList;
 import java.util.List;

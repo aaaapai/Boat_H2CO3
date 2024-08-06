@@ -17,11 +17,11 @@
  */
 package org.koishi.launcher.h2co3.core.game.mod.server;
 
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.MINECRAFT;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.MINECRAFT;
 
 import com.google.gson.JsonParseException;
 
-import org.koishi.launcher.h2co3.core.download.DefaultDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.game.mod.Modpack;
 import org.koishi.launcher.h2co3.core.game.mod.ModpackConfiguration;
 import org.koishi.launcher.h2co3.core.game.mod.ModpackManifest;

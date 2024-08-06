@@ -19,7 +19,7 @@ package org.koishi.launcher.h2co3.core.game.mod.multimc;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.koishi.launcher.h2co3.core.download.Library;
+import org.koishi.launcher.h2co3.core.game.download.Library;
 import org.koishi.launcher.h2co3.core.utils.Lang;
 
 import java.util.ArrayList;

@@ -20,9 +20,9 @@ package org.koishi.launcher.h2co3.core.game.mod.server;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
-import org.koishi.launcher.h2co3.core.download.DefaultDependencyManager;
-import org.koishi.launcher.h2co3.core.download.DefaultGameRepository;
-import org.koishi.launcher.h2co3.core.download.GameBuilder;
+import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.DefaultGameRepository;
+import org.koishi.launcher.h2co3.core.game.download.GameBuilder;
 import org.koishi.launcher.h2co3.core.game.mod.MinecraftInstanceTask;
 import org.koishi.launcher.h2co3.core.game.mod.Modpack;
 import org.koishi.launcher.h2co3.core.game.mod.ModpackConfiguration;

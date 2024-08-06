@@ -4,12 +4,12 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.JsonParseException;
 
-import org.koishi.launcher.h2co3.core.download.DownloadInfo;
-import org.koishi.launcher.h2co3.core.download.DownloadType;
-import org.koishi.launcher.h2co3.core.download.GameJavaVersion;
-import org.koishi.launcher.h2co3.core.download.LoggingInfo;
-import org.koishi.launcher.h2co3.core.download.ReleaseType;
-import org.koishi.launcher.h2co3.core.download.Version;
+import org.koishi.launcher.h2co3.core.game.download.DownloadInfo;
+import org.koishi.launcher.h2co3.core.game.download.DownloadType;
+import org.koishi.launcher.h2co3.core.game.download.GameJavaVersion;
+import org.koishi.launcher.h2co3.core.game.download.LoggingInfo;
+import org.koishi.launcher.h2co3.core.game.download.ReleaseType;
+import org.koishi.launcher.h2co3.core.game.download.Version;
 import org.koishi.launcher.h2co3.core.utils.Arguments;
 import org.koishi.launcher.h2co3.core.utils.CompatibilityRule;
 import org.koishi.launcher.h2co3.core.utils.gson.JsonMap;

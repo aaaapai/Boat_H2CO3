@@ -21,7 +21,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
-import org.koishi.launcher.h2co3.core.download.ModLoaderType;
+import org.koishi.launcher.h2co3.core.game.download.ModLoaderType;
 import org.koishi.launcher.h2co3.core.game.mod.LocalModFile;
 import org.koishi.launcher.h2co3.core.game.mod.ModManager;
 import org.koishi.launcher.h2co3.core.utils.StringUtils;

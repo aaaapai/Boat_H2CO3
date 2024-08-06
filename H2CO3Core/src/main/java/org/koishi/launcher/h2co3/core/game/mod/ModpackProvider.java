@@ -20,7 +20,7 @@ package org.koishi.launcher.h2co3.core.game.mod;
 import com.google.gson.JsonParseException;
 
 import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.koishi.launcher.h2co3.core.download.DefaultDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.game.LaunchOptions;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 

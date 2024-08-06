@@ -27,7 +27,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import org.koishi.launcher.h2co3.core.download.ModLoaderType;
+import org.koishi.launcher.h2co3.core.game.download.ModLoaderType;
 import org.koishi.launcher.h2co3.core.game.mod.LocalModFile;
 import org.koishi.launcher.h2co3.core.game.mod.ModManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;

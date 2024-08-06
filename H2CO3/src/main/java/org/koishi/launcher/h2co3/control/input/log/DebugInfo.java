@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import org.koishi.launcher.h2co3.control.controller.Controller;
 import org.koishi.launcher.h2co3.control.input.Input;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.resources.component.LogView;

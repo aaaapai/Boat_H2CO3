@@ -112,7 +112,7 @@ static void *logger_thread() {
 }
 
 JNIEXPORT jint JNICALL
-Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_redirectStdio(
+Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_utils_H2CO3LauncherBridge_redirectStdio(
         JNIEnv *env, jobject jobject, jstring path) {
     setvbuf(stdout, 0, _IOLBF, 0);
     setvbuf(stderr, 0, _IONBF, 0);
@@ -128,7 +128,7 @@ Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_redi
         return 2;
     }
 
-    jclass bridge = (*env)->FindClass(env, "org/koishi/launcher/h2co3/core/h2co3launcher/utils/H2CO3LauncherBridge");
+    jclass bridge = (*env)->FindClass(env, "org/koishi/launcher/h2co3/core/game/h2co3launcher/utils/H2CO3LauncherBridge");
     log_method = (*env)->GetMethodID(env, bridge, "receiveLog", "(Ljava/lang/String;)V");
     if (!log_method) {
         __android_log_print(ANDROID_LOG_ERROR, "H2CO3", "Failed to find receive method!");
@@ -151,7 +151,7 @@ Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_redi
 }
 
 JNIEXPORT jint JNICALL
-Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_chdir(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_utils_H2CO3LauncherBridge_chdir(JNIEnv *env,
                                                                         jobject jobject,
                                                                         jstring path) {
     const char *dir = (*env)->GetStringUTFChars(env, path, 0);
@@ -166,7 +166,7 @@ Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_chdi
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setenv(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_utils_H2CO3LauncherBridge_setenv(JNIEnv *env,
                                                                          jobject jobject,
                                                                          jstring str1,
                                                                          jstring str2) {
@@ -180,7 +180,7 @@ Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_sete
 }
 
 JNIEXPORT jint JNICALL
-Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_dlopen(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_utils_H2CO3LauncherBridge_dlopen(JNIEnv *env,
                                                                          jobject jobject,
                                                                          jstring str) {
     int ret = 0;
@@ -201,7 +201,7 @@ Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_dlop
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setLdLibraryPath(
+Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_utils_H2CO3LauncherBridge_setLdLibraryPath(
         JNIEnv *env,
                                                                                    jobject jobject,
                                                                                    jstring ldLibraryPath) {
@@ -247,14 +247,14 @@ void custom_exit(int code) {
 }
 
 JNIEXPORT jint JNICALL
-Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setupExitTrap(
+Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_utils_H2CO3LauncherBridge_setupExitTrap(
         JNIEnv *env,
                                                                                 jobject jobject1,
                                                                                 jobject bridge) {
     exitTrap_bridge = (*env)->NewGlobalRef(env, bridge);
     (*env)->GetJavaVM(env, &exitTrap_jvm);
     jclass exitTrap_exitClass = (*env)->NewGlobalRef(env, (*env)->FindClass(env,
-                                                                            "org/koishi/launcher/h2co3/core/h2co3launcher/utils/H2CO3LauncherBridge"));
+                                                                            "org/koishi/launcher/h2co3/core/game/h2co3launcher/utils/H2CO3LauncherBridge"));
     exitTrap_method = (*env)->GetMethodID(env, exitTrap_exitClass, "onExit", "(I)V");
     (*env)->DeleteGlobalRef(env, exitTrap_exitClass);
     // Enable xhook debug mode here
@@ -278,7 +278,7 @@ int
 );
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setupJLI(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_utils_H2CO3LauncherBridge_setupJLI(JNIEnv *env,
                                                                            jobject jobject) {
 
     void *handle;
@@ -290,7 +290,7 @@ Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setu
 }
 
 JNIEXPORT jint JNICALL
-Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_jliLaunch(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_utils_H2CO3LauncherBridge_jliLaunch(JNIEnv *env,
                                                                             jobject jobject,
                                                                             jobjectArray argsArray) {
     int argc = (*env)->GetArrayLength(env, argsArray);

@@ -17,7 +17,7 @@
  */
 package org.koishi.launcher.h2co3.core.game.mod;
 
-import org.koishi.launcher.h2co3.core.download.ModLoaderType;
+import org.koishi.launcher.h2co3.core.game.download.ModLoaderType;
 
 import java.util.HashSet;
 import java.util.Objects;

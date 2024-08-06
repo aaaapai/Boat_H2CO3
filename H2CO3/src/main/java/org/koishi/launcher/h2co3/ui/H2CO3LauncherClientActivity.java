@@ -12,7 +12,7 @@
 
 package org.koishi.launcher.h2co3.ui;
 
-import static org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherHelper.launchMinecraft;
+import static org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherHelper.launchMinecraft;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
@@ -30,10 +30,10 @@ import androidx.annotation.NonNull;
 import org.koishi.launcher.h2co3.control.client.H2CO3ControlClient;
 import org.koishi.launcher.h2co3.control.controller.H2CO3VirtualController;
 import org.koishi.launcher.h2co3.control.controller.HardwareController;
-import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3GameHelper;
-import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridge;
-import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridgeCallBack;
-import org.koishi.launcher.h2co3.core.h2co3launcher.utils.MCOptionUtils;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherBridgeCallBack;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.MCOptionUtils;
 import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 import org.koishi.launcher.h2co3.core.utils.Logging;
 import org.koishi.launcher.h2co3.launcher.H2CO3LauncherActivity;

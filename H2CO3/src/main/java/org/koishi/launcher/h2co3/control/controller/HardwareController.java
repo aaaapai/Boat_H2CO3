@@ -33,7 +33,7 @@ import org.koishi.launcher.h2co3.control.input.otg.GamePad;
 import org.koishi.launcher.h2co3.control.input.otg.Keyboard;
 import org.koishi.launcher.h2co3.control.input.otg.Mouse;
 import org.koishi.launcher.h2co3.control.input.otg.Phone;
-import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherBridge;
 
 import java.util.ArrayList;
 

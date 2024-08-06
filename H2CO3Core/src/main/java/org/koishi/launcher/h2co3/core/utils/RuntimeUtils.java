@@ -6,7 +6,6 @@ import static org.koishi.launcher.h2co3.core.utils.file.FileTools.uncompressTarX
 
 import android.content.Context;
 
-import org.apache.commons.io.FileUtils;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.core.utils.io.IOUtils;
@@ -25,14 +24,14 @@ public class RuntimeUtils {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void install(Context context, String targetDir, String srcDir) throws IOException {
-        FileUtils.deleteDirectory(new File(targetDir));
+        FileTools.deleteDirectory(new File(targetDir));
         new File(targetDir).mkdirs();
         copyAssets(context, srcDir, targetDir);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void installJava(Context context, String targetDir, String srcDir) throws IOException {
-        FileUtils.deleteDirectory(new File(targetDir));
+        FileTools.deleteDirectory(new File(targetDir));
         new File(targetDir).mkdirs();
         String universalPath = srcDir + "/universal.tar.xz";
         String archPath = srcDir + "/bin-" + Architecture.archAsString(Architecture.getDeviceArchitecture()) + ".tar.xz";
@@ -58,9 +57,9 @@ public class RuntimeUtils {
         File fileLib = new File(dest, "/" + libFolder + "/libawt_xawt.so");
         fileLib.delete();
         if (javaPath.equals(H2CO3Tools.JAVA_8_PATH)) {
-            FileUtils.copyFile(new File(context.getApplicationInfo().nativeLibraryDir, "libawt_xawt.so"), new File(javaPath + "/lib/" + getArchitectureString(Architecture.getDeviceArchitecture()) + "/libawt_xawt.so"));
+            FileTools.copyFile(new File(context.getApplicationInfo().nativeLibraryDir, "libawt_xawt.so"), new File(javaPath + "/lib/" + getArchitectureString(Architecture.getDeviceArchitecture()) + "/libawt_xawt.so"));
         } else {
-            FileUtils.copyFile(new File(context.getApplicationInfo().nativeLibraryDir, "libawt_xawt.so"), new File(javaPath + "/lib/libawt_xawt.so"));
+            FileTools.copyFile(new File(context.getApplicationInfo().nativeLibraryDir, "libawt_xawt.so"), new File(javaPath + "/lib/libawt_xawt.so"));
         }
 
     }

@@ -21,7 +21,7 @@ import org.koishi.launcher.h2co3.control.controller.Controller;
 import org.koishi.launcher.h2co3.control.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.control.input.Input;
 import org.koishi.launcher.h2co3.control.input.OnscreenInput;
-import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherBridge;
 
 public class CustomizeKeyboard implements OnscreenInput, Controller, CallCustomizeKeyboard {
 

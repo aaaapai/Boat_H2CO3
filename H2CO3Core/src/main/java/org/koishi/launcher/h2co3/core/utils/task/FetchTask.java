@@ -20,7 +20,7 @@ package org.koishi.launcher.h2co3.core.utils.task;
 import static org.koishi.launcher.h2co3.core.utils.Lang.threadPool;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.koishi.launcher.h2co3.core.download.CacheRepository;
+import org.koishi.launcher.h2co3.core.game.download.CacheRepository;
 import org.koishi.launcher.h2co3.core.utils.Logging;
 import org.koishi.launcher.h2co3.core.utils.NetworkUtils;
 import org.koishi.launcher.h2co3.core.utils.event.Event;

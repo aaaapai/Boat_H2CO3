@@ -12,16 +12,16 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.koishi.launcher.h2co3.R;
-import org.koishi.launcher.h2co3.core.download.RemoteVersion;
-import org.koishi.launcher.h2co3.core.download.fabric.FabricAPIRemoteVersion;
-import org.koishi.launcher.h2co3.core.download.fabric.FabricRemoteVersion;
-import org.koishi.launcher.h2co3.core.download.forge.ForgeRemoteVersion;
-import org.koishi.launcher.h2co3.core.download.game.GameRemoteVersion;
-import org.koishi.launcher.h2co3.core.download.liteloader.LiteLoaderRemoteVersion;
-import org.koishi.launcher.h2co3.core.download.neoforge.NeoForgeRemoteVersion;
-import org.koishi.launcher.h2co3.core.download.optifine.OptiFineRemoteVersion;
-import org.koishi.launcher.h2co3.core.download.quilt.QuiltAPIRemoteVersion;
-import org.koishi.launcher.h2co3.core.download.quilt.QuiltRemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.RemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.fabric.FabricAPIRemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.fabric.FabricRemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.forge.ForgeRemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.vanilla.GameRemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.liteloader.LiteLoaderRemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.neoforge.NeoForgeRemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.optifine.OptiFineRemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.quilt.QuiltAPIRemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.quilt.QuiltRemoteVersion;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 

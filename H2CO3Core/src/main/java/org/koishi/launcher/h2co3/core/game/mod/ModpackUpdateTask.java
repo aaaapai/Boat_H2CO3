@@ -17,7 +17,7 @@
  */
 package org.koishi.launcher.h2co3.core.game.mod;
 
-import org.koishi.launcher.h2co3.core.download.DefaultGameRepository;
+import org.koishi.launcher.h2co3.core.game.download.DefaultGameRepository;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 

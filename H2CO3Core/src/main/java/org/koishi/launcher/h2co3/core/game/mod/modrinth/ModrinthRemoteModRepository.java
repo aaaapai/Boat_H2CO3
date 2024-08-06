@@ -24,7 +24,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.Nullable;
-import org.koishi.launcher.h2co3.core.download.ModLoaderType;
+import org.koishi.launcher.h2co3.core.game.download.ModLoaderType;
 import org.koishi.launcher.h2co3.core.game.mod.LocalModFile;
 import org.koishi.launcher.h2co3.core.game.mod.RemoteMod;
 import org.koishi.launcher.h2co3.core.game.mod.RemoteModRepository;

@@ -5,7 +5,7 @@ import static org.koishi.launcher.h2co3.core.utils.Logging.LOG;
 import com.google.gson.JsonParseException;
 import com.moandjiezana.toml.Toml;
 
-import org.koishi.launcher.h2co3.core.download.ModLoaderType;
+import org.koishi.launcher.h2co3.core.game.download.ModLoaderType;
 import org.koishi.launcher.h2co3.core.game.mod.LocalModFile;
 import org.koishi.launcher.h2co3.core.game.mod.ModManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;

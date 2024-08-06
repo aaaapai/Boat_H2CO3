@@ -19,8 +19,8 @@ package org.koishi.launcher.h2co3.core.game.mod;
 
 import com.google.gson.JsonParseException;
 
-import org.koishi.launcher.h2co3.core.download.ModLoaderType;
-import org.koishi.launcher.h2co3.core.download.VersionNumber;
+import org.koishi.launcher.h2co3.core.game.download.ModLoaderType;
+import org.koishi.launcher.h2co3.core.game.download.VersionNumber;
 import org.koishi.launcher.h2co3.core.game.GameRepository;
 import org.koishi.launcher.h2co3.core.game.mod.modinfo.FabricModMetadata;
 import org.koishi.launcher.h2co3.core.game.mod.modinfo.ForgeNewModMetadata;

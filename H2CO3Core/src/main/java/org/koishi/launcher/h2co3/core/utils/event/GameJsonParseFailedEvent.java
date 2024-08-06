@@ -19,7 +19,7 @@ package org.koishi.launcher.h2co3.core.utils.event;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.koishi.launcher.h2co3.core.download.DefaultGameRepository;
+import org.koishi.launcher.h2co3.core.game.download.DefaultGameRepository;
 
 import java.io.File;
 

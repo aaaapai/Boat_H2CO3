@@ -45,7 +45,7 @@ import org.koishi.launcher.h2co3.control.input.log.DebugInfo;
 import org.koishi.launcher.h2co3.control.input.screen.CustomizeKeyboard;
 import org.koishi.launcher.h2co3.control.input.screen.ItemBar;
 import org.koishi.launcher.h2co3.control.input.screen.OnscreenTouchpad;
-import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 import org.koishi.launcher.h2co3.resources.component.MenuView;
 import org.koishi.launcher.h2co3.resources.component.dialog.DialogUtils;

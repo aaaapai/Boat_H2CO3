@@ -1,10 +1,10 @@
 package org.koishi.launcher.h2co3.core.game;
 
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.download.Library;
-import org.koishi.launcher.h2co3.core.download.LoggingInfo;
-import org.koishi.launcher.h2co3.core.download.Version;
-import org.koishi.launcher.h2co3.core.download.VersionProvider;
+import org.koishi.launcher.h2co3.core.game.download.Library;
+import org.koishi.launcher.h2co3.core.game.download.LoggingInfo;
+import org.koishi.launcher.h2co3.core.game.download.Version;
+import org.koishi.launcher.h2co3.core.game.download.VersionProvider;
 import org.koishi.launcher.h2co3.core.utils.io.VersionNotFoundException;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 
