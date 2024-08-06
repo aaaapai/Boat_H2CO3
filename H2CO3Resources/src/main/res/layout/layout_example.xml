@@ -234,7 +234,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="@dimen/guide_r" />
+        app:layout_constraintGuide_percent="@dimen/guide_l" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
