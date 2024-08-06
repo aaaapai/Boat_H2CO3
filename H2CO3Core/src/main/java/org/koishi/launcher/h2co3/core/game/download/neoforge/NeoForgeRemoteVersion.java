@@ -1,10 +1,10 @@
-package com.tungsten.fclcore.download.neoforge;
+package org.koishi.launcher.h2co3.core.game.download.neoforge;
 
-import com.tungsten.fclcore.download.DefaultDependencyManager;
-import com.tungsten.fclcore.download.LibraryAnalyzer;
-import com.tungsten.fclcore.download.RemoteVersion;
-import com.tungsten.fclcore.game.Version;
-import com.tungsten.fclcore.task.Task;
+import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
+import org.koishi.launcher.h2co3.core.game.download.RemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.Version;
+import org.koishi.launcher.h2co3.core.utils.task.Task;
 
 import java.util.List;
 

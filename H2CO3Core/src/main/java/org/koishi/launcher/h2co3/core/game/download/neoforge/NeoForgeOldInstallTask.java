@@ -15,42 +15,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.tungsten.fclcore.download.neoforge;
+package org.koishi.launcher.h2co3.core.game.download.neoforge;
 
-import static com.tungsten.fclcore.util.Logging.LOG;
-import static com.tungsten.fclcore.util.gson.JsonUtils.fromNonNullJson;
+import static org.koishi.launcher.h2co3.core.utils.Logging.LOG;
+import static org.koishi.launcher.h2co3.core.utils.gson.JsonUtils.fromNonNullJson;
 
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.tungsten.fclauncher.utils.FCLPath;
-import com.tungsten.fclcore.download.ArtifactMalformedException;
-import com.tungsten.fclcore.download.DefaultDependencyManager;
-import com.tungsten.fclcore.download.LibraryAnalyzer;
-import com.tungsten.fclcore.download.ProcessService;
-import com.tungsten.fclcore.download.forge.ForgeNewInstallProfile;
-import com.tungsten.fclcore.download.game.GameLibrariesTask;
-import com.tungsten.fclcore.download.game.VersionJsonDownloadTask;
-import com.tungsten.fclcore.game.Artifact;
-import com.tungsten.fclcore.game.DefaultGameRepository;
-import com.tungsten.fclcore.game.DownloadInfo;
-import com.tungsten.fclcore.game.DownloadType;
-import com.tungsten.fclcore.game.Library;
-import com.tungsten.fclcore.game.Version;
-import com.tungsten.fclcore.task.FileDownloadTask;
-import com.tungsten.fclcore.task.Task;
-import com.tungsten.fclcore.util.DigestUtils;
-import com.tungsten.fclcore.util.SocketServer;
-import com.tungsten.fclcore.util.StringUtils;
-import com.tungsten.fclcore.util.function.ExceptionalFunction;
-import com.tungsten.fclcore.util.io.ChecksumMismatchException;
-import com.tungsten.fclcore.util.io.CompressingUtils;
-import com.tungsten.fclcore.util.io.FileUtils;
-import com.tungsten.fclcore.util.platform.CommandBuilder;
-
 import org.jetbrains.annotations.NotNull;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.DefaultGameRepository;
+import org.koishi.launcher.h2co3.core.game.download.DownloadInfo;
+import org.koishi.launcher.h2co3.core.game.download.DownloadType;
+import org.koishi.launcher.h2co3.core.game.download.Library;
+import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
+import org.koishi.launcher.h2co3.core.game.download.Version;
+import org.koishi.launcher.h2co3.core.game.download.forge.ForgeNewInstallProfile;
+import org.koishi.launcher.h2co3.core.game.download.vanilla.GameLibrariesTask;
+import org.koishi.launcher.h2co3.core.game.download.vanilla.VersionJsonDownloadTask;
+import org.koishi.launcher.h2co3.core.shell.ProcessService;
+import org.koishi.launcher.h2co3.core.utils.Artifact;
+import org.koishi.launcher.h2co3.core.utils.CommandBuilder;
+import org.koishi.launcher.h2co3.core.utils.DigestUtils;
+import org.koishi.launcher.h2co3.core.utils.SocketServer;
+import org.koishi.launcher.h2co3.core.utils.StringUtils;
+import org.koishi.launcher.h2co3.core.utils.file.FileTools;
+import org.koishi.launcher.h2co3.core.utils.function.ExceptionalFunction;
+import org.koishi.launcher.h2co3.core.utils.io.ArtifactMalformedException;
+import org.koishi.launcher.h2co3.core.utils.io.ChecksumMismatchException;
+import org.koishi.launcher.h2co3.core.utils.io.CompressingUtils;
+import org.koishi.launcher.h2co3.core.utils.task.FileDownloadTask;
+import org.koishi.launcher.h2co3.core.utils.task.Task;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -61,7 +60,14 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.jar.Attributes;
@@ -183,7 +189,7 @@ public class NeoForgeOldInstallTask extends Task<Version> {
         int exitCode;
         boolean listen = true;
         while (listen) {
-            if (((ActivityManager) FCLPath.CONTEXT.getSystemService(Context.ACTIVITY_SERVICE)).getRunningAppProcesses().size() == 1) {
+            if (((ActivityManager) H2CO3Tools.CONTEXT.getSystemService(Context.ACTIVITY_SERVICE)).getRunningAppProcesses().size() == 1) {
                 listen = false;
             }
         }
@@ -193,12 +199,12 @@ public class NeoForgeOldInstallTask extends Task<Version> {
             server1.stop();
             latch.countDown();
         });
-        Intent service = new Intent(FCLPath.CONTEXT, ProcessService.class);
+        Intent service = new Intent(H2CO3Tools.CONTEXT, ProcessService.class);
         Bundle bundle = new Bundle();
         bundle.putStringArray("command", command.toArray(new String[0]));
         bundle.putInt("java", java);
         service.putExtras(bundle);
-        FCLPath.CONTEXT.startService(service);
+        H2CO3Tools.CONTEXT.startService(service);
         server.start();
         latch.await();
         exitCode = Integer.parseInt((String) server.getResult());
@@ -317,15 +323,15 @@ public class NeoForgeOldInstallTask extends Task<Version> {
     @Override
     public void preExecute() throws Exception {
         try (FileSystem fs = CompressingUtils.createReadOnlyZipFileSystem(installer)) {
-            profile = fromNonNullJson(FileUtils.readText(fs.getPath("install_profile.json")), ForgeNewInstallProfile.class);
+            profile = fromNonNullJson(FileTools.readText(fs.getPath("install_profile.json")), ForgeNewInstallProfile.class);
             processors = profile.getProcessors();
-            neoForgeVersion = fromNonNullJson(FileUtils.readText(fs.getPath(profile.getJson())), Version.class);
+            neoForgeVersion = fromNonNullJson(FileTools.readText(fs.getPath(profile.getJson())), Version.class);
 
             for (Library library : profile.getLibraries()) {
                 Path file = fs.getPath("maven").resolve(library.getPath());
                 if (Files.exists(file)) {
                     Path dest = gameRepository.getLibraryFile(version, library).toPath();
-                    FileUtils.copyFile(file, dest);
+                    FileTools.copyFile(file, dest);
                 }
             }
 
@@ -333,7 +339,7 @@ public class NeoForgeOldInstallTask extends Task<Version> {
                 Path mainJar = profile.getPath().get().getPath(fs.getPath("maven"));
                 if (Files.exists(mainJar)) {
                     Path dest = gameRepository.getArtifactFile(version, profile.getPath().get());
-                    FileUtils.copyFile(mainJar, dest);
+                    FileTools.copyFile(mainJar, dest);
                 }
             }
         } catch (ZipException ex) {
@@ -422,7 +428,7 @@ public class NeoForgeOldInstallTask extends Task<Version> {
                         Collections.emptyMap(),
                         str -> {
                             Path dest = Files.createTempFile(tempDir, null, null);
-                            FileUtils.copyFile(fs.getPath(str), dest);
+                            FileTools.copyFile(fs.getPath(str), dest);
                             return dest.toString();
                         }));
             }
@@ -461,6 +467,6 @@ public class NeoForgeOldInstallTask extends Task<Version> {
 
     @Override
     public void postExecute() throws Exception {
-        FileUtils.deleteDirectory(tempDir.toFile());
+        FileTools.deleteDirectory(tempDir.toFile());
     }
 }

@@ -59,8 +59,9 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     private int output = 0;
 
     public static void receiveLog(String str) throws IOException {
-        if (logReceiver == null || logReceiver.get() == null) {
-            logReceiver = new WeakReference<>(new H2CO3LauncherBridge.LogReceiver() {
+        H2CO3LauncherBridge.LogReceiver receiver = logReceiver != null ? logReceiver.get() : null;
+        if (receiver == null) {
+            receiver = new H2CO3LauncherBridge.LogReceiver() {
                 final StringBuilder builder = new StringBuilder();
 
                 @Override
@@ -72,10 +73,10 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
                 public String getLogs() {
                     return builder.toString();
                 }
-            });
-        } else {
-            logReceiver.get().pushLog(str);
+            };
+            logReceiver = new WeakReference<>(receiver);
         }
+        receiver.pushLog(str);
     }
 
     public static void attachControllerInterface() {
@@ -84,9 +85,9 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
             private HardwareController hardwareController;
 
             @Override
-            public void onActivityCreate(H2CO3LauncherActivity H2CO3LauncherActivity) {
-                virtualController = new H2CO3VirtualController((H2CO3ControlClient) H2CO3LauncherActivity, H2CO3LauncherActivity.launcherLib, KEYMAP_TO_X);
-                hardwareController = new HardwareController((H2CO3ControlClient) H2CO3LauncherActivity, H2CO3LauncherActivity.launcherLib, KEYMAP_TO_X);
+            public void onActivityCreate(H2CO3LauncherActivity activity) {
+                virtualController = new H2CO3VirtualController((H2CO3ControlClient) activity, activity.launcherLib, KEYMAP_TO_X);
+                hardwareController = new HardwareController((H2CO3ControlClient) activity, activity.launcherLib, KEYMAP_TO_X);
             }
 
             @Override
@@ -152,12 +153,12 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
         h2co3LauncherCallback = new H2CO3LauncherBridgeCallBack() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-
+                configureSurfaceTexture(surface, width, height);
             }
 
             @Override
             public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
+                // No operation
             }
 
             @Override
@@ -167,25 +168,24 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
 
             @Override
             public void onLog(String log) throws IOException {
-                if (log.contains("OR:") || log.contains("ERROR:") || log.contains("INTERNAL ERROR:")) {
-                    return;
+                if (!log.contains("OR:") && !log.contains("ERROR:") && !log.contains("INTERNAL ERROR:")) {
+                    receiveLog(log);
                 }
-                receiveLog(log);
             }
 
             @Override
             public void onStart() {
-
+                // No operation
             }
 
             @Override
             public void onPicOutput() {
-
+                // No operation
             }
 
             @Override
             public void onError(Exception e) {
-
+                // No operation
             }
 
             @Override
@@ -195,15 +195,13 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
 
             @Override
             public void onHitResultTypeChange(int type) {
-
+                // No operation
             }
         };
     }
 
     @Override
-    public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-        int width = screenWidth;
-        int height = screenHeight;
+    public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int width, int height) {
         surfaceTexture.setDefaultBufferSize(width, height);
         launcherLib.pushEventWindow(width, height);
     }
@@ -236,6 +234,7 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
 
     @Override
     public void onClick(View p1) {
+        // No operation
     }
 
     @Override
@@ -250,13 +249,10 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     }
 
     @Override
-    public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
+    public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int width, int height) {
         Logging.LOG.log(Level.INFO, "surface ready, start jvm now!");
         launcherLib.setSurfaceDestroyed(false);
-        int width = screenWidth;
-        int height = screenHeight;
         configureSurfaceTexture(surfaceTexture, width, height);
-        surfaceTexture.setDefaultBufferSize(width, height);
         try {
             launcherLib.execute(new Surface(surfaceTexture), h2co3LauncherCallback);
         } catch (IOException e) {
@@ -268,17 +264,13 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     @Override
     public void setPointerInc(int xInc, int yInc) {
         if (!grabbed) {
-            int x = GRABBED_POINTER[0] + xInc;
-            int y = GRABBED_POINTER[1] + yInc;
-            if (x >= 0 && x <= screenWidth) {
-                GRABBED_POINTER[0] += xInc;
-            }
-            if (y >= 0 && y <= screenHeight) {
-                GRABBED_POINTER[1] += yInc;
-            }
-            setPointer(GRABBED_POINTER[0], GRABBED_POINTER[1]);
-            cursorIcon.setX(GRABBED_POINTER[0]);
-            cursorIcon.setY(GRABBED_POINTER[1]);
+            int x = Math.min(Math.max(GRABBED_POINTER[0] + xInc, 0), screenWidth);
+            int y = Math.min(Math.max(GRABBED_POINTER[1] + yInc, 0), screenHeight);
+            GRABBED_POINTER[0] = x;
+            GRABBED_POINTER[1] = y;
+            setPointer(x, y);
+            cursorIcon.setX(x);
+            cursorIcon.setY(y);
         } else {
             setPointer(getPointer()[0] + xInc, getPointer()[1] + yInc);
         }
@@ -307,12 +299,11 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
 
     @Override
     public void typeWords(String str) {
-        if (str == null) {
-            return;
-        }
-        for (int i = 0; i < str.length(); i++) {
-            setKey(0, str.charAt(i), true);
-            setKey(0, str.charAt(i), false);
+        if (str != null) {
+            for (char c : str.toCharArray()) {
+                setKey(0, c, true);
+                setKey(0, c, false);
+            }
         }
     }
 
@@ -345,11 +336,9 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     public void setGrabCursor(boolean isGrabbed) {
         super.setGrabCursor(isGrabbed);
         grabbed = isGrabbed;
+        cursorIcon.setVisibility(isGrabbed ? View.INVISIBLE : View.VISIBLE);
         if (!isGrabbed) {
             setPointer(GRABBED_POINTER[0], GRABBED_POINTER[1]);
-            cursorIcon.setVisibility(View.VISIBLE);
-        } else if (cursorIcon.getVisibility() == View.VISIBLE) {
-            cursorIcon.setVisibility(View.INVISIBLE);
         }
     }
 }

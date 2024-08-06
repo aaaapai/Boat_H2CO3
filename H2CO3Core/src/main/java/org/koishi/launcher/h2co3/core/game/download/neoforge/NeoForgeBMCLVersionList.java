@@ -15,19 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.tungsten.fclcore.download.neoforge;
+package org.koishi.launcher.h2co3.core.game.download.neoforge;
 
-import static com.tungsten.fclcore.util.Lang.wrap;
+import static org.koishi.launcher.h2co3.core.utils.Lang.wrap;
 
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-import com.tungsten.fclcore.download.VersionList;
-import com.tungsten.fclcore.util.Lang;
-import com.tungsten.fclcore.util.StringUtils;
-import com.tungsten.fclcore.util.gson.Validation;
-import com.tungsten.fclcore.util.io.HttpRequest;
-import com.tungsten.fclcore.util.versioning.VersionNumber;
+
+import org.koishi.launcher.h2co3.core.game.download.VersionList;
+import org.koishi.launcher.h2co3.core.game.download.VersionNumber;
+import org.koishi.launcher.h2co3.core.utils.HttpRequest;
+import org.koishi.launcher.h2co3.core.utils.Lang;
+import org.koishi.launcher.h2co3.core.utils.StringUtils;
+import org.koishi.launcher.h2co3.core.utils.gson.tools.Validation;
 
 import java.util.List;
 import java.util.Optional;

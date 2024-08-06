@@ -21,8 +21,6 @@ import org.koishi.launcher.h2co3.ui.fragment.download.DownloadListFragment;
 import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 import org.koishi.launcher.h2co3.ui.fragment.manage.ManageFragment;
 
-import java.util.Objects;
-
 public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private H2CO3ToolBar toolbar;
@@ -44,54 +42,69 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.navigation_home);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.app_name));
-        initFragment(homeFragment);
-        setNavigationItemChecked(0);
+        getSupportActionBar().setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.app_name));
+        initFragment(getHomeFragment());
+        setNavigationItemChecked(R.id.navigation_home);
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                setNavigationItemChecked(0);
-                switchFragment(homeFragment, org.koishi.launcher.h2co3.resources.R.string.title_home);
+                setNavigationItemChecked(R.id.navigation_home);
+                switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.title_home);
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
-
     }
 
     private void initUI() {
         toolbar = findViewById(R.id.toolbar);
         navigationView = findViewById(R.id.nav);
+    }
+
+    private HomeFragment getHomeFragment() {
         if (homeFragment == null) {
             homeFragment = new HomeFragment();
         }
+        return homeFragment;
+    }
+
+    private DirectoryFragment getDirectoryFragment() {
         if (directoryFragment == null) {
             directoryFragment = new DirectoryFragment();
         }
+        return directoryFragment;
+    }
+
+    private ManageFragment getManageFragment() {
         if (manageFragment == null) {
             manageFragment = new ManageFragment();
         }
+        return manageFragment;
+    }
+
+    private DownloadListFragment getDownloadFragment() {
         if (downloadFragment == null) {
             downloadFragment = new DownloadListFragment();
         }
+        return downloadFragment;
     }
 
     private void initFragment(H2CO3Fragment fragment) {
         if (currentFragment != fragment) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop);
-            if (fragment.isAdded()) {
-                transaction.show(fragment);
-            } else {
-                transaction.add(R.id.nav_host_fragment, fragment);
+            if (fragment != null) {
+                if (fragment.isAdded()) {
+                    transaction.show(fragment);
+                } else {
+                    transaction.add(R.id.nav_host_fragment, fragment);
+                }
+                if (currentFragment != null) {
+                    transaction.hide(currentFragment);
+                }
+                currentFragment = fragment;
+                transaction.commit();
             }
-
-            if (currentFragment != null && currentFragment != fragment) {
-                transaction.hide(currentFragment);
-            }
-
-            currentFragment = fragment;
-            transaction.commit();
         }
     }
 
@@ -109,50 +122,43 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_item_home) {
-            setNavigationItemChecked(0);
-            switchFragment(homeFragment, org.koishi.launcher.h2co3.resources.R.string.app_name);
+            setNavigationItemChecked(R.id.navigation_home);
+            switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.app_name);
         } else if (item.getItemId() == R.id.action_item_setting) {
-            setNavigationItemChecked(3);
-            switchFragment(manageFragment, org.koishi.launcher.h2co3.resources.R.string.title_manage);
+            setNavigationItemChecked(R.id.navigation_manage);
+            switchFragment(getManageFragment(), org.koishi.launcher.h2co3.resources.R.string.title_manage);
         }
         return super.onOptionsItemSelected(item);
     }
 
-
     private void switchFragment(H2CO3Fragment fragment, int resID) {
         initFragment(fragment);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(getString(resID));
+        getSupportActionBar().setTitle(getString(resID));
     }
 
-    private void setNavigationItemChecked(int index) {
+    private void setNavigationItemChecked(int itemId) {
         Menu menu = navigationView.getMenu();
         for (int i = 0; i < menu.size(); i++) {
-            menu.getItem(i).setChecked(false);
+            menu.getItem(i).setChecked(menu.getItem(i).getItemId() == itemId);
         }
-        menu.getItem(index).setChecked(true);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem menuItem) {
-        int itemId = menuItem.getItemId();
         if (menuItem.isChecked()) {
             return true;
         }
 
-        Menu menu = navigationView.getMenu();
-        for (int i = 0; i < menu.size(); i++) {
-            menu.getItem(i).setChecked(false);
-        }
-        menuItem.setChecked(true);
+        setNavigationItemChecked(menuItem.getItemId());
 
-        if (itemId == R.id.navigation_home) {
-            switchFragment(homeFragment, org.koishi.launcher.h2co3.resources.R.string.app_name);
-        } else if (itemId == R.id.navigation_directory) {
-            switchFragment(directoryFragment, org.koishi.launcher.h2co3.resources.R.string.title_directory);
-        } else if (itemId == R.id.navigation_manage) {
-            switchFragment(manageFragment, org.koishi.launcher.h2co3.resources.R.string.title_manage);
-        } else if (itemId == R.id.navigation_download) {
-            switchFragment(downloadFragment, org.koishi.launcher.h2co3.resources.R.string.title_download);
+        if (menuItem.getItemId() == R.id.navigation_home) {
+            switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.app_name);
+        } else if (menuItem.getItemId() == R.id.navigation_directory) {
+            switchFragment(getDirectoryFragment(), org.koishi.launcher.h2co3.resources.R.string.title_directory);
+        } else if (menuItem.getItemId() == R.id.navigation_manage) {
+            switchFragment(getManageFragment(), org.koishi.launcher.h2co3.resources.R.string.title_manage);
+        } else if (menuItem.getItemId() == R.id.navigation_download) {
+            switchFragment(getDownloadFragment(), org.koishi.launcher.h2co3.resources.R.string.title_download);
         }
         return true;
     }

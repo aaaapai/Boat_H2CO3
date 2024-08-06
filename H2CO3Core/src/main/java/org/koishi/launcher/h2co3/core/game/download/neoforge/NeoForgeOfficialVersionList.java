@@ -1,12 +1,12 @@
-package com.tungsten.fclcore.download.neoforge;
+package org.koishi.launcher.h2co3.core.game.download.neoforge;
 
-import static com.tungsten.fclcore.util.Lang.wrap;
+import static org.koishi.launcher.h2co3.core.utils.Lang.wrap;
 
-import com.tungsten.fclcore.download.DownloadProvider;
-import com.tungsten.fclcore.download.VersionList;
-import com.tungsten.fclcore.util.Lang;
-import com.tungsten.fclcore.util.StringUtils;
-import com.tungsten.fclcore.util.io.HttpRequest;
+import org.koishi.launcher.h2co3.core.game.download.DownloadProvider;
+import org.koishi.launcher.h2co3.core.game.download.VersionList;
+import org.koishi.launcher.h2co3.core.utils.HttpRequest;
+import org.koishi.launcher.h2co3.core.utils.Lang;
+import org.koishi.launcher.h2co3.core.utils.StringUtils;
 
 import java.util.List;
 import java.util.Optional;

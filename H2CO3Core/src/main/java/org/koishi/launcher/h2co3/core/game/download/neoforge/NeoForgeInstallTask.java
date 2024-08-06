@@ -1,25 +1,30 @@
-package com.tungsten.fclcore.download.neoforge;
+package org.koishi.launcher.h2co3.core.game.download.neoforge;
 
-import static com.tungsten.fclcore.util.StringUtils.removePrefix;
-import static com.tungsten.fclcore.util.StringUtils.removeSuffix;
 
-import com.tungsten.fclcore.download.DefaultDependencyManager;
-import com.tungsten.fclcore.download.LibraryAnalyzer;
-import com.tungsten.fclcore.download.VersionMismatchException;
-import com.tungsten.fclcore.download.forge.ForgeNewInstallProfile;
-import com.tungsten.fclcore.download.forge.ForgeNewInstallTask;
-import com.tungsten.fclcore.game.Version;
-import com.tungsten.fclcore.task.FileDownloadTask;
-import com.tungsten.fclcore.task.Task;
-import com.tungsten.fclcore.util.gson.JsonUtils;
-import com.tungsten.fclcore.util.io.CompressingUtils;
-import com.tungsten.fclcore.util.io.FileUtils;
+
+import static org.koishi.launcher.h2co3.core.utils.StringUtils.removePrefix;
+import static org.koishi.launcher.h2co3.core.utils.StringUtils.removeSuffix;
+
+import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
+import org.koishi.launcher.h2co3.core.game.download.Version;
+import org.koishi.launcher.h2co3.core.game.download.forge.ForgeNewInstallProfile;
+import org.koishi.launcher.h2co3.core.game.download.forge.ForgeNewInstallTask;
+import org.koishi.launcher.h2co3.core.utils.file.FileTools;
+import org.koishi.launcher.h2co3.core.utils.gson.JsonUtils;
+import org.koishi.launcher.h2co3.core.utils.io.CompressingUtils;
+import org.koishi.launcher.h2co3.core.utils.io.VersionMismatchException;
+import org.koishi.launcher.h2co3.core.utils.task.FileDownloadTask;
+import org.koishi.launcher.h2co3.core.utils.task.Task;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 public final class NeoForgeInstallTask extends Task<Version> {
     private final DefaultDependencyManager dependencyManager;
@@ -88,7 +93,7 @@ public final class NeoForgeInstallTask extends Task<Version> {
         Optional<String> gameVersion = dependencyManager.getGameRepository().getGameVersion(version);
         if (!gameVersion.isPresent()) throw new IOException();
         try (FileSystem fs = CompressingUtils.createReadOnlyZipFileSystem(installer)) {
-            String installProfileText = FileUtils.readText(fs.getPath("install_profile.json"));
+            String installProfileText = FileTools.readText(fs.getPath("install_profile.json"));
             Map<?, ?> installProfile = JsonUtils.fromNonNullJson(installProfileText, Map.class);
             if (LibraryAnalyzer.LibraryType.FORGE.getPatchId().equals(installProfile.get("profile")) && (Files.exists(fs.getPath("META-INF/NEOFORGE.RSA")) || installProfileText.contains("neoforge"))) {
                 ForgeNewInstallProfile profile = JsonUtils.fromNonNullJson(installProfileText, ForgeNewInstallProfile.class);
