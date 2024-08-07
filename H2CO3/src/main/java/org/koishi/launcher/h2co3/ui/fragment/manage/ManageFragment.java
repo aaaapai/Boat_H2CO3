@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.dialog.H2CO3LauncherRuntimeDialog;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
-import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
+import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 
 public class ManageFragment extends H2CO3Fragment implements View.OnClickListener {
 

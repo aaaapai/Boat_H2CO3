@@ -13,9 +13,9 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
 import org.koishi.launcher.h2co3.R;
-import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
-import org.koishi.launcher.h2co3.resources.component.H2CO3ToolBar;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
+import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
+import org.koishi.launcher.h2co3.resources.component.H2CO3ToolBar;
 import org.koishi.launcher.h2co3.ui.fragment.directory.DirectoryFragment;
 import org.koishi.launcher.h2co3.ui.fragment.download.DownloadListFragment;
 import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;

@@ -34,7 +34,7 @@ import org.koishi.launcher.h2co3.core.utils.task.Task;
 import org.koishi.launcher.h2co3.core.utils.task.TaskExecutor;
 import org.koishi.launcher.h2co3.core.utils.task.TaskListener;
 import org.koishi.launcher.h2co3.dialog.TaskDialog;
-import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
+import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3CustomViewDialog;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MessageDialog;
 import org.koishi.launcher.h2co3.utils.download.InstallerItem;
@@ -66,6 +66,14 @@ public class EditVersionFragment extends H2CO3Fragment {
     private DownloadProviders downloadProviders;
     private TaskDialog pane;
     private AlertDialog paneAlert;
+    ChooseMcVersionFragment chooseMcVersionFragment;
+
+    Bundle args;
+    public EditVersionFragment(ChooseMcVersionFragment chooseMcVersionFragment, Bundle bundle) {
+        super();
+        this.chooseMcVersionFragment = chooseMcVersionFragment;
+        this.args = bundle;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +81,6 @@ public class EditVersionFragment extends H2CO3Fragment {
         view = inflater.inflate(R.layout.fragment_download_edit_version, container, false);
         initView();
         downloadProviders = new DownloadProviders();
-        Bundle args = getArguments();
         System.out.println(args);
         if (args != null) {
             String versionName = args.getString("versionName");
@@ -82,8 +89,13 @@ public class EditVersionFragment extends H2CO3Fragment {
         }
         group = new InstallerItem.InstallerItemGroup(getContext(), gameVersion);
         installerScrollView.addView(group.getView());
-        NavController navController = Navigation.findNavController(requireParentFragment().requireView());
-        backButton.setOnClickListener(v -> navController.navigate(R.id.action_editVersionFragment_to_chooseVersionFragment));
+        backButton.setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit, org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop)
+                    .remove(EditVersionFragment.this)
+                    .show(chooseMcVersionFragment)
+                    .commit();
+        });
         for (InstallerItem library : group.getLibraries()) {
             String libraryId = library.getLibraryId();
             System.out.println(libraryId);

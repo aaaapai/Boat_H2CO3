@@ -1,15 +1,9 @@
-/*
- * //
- * // Created by cainiaohh on 2024-03-31.
- * //
- */
 package org.koishi.launcher.h2co3.resources.component.activity
 
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.webkit.CookieManager
 import org.koishi.launcher.h2co3.core.H2CO3Tools
 import org.koishi.launcher.h2co3.core.utils.file.FileTools

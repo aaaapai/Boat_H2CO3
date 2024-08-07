@@ -45,7 +45,7 @@ import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.core.utils.file.AssetsUtils;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
-import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
+import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 
 import java.io.File;
 import java.io.IOException;

@@ -51,7 +51,7 @@ import org.koishi.launcher.h2co3.core.login.other.Servers;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Button;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
-import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
+import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3CustomViewDialog;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3ProgressDialog;

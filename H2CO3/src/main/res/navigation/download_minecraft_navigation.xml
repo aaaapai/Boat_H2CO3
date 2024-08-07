@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/chooseVersionFragment"
-        android:name="org.koishi.launcher.h2co3.ui.fragment.download.ChooseVersionFragment"
+        android:name="org.koishi.launcher.h2co3.ui.fragment.download.ChooseMcVersionFragment"
         tools:layout="@layout/fragment_download_mc_choose_version">
         <action
             android:id="@+id/action_chooseVersionFragment_to_editVersionFragment"

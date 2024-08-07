@@ -31,9 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
-import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
-import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
+import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 
 import java.io.BufferedReader;
@@ -47,7 +46,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ChooseVersionFragment extends H2CO3Fragment {
+public class ChooseMcVersionFragment extends H2CO3Fragment {
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
@@ -244,8 +243,13 @@ public class ChooseVersionFragment extends H2CO3Fragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putString("versionName", version.versionName());
-
-                    navController.navigate(R.id.action_chooseVersionFragment_to_editVersionFragment, bundle);
+                    EditVersionFragment editVersionFragment = new EditVersionFragment(ChooseMcVersionFragment.this,bundle);
+                    getParentFragmentManager().beginTransaction()
+                            .setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit, org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop)
+                            .add(R.id.fragmentContainerView, editVersionFragment)
+                            .hide(ChooseMcVersionFragment.this)
+                            .commit();
+                    //navController.navigate(R.id.action_chooseVersionFragment_to_editVersionFragment, bundle);
                 }
 
                 isHandlingClick.set(false);
@@ -256,4 +260,5 @@ public class ChooseVersionFragment extends H2CO3Fragment {
     public record Version(String versionName, String versionType, String versionUrl,
                           String versionSha1) {
     }
+
 }
