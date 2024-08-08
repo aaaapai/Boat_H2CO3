@@ -20,6 +20,7 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.utils.NetworkUtils;
 import org.koishi.launcher.h2co3.core.utils.RuntimeUtils;
+import org.koishi.launcher.h2co3.core.utils.io.IOUtils;
 import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 import org.koishi.launcher.h2co3.ui.H2CO3MainActivity;
@@ -28,7 +29,7 @@ import java.io.IOException;
 
 public class EulaFragment extends H2CO3Fragment implements View.OnClickListener {
 
-    public static final String EULA_URL = "https://gitee.com/cainiaohanhanyai/cnhhfile/raw/master/Documents/eula.txt?inline=false";
+    //public static final String EULA_URL = "https://gitee.com/cainiaohanhanyai/cnhhfile/raw/master/Documents/eula.txt?inline=false";
     private final Handler handler = new Handler(Looper.getMainLooper());
     NavController navController;
     private ProgressBar progressBar;
@@ -66,7 +67,7 @@ public class EulaFragment extends H2CO3Fragment implements View.OnClickListener 
         new Thread(() -> {
             String str;
             try {
-                str = NetworkUtils.doGet(NetworkUtils.toURL(EULA_URL));
+                str = IOUtils.readFullyAsString(requireActivity().getAssets().open( "eula.txt"));
                 load = true;
             } catch (IOException e) {
                 str = getString(org.koishi.launcher.h2co3.resources.R.string.title_error);

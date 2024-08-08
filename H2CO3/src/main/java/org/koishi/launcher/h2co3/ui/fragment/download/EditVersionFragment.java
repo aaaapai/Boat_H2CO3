@@ -66,9 +66,10 @@ public class EditVersionFragment extends H2CO3Fragment {
     private DownloadProviders downloadProviders;
     private TaskDialog pane;
     private AlertDialog paneAlert;
-    ChooseMcVersionFragment chooseMcVersionFragment;
+    private final ChooseMcVersionFragment chooseMcVersionFragment;
 
-    Bundle args;
+    private final Bundle args;
+
     public EditVersionFragment(ChooseMcVersionFragment chooseMcVersionFragment, Bundle bundle) {
         super();
         this.chooseMcVersionFragment = chooseMcVersionFragment;
@@ -81,119 +82,145 @@ public class EditVersionFragment extends H2CO3Fragment {
         view = inflater.inflate(R.layout.fragment_download_edit_version, container, false);
         initView();
         downloadProviders = new DownloadProviders();
-        System.out.println(args);
-        if (args != null) {
-            String versionName = args.getString("versionName");
-            this.gameVersion = args.getString("versionName");
-            versionNameEditText.setText(versionName);
-        }
-        group = new InstallerItem.InstallerItemGroup(getContext(), gameVersion);
-        installerScrollView.addView(group.getView());
-        backButton.setOnClickListener(v -> {
-            getParentFragmentManager().beginTransaction()
-                    .setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit, org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop)
-                    .remove(EditVersionFragment.this)
-                    .show(chooseMcVersionFragment)
-                    .commit();
+
+        showLoadingIndicator();
+
+        loadInitialData();
+
+        backButton.setOnClickListener(v -> navigateBack());
+        downloadButton.setOnClickListener(v -> startDownload());
+
+        return view;
+    }
+
+    private void loadInitialData() {
+        Schedulers.io().execute(() -> {
+            if (args != null) {
+                String versionName = args.getString("versionName");
+                this.gameVersion = versionName;
+
+            }
+
+
+            group = new InstallerItem.InstallerItemGroup(getContext(), gameVersion);
+
+            Schedulers.androidUIThread().execute(() -> {
+                installerScrollView.addView(group.getView());
+                hideLoadingIndicator();
+                setupLibraryActions();
+                versionNameEditText.setText(gameVersion);
+            });
         });
+    }
+
+    private void showLoadingIndicator() {
+        //progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideLoadingIndicator() {
+        //progressBar.setVisibility(View.GONE);
+    }
+
+    private void navigateBack() {
+        getParentFragmentManager().beginTransaction()
+                .setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit, org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop)
+                .remove(EditVersionFragment.this)
+                .show(chooseMcVersionFragment)
+                .commit();
+    }
+
+    private void setupLibraryActions() {
         for (InstallerItem library : group.getLibraries()) {
             String libraryId = library.getLibraryId();
-            System.out.println(libraryId);
+            if ("game".equals(libraryId)) continue;
 
-            if (libraryId.equals("game")) continue;
-            library.action.set(() -> {
-                if (LibraryAnalyzer.LibraryType.FABRIC_API.getPatchId().equals(libraryId)) {
-                    H2CO3MessageDialog builder = new H2CO3MessageDialog(getContext());
-                    builder.setCancelable(false);
-                    builder.setMessage(requireContext().getString(org.koishi.launcher.h2co3.resources.R.string.install_installer_fabric_api_warning));
-                    builder.setNegativeButton(requireContext().getString(org.koishi.launcher.h2co3.resources.R.string.button_cancel), null);
-                    builder.create().show();
-                }
-
-                if (library.incompatibleLibraryName.get() == null) {
-
-                    currentVersionList = downloadProviders.getDownloadProvider().getVersionListById(libraryId);
-                    if (!isChooseInstallerVersionDialogShowing) {
-                        showChooseInstallerVersionDialog(libraryId);
-                    }
-                    listener = remoteVersion -> {
-                        map.put(libraryId, remoteVersion);
-                        System.out.println(map);
-                        reload();
-                        chooseInstallerVersionDialogAlert.dismiss();
-                    };
-                }
-            });
+            library.action.set(() -> handleLibraryAction(libraryId, library));
             library.removeAction.set(() -> {
                 map.remove(libraryId);
                 reload();
             });
         }
+    }
 
+    private void handleLibraryAction(String libraryId, InstallerItem library) {
+        if (LibraryAnalyzer.LibraryType.FABRIC_API.getPatchId().equals(libraryId)) {
+            showFabricApiWarning();
+        }
 
-        downloadButton.setOnClickListener(v -> {
-            String versionName = versionNameEditText.getText() != null ? versionNameEditText.getText().toString() : "";
-            DownloadProviders downloadProviders = new DownloadProviders();
-            H2CO3CacheRepository cacheRepository = H2CO3CacheRepository.REPOSITORY;
-            CacheRepository.setInstance(cacheRepository);
-            cacheRepository.setDirectory(H2CO3Tools.CACHE_DIR);
-            System.out.println(cacheRepository.getDirectory());
-
-            DefaultDependencyManager dependencyManager = new DefaultDependencyManager(new H2CO3GameRepository(new File(H2CO3GameHelper.getGameDirectory())), downloadProviders.getDownloadProvider(), cacheRepository);
-            GameBuilder builder = dependencyManager.gameBuilder();
-
-            builder.name(versionName);
-            builder.gameVersion(gameVersion);
-
-            String minecraftPatchId = LibraryAnalyzer.LibraryType.MINECRAFT.getPatchId();
-            for (Map.Entry<String, RemoteVersion> entry : map.entrySet()) {
-                if (!minecraftPatchId.equals(entry.getKey())) {
-                    builder.version(entry.getValue());
-                    System.out.println(entry.getValue());
-                }
+        if (library.incompatibleLibraryName.get() == null) {
+            currentVersionList = downloadProviders.getDownloadProvider().getVersionListById(libraryId);
+            if (!isChooseInstallerVersionDialogShowing) {
+                showChooseInstallerVersionDialog(libraryId);
             }
+            listener = remoteVersion -> {
+                map.put(libraryId, remoteVersion);
+                reload();
+                chooseInstallerVersionDialogAlert.dismiss();
+            };
+        }
+    }
 
-            Task<?> task = builder.buildAsync();
+    private void showFabricApiWarning() {
+        H2CO3MessageDialog builder = new H2CO3MessageDialog(getContext());
+        builder.setCancelable(false);
+        builder.setMessage(requireContext().getString(org.koishi.launcher.h2co3.resources.R.string.install_installer_fabric_api_warning));
+        builder.setNegativeButton(requireContext().getString(org.koishi.launcher.h2co3.resources.R.string.button_cancel), null);
+        builder.create().show();
+    }
 
+    private void startDownload() {
+        String versionName = versionNameEditText.getText() != null ? versionNameEditText.getText().toString() : "";
+        H2CO3CacheRepository cacheRepository = H2CO3CacheRepository.REPOSITORY;
+        CacheRepository.setInstance(cacheRepository);
+        cacheRepository.setDirectory(H2CO3Tools.CACHE_DIR);
 
-            pane = new TaskDialog(requireContext());
-            paneAlert = pane.create();
-            pane.setAlertDialog(paneAlert);
-            pane.setCancel(new TaskCancellationAction(() -> paneAlert.dismiss()));
-            pane.setTitle("Installing...");
+        DefaultDependencyManager dependencyManager = new DefaultDependencyManager(new H2CO3GameRepository(new File(H2CO3GameHelper.getGameDirectory())), downloadProviders.getDownloadProvider(), cacheRepository);
+        GameBuilder builder = dependencyManager.gameBuilder();
 
-            Schedulers.androidUIThread().execute(() -> {
-                TaskExecutor executor = task.executor(new TaskListener() {
-                    @Override
-                    public void onStop(boolean success, TaskExecutor executor) {
-                        Schedulers.androidUIThread().execute(() -> {
-                            if (success) {
-                                showCompletionDialog(getContext());
-                            } else {
-                                if (executor.getException() == null) {
-                                    return;
-                                }
+        builder.name(versionName);
+        builder.gameVersion(gameVersion);
+
+        String minecraftPatchId = LibraryAnalyzer.LibraryType.MINECRAFT.getPatchId();
+        for (Map.Entry<String, RemoteVersion> entry : map.entrySet()) {
+            if (!minecraftPatchId.equals(entry.getKey())) {
+                builder.version(entry.getValue());
+            }
+        }
+
+        Task<?> task = builder.buildAsync();
+
+        pane = new TaskDialog(requireContext());
+        paneAlert = pane.create();
+        pane.setAlertDialog(paneAlert);
+        pane.setCancel(new TaskCancellationAction(() -> paneAlert.dismiss()));
+        pane.setTitle("Installing...");
+
+        Schedulers.androidUIThread().execute(() -> {
+            TaskExecutor executor = task.executor(new TaskListener() {
+                @Override
+                public void onStop(boolean success, TaskExecutor executor) {
+                    Schedulers.androidUIThread().execute(() -> {
+                        if (success) {
+                            showCompletionDialog(getContext());
+                        } else {
+                            if (executor.getException() != null) {
                                 paneAlert.dismiss();
                                 H2CO3Tools.showError(requireContext(), String.valueOf(executor.getException()));
                             }
-                        });
-                    }
-                });
-                pane.setExecutor(executor);
-                paneAlert.show();
-                executor.start();
+                        }
+                    });
+                }
             });
+            pane.setExecutor(executor);
+            paneAlert.show();
+            executor.start();
         });
-
-
-        return view;
     }
 
     private void initView() {
         versionNameEditText = findViewById(view, R.id.version_name_edit);
         backButton = findViewById(view, R.id.minecraft_back_button);
         downloadButton = findViewById(view, R.id.minecraft_download_button);
-
         installerScrollView = findViewById(view, R.id.installer_list_layout);
     }
 
@@ -218,7 +245,6 @@ public class EditVersionFragment extends H2CO3Fragment {
         chooseInstallerVersionDialogAlert.setOnDismissListener(dialog -> isChooseInstallerVersionDialogShowing = false);
         refreshList(libId);
     }
-
 
     private List<RemoteVersion> loadVersions(String libraryId) {
         return downloadProviders.getDownloadProvider().getVersionListById(libraryId)
@@ -249,8 +275,6 @@ public class EditVersionFragment extends H2CO3Fragment {
                     }
                 });
             }
-
-            System.gc();
         });
     }
 
