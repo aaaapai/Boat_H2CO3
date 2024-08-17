@@ -50,25 +50,7 @@ public class H2CO3LauncherBridge implements Serializable {
         System.loadLibrary("h2co3Launcher");
     }
 
-    public H2CO3LauncherBridge() {
-    }
-
-    public native int chdir(String path);
-    public native int redirectStdio(String path);
-    public native void setenv(String name, String value);
-    public native int dlopen(String name);
-    public native void setEventPipe();
-    public native void nativeMoveWindow(int x, int y);
-    public native int[] renderAWTScreenFrame();
-    public static native void pushEvent(long time, int type, int p1, int p2);
-    public static native int[] getPointer();
-    public native void setLdLibraryPath(String path);
-
-    public native void setH2CO3LauncherNativeWindow(Surface surface);
-    public native void setupExitTrap(H2CO3LauncherBridge bridge);
-    public native void setH2CO3LauncherBridge(H2CO3LauncherBridge h2co3LauncherBridgeBridge);
-    public native void nativeSendData(int type, int i1, int i2, int i3, int i4);
-
+    // Constants
     public static final int DEFAULT_WIDTH = 1280;
     public static final int DEFAULT_HEIGHT = 720;
     public static final int KeyPress = 2;
@@ -87,6 +69,7 @@ public class H2CO3LauncherBridge implements Serializable {
     public static final int CursorEnabled = 0;
     public static final int CursorDisabled = 1;
 
+    // Fields
     private boolean surfaceDestroyed;
     private String logPath;
     private H2CO3LauncherBridgeCallBack callback;
@@ -94,9 +77,29 @@ public class H2CO3LauncherBridge implements Serializable {
     private Thread thread;
     private ExecutorService mExecutor;
     private SurfaceTexture surfaceTexture;
-
     private H2CO3GameHelper gameHelper;
 
+    // Constructor
+    public H2CO3LauncherBridge() {
+    }
+
+    // Native methods
+    public native int chdir(String path);
+    public native int redirectStdio(String path);
+    public native void setenv(String name, String value);
+    public native int dlopen(String name);
+    public native void setEventPipe();
+    public native void nativeMoveWindow(int x, int y);
+    public native int[] renderAWTScreenFrame();
+    public static native void pushEvent(long time, int type, int p1, int p2);
+    public static native int[] getPointer();
+    public native void setLdLibraryPath(String path);
+    public native void setH2CO3LauncherNativeWindow(Surface surface);
+    public native void setupExitTrap(H2CO3LauncherBridge bridge);
+    public native void setH2CO3LauncherBridge(H2CO3LauncherBridge h2co3LauncherBridgeBridge);
+    public native void nativeSendData(int type, int i1, int i2, int i3, int i4);
+
+    // Getters and Setters
     public void setThread(Thread thread) {
         this.thread = thread;
     }
@@ -122,12 +125,15 @@ public class H2CO3LauncherBridge implements Serializable {
         this.logPath = logPath;
     }
 
-    public void receiveLog(String log) throws IOException {
-        if (callback != null) {
-            callback.onLog(log + "\n");
-        }
+    public SurfaceTexture getSurfaceTexture() {
+        return surfaceTexture;
     }
 
+    public void setSurfaceTexture(SurfaceTexture surfaceTexture) {
+        this.surfaceTexture = surfaceTexture;
+    }
+
+    // Main methods
     public void execute(Surface surface, H2CO3LauncherBridgeCallBack callback) throws IOException {
         Handler handler = new Handler();
         this.callback = callback;
@@ -146,7 +152,6 @@ public class H2CO3LauncherBridge implements Serializable {
             destroyWindowHandler();
         }
         receiveLog("invoke setEventPipe");
-
         setEventPipe();
 
         // start
@@ -202,12 +207,27 @@ public class H2CO3LauncherBridge implements Serializable {
         pushEvent(System.nanoTime(), ConfigureNotify, width, height);
     }
 
-    public SurfaceTexture getSurfaceTexture() {
-        return surfaceTexture;
+    public String getPrimaryClipString() {
+        ClipboardManager clipboard = getClipboardManager();
+        if (!clipboard.hasPrimaryClip()) {
+            return null;
+        }
+        ClipData.Item item = Objects.requireNonNull(clipboard.getPrimaryClip()).getItemAt(0);
+        return item.getText() != null ? item.getText().toString() : null;
     }
 
-    public void setSurfaceTexture(SurfaceTexture surfaceTexture) {
-        this.surfaceTexture = surfaceTexture;
+    private ClipboardManager getClipboardManager() {
+        return (ClipboardManager) H2CO3Tools.CONTEXT.getSystemService(Context.CLIPBOARD_SERVICE);
+    }
+
+    public void receiveLog(String log) {
+        if (callback != null) {
+            try {
+                callback.onLog(log + "\n");
+            } catch (IOException e) {
+                Log.e("H2CO3LauncherBridge", "Error receiving log", e);
+            }
+        }
     }
 
     public void handleWindow() throws IOException {
@@ -222,7 +242,7 @@ public class H2CO3LauncherBridge implements Serializable {
                 Bitmap rgbArrayBitmap = Bitmap.createBitmap(DEFAULT_WIDTH, DEFAULT_HEIGHT, Bitmap.Config.ARGB_8888);
                 Paint paint = new Paint();
                 try {
-                    while (!surfaceDestroyed && this.surface.isValid()) {
+                    while (!surfaceDestroyed && this.surface != null && this.surface.isValid()) {
                         canvas = this.surface.lockCanvas(null);
                         canvas.drawRGB(0, 0, 0);
                         int[] rgbArray = renderAWTScreenFrame();
@@ -237,22 +257,21 @@ public class H2CO3LauncherBridge implements Serializable {
                 } catch (Throwable throwable) {
                     Handler handler = new Handler();
                     handler.post(() -> {
-                        try {
-                            receiveLog(throwable.toString());
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        receiveLog(throwable.toString());
                     });
+                } finally {
+                    rgbArrayBitmap.recycle();
+                    if (this.surface != null) {
+                        this.surface.release();
+                    }
                 }
-                rgbArrayBitmap.recycle();
-                this.surface.release();
             });
         }
     }
 
     private void destroyWindowHandler() {
         if (mExecutor != null) {
-            mExecutor.shutdown();
+            mExecutor.shutdownNow();
             mExecutor = null;
         }
     }
@@ -262,40 +281,15 @@ public class H2CO3LauncherBridge implements Serializable {
         ((Activity) context).runOnUiThread(() -> {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                String targetLink = link;
-                if (targetLink.startsWith("file://")) {
-                    targetLink = targetLink.replace("file://", "");
-                } else if (targetLink.startsWith("file:")) {
-                    targetLink = targetLink.replace("file:", "");
-                }
-                Uri uri;
-                if (targetLink.startsWith("http")) {
-                    uri = Uri.parse(targetLink);
-                } else {
-                    //can`t get authority by R.string.file_browser_provider
-                    uri = FileProvider.getUriForFile(context, "org.koishi.launcher.h2co3.provider", new File(targetLink));
-                }
+                String targetLink = link.replaceFirst("^(file://|file:)", "");
+                Uri uri = targetLink.startsWith("http") ? Uri.parse(targetLink) :
+                        FileProvider.getUriForFile(context, "org.koishi.launcher.h2co3.provider", new File(targetLink));
                 intent.setDataAndType(uri, "*/*");
                 context.startActivity(intent);
             } catch (Exception e) {
                 Log.e("openLink error", e.toString());
             }
         });
-    }
-
-    public void setPrimaryClipString(String string) {
-        ClipboardManager clipboard = (ClipboardManager) H2CO3Tools.CONTEXT.getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("H2CO3Launcher Clipboard", string);
-        clipboard.setPrimaryClip(clip);
-    }
-
-    public String getPrimaryClipString() {
-        ClipboardManager clipboard = (ClipboardManager) H2CO3Tools.CONTEXT.getSystemService(Context.CLIPBOARD_SERVICE);
-        if (!clipboard.hasPrimaryClip()) {
-            return null;
-        }
-        ClipData.Item item = Objects.requireNonNull(clipboard.getPrimaryClip()).getItemAt(0);
-        return item.getText().toString();
     }
 
     public interface LogReceiver {
