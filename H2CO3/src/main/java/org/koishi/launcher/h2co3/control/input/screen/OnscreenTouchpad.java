@@ -36,7 +36,7 @@ import org.koishi.launcher.h2co3.control.definitions.map.KeyMap;
 import org.koishi.launcher.h2co3.control.definitions.map.MouseMap;
 import org.koishi.launcher.h2co3.control.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.control.input.OnscreenInput;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.resources.component.dialog.DialogUtils;
 import org.koishi.launcher.h2co3.resources.component.dialog.support.DialogSupports;
 

@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.widget.NestedScrollView;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +26,7 @@ import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
 import org.koishi.launcher.h2co3.core.game.download.RemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.VersionList;
 import org.koishi.launcher.h2co3.core.game.H2CO3CacheRepository;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 import org.koishi.launcher.h2co3.core.utils.task.TaskExecutor;
@@ -68,12 +66,15 @@ public class EditVersionFragment extends H2CO3Fragment {
     private AlertDialog paneAlert;
     private final ChooseMcVersionFragment chooseMcVersionFragment;
 
+    private H2CO3GameHelper gameHelper;
+
     private final Bundle args;
 
     public EditVersionFragment(ChooseMcVersionFragment chooseMcVersionFragment, Bundle bundle) {
         super();
         this.chooseMcVersionFragment = chooseMcVersionFragment;
         this.args = bundle;
+        this.gameHelper = new H2CO3GameHelper();
     }
 
     @Override
@@ -174,7 +175,7 @@ public class EditVersionFragment extends H2CO3Fragment {
         CacheRepository.setInstance(cacheRepository);
         cacheRepository.setDirectory(H2CO3Tools.CACHE_DIR);
 
-        DefaultDependencyManager dependencyManager = new DefaultDependencyManager(new H2CO3GameRepository(new File(H2CO3GameHelper.getGameDirectory())), downloadProviders.getDownloadProvider(), cacheRepository);
+        DefaultDependencyManager dependencyManager = new DefaultDependencyManager(new H2CO3GameRepository(new File(gameHelper.getGameDirectory())), downloadProviders.getDownloadProvider(), cacheRepository);
         GameBuilder builder = dependencyManager.gameBuilder();
 
         builder.name(versionName);

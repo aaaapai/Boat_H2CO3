@@ -42,7 +42,7 @@ import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.adapter.BaseRecycleAdapter;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.core.utils.file.AssetsUtils;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
@@ -66,6 +66,7 @@ public class DirectoryFragment extends H2CO3Fragment {
     private DirectoryAdapter dirAdapter;
     private String H2CO3Dir;
     private JSONObject dirsJsonObj;
+    private H2CO3GameHelper gameHelper;
     @SuppressLint("HandlerLeak")
     private final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -94,6 +95,7 @@ public class DirectoryFragment extends H2CO3Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        gameHelper = new H2CO3GameHelper();
     }
 
     @Override
@@ -142,7 +144,7 @@ public class DirectoryFragment extends H2CO3Fragment {
     }
 
     public void initVer() {
-        File versionlist = new File(H2CO3GameHelper.getGameDirectory() + "/versions");
+        File versionlist = new File(gameHelper.getGameDirectory() + "/versions");
 
         if (versionlist.isDirectory() && versionlist.exists()) {
 
@@ -249,7 +251,7 @@ public class DirectoryFragment extends H2CO3Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        String currentDir = H2CO3GameHelper.getGameDirectory();
+        String currentDir = gameHelper.getGameDirectory();
         File f = new File(currentDir);
         if (f.exists() && f.isDirectory()) {
             initVer();
@@ -263,10 +265,10 @@ public class DirectoryFragment extends H2CO3Fragment {
     }
 
     public void setNewDirButton(String newDirButton) {
-        H2CO3GameHelper.setGameDirectory(newDirButton);
-        H2CO3GameHelper.setGameAssets(newDirButton + "/assets/virtual/legacy");
-        H2CO3GameHelper.setGameAssetsRoot(newDirButton + "/assets");
-        H2CO3GameHelper.setGameCurrentVersion(newDirButton + "/versions");
+        gameHelper.setGameDirectory(newDirButton);
+        gameHelper.setGameAssets(newDirButton + "/assets/virtual/legacy");
+        gameHelper.setGameAssetsRoot(newDirButton + "/assets");
+        gameHelper.setGameCurrentVersion(newDirButton + "/versions");
     }
 
     private JSONObject getJsonObj() {
@@ -373,9 +375,9 @@ public class DirectoryFragment extends H2CO3Fragment {
         @Override
         public void onBindViewHolder(MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
             holder.textview.setText(datas.get(position));
-            File f = new File(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
-            String verF = H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position);
-            if (verF.equals(H2CO3GameHelper.getGameCurrentVersion())) {
+            File f = new File(gameHelper.getGameDirectory() + "/versions/" + datas.get(position));
+            String verF = gameHelper.getGameDirectory() + "/versions/" + datas.get(position);
+            if (verF.equals(gameHelper.getGameCurrentVersion())) {
                 holder.rl.setStrokeWidth(13);
             } else {
                 holder.rl.setStrokeWidth(3);
@@ -395,9 +397,9 @@ public class DirectoryFragment extends H2CO3Fragment {
                 holder.rl.setOnClickListener(v -> {
                     if (f.exists() && f.isDirectory()) {
                         verAdapter.notifyItemChanged(position);
-                        H2CO3GameHelper.setGameCurrentVersion(verF);
+                        gameHelper.setGameCurrentVersion(verF);
                         verRecyclerView.setAdapter(verAdapter);
-                        if (verF.equals(H2CO3GameHelper.getGameCurrentVersion())) {
+                        if (verF.equals(gameHelper.getGameCurrentVersion())) {
                             holder.rl.setStrokeWidth(13);
                         } else {
                             holder.rl.setStrokeWidth(3);
@@ -414,7 +416,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                     holder.btn.setVisibility(View.INVISIBLE);
                     holder.textview.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
                     holder.rl.setEnabled(false);
-                    File f1 = new File(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
+                    File f1 = new File(gameHelper.getGameDirectory() + "/versions/" + datas.get(position));
                     new Thread(() -> {
                         if (f1.isDirectory()) {
                             try {
@@ -423,7 +425,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                                 throw new RuntimeException(e);
                             }
                         } else {
-                            deleteFile(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
+                            deleteFile(gameHelper.getGameDirectory() + "/versions/" + datas.get(position));
                         }
                         handler.sendEmptyMessage(2);
                     }).start();
@@ -489,7 +491,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                 check.setImageDrawable(getResources().getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
                 delDir.setVisibility(View.VISIBLE);
             }
-            if (datas.get(position).equals(H2CO3GameHelper.getGameDirectory())) {
+            if (datas.get(position).equals(gameHelper.getGameDirectory())) {
                 lay.setStrokeWidth(11);
                 lay.setOnClickListener(null);
             } else {
@@ -538,7 +540,7 @@ public class DirectoryFragment extends H2CO3Fragment {
 
             delDir.setOnClickListener(view -> {
                 if (null != mRvItemOnclickListener) {
-                    if (datas.get(position).equals(H2CO3GameHelper.getGameDirectory())) {
+                    if (datas.get(position).equals(gameHelper.getGameDirectory())) {
                         setDir(h2co3Directory);
                     }
                     AlertDialog alertDialog1 = new MaterialAlertDialogBuilder(requireActivity())
@@ -573,10 +575,10 @@ public class DirectoryFragment extends H2CO3Fragment {
         }
 
         public void setDir(String dir) {
-            H2CO3GameHelper.setGameDirectory(dir);
-            H2CO3GameHelper.setGameAssets(dir + "/assets/virtual/legacy");
-            H2CO3GameHelper.setGameAssetsRoot(dir + "/assets");
-            H2CO3GameHelper.setGameCurrentVersion(dir + "/versions");
+            gameHelper.setGameDirectory(dir);
+            gameHelper.setGameAssets(dir + "/assets/virtual/legacy");
+            gameHelper.setGameAssetsRoot(dir + "/assets");
+            gameHelper.setGameCurrentVersion(dir + "/versions");
         }
     }
 }

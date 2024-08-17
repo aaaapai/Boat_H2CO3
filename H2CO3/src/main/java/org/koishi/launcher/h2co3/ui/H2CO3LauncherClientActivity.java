@@ -12,7 +12,7 @@
 
 package org.koishi.launcher.h2co3.ui;
 
-import static org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherHelper.launchMinecraft;
+import static org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherHelper.launchMinecraft;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
@@ -30,10 +30,10 @@ import androidx.annotation.NonNull;
 import org.koishi.launcher.h2co3.control.client.H2CO3ControlClient;
 import org.koishi.launcher.h2co3.control.controller.H2CO3VirtualController;
 import org.koishi.launcher.h2co3.control.controller.HardwareController;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3GameHelper;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherBridge;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherBridgeCallBack;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.MCOptionUtils;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridgeCallBack;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.MCOptionUtils;
 import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 import org.koishi.launcher.h2co3.core.utils.Logging;
 import org.koishi.launcher.h2co3.launcher.H2CO3LauncherActivity;
@@ -130,6 +130,7 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overlay);
+        H2CO3GameHelper gameHelper = new H2CO3GameHelper();
         mainTextureView = findViewById(R.id.main_game_render_view);
         mainTextureView.setSurfaceTextureListener(this);
         baseLayout = findViewById(R.id.main_base);
@@ -140,7 +141,7 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
         cursorIcon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.cursor5);
         this.addView(cursorIcon);
         try {
-            launcherLib = launchMinecraft(this, screenWidth, screenHeight);
+            launcherLib = launchMinecraft(this, gameHelper, screenWidth, screenHeight);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -225,11 +226,12 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     private void configureSurfaceTexture(SurfaceTexture surface, int width, int height) {
         int scaleFactor = 1;
         surface.setDefaultBufferSize(width * scaleFactor, height * scaleFactor);
-        MCOptionUtils.saveOptions(H2CO3GameHelper.getGameDirectory());
-        MCOptionUtils.setOption("overrideWidth", String.valueOf(width * scaleFactor));
-        MCOptionUtils.setOption("overrideHeight", String.valueOf(height * scaleFactor));
-        MCOptionUtils.setOption("fullscreen", "true");
-        MCOptionUtils.saveOptions(H2CO3GameHelper.getGameDirectory());
+        //TODO:Fix these bugs
+//        MCOptionUtils.saveOptions(H2CO3GameHelper.getGameDirectory());
+//        MCOptionUtils.setOption("overrideWidth", String.valueOf(width * scaleFactor));
+//        MCOptionUtils.setOption("overrideHeight", String.valueOf(height * scaleFactor));
+//        MCOptionUtils.setOption("fullscreen", "true");
+//        MCOptionUtils.saveOptions(H2CO3GameHelper.getGameDirectory());
     }
 
     @Override

@@ -22,7 +22,7 @@ import com.hjq.permissions.XXPermissions;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Auth;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.core.utils.RuntimeUtils;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 import org.koishi.launcher.h2co3.ui.H2CO3MainActivity;
@@ -41,9 +41,13 @@ public class WelcomeFragment extends Fragment {
     private boolean java17 = false;
     private boolean java21 = false;
 
+    private H2CO3GameHelper gameHelper;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.gameHelper = new H2CO3GameHelper();
         return inflater.inflate(R.layout.fragment_welcome_welcome, container, false);
+
     }
 
     @Override
@@ -72,7 +76,7 @@ public class WelcomeFragment extends Fragment {
         boolean isFirstLaunch = H2CO3Tools.getH2CO3Value("isFirstLaunch", true, Boolean.class);
         if (isFirstLaunch) {
             H2CO3Auth.resetUserState();
-            H2CO3GameHelper.setDir(H2CO3Tools.MINECRAFT_DIR);
+            gameHelper.setDir(H2CO3Tools.MINECRAFT_DIR);
             showWelcomeUI();
         } else {
             checkPermission();

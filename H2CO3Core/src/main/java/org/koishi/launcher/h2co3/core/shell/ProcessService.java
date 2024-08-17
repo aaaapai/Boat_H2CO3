@@ -9,9 +9,10 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherBridge;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherBridgeCallBack;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.utils.H2CO3LauncherHelper;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridgeCallBack;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherHelper;
 import org.koishi.launcher.h2co3.core.utils.Logging;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 
@@ -38,14 +39,12 @@ public class ProcessService extends Service {
         String[] command = intent.getExtras().getStringArray("command");
         int java = intent.getExtras().getInt("java");
         String jre = "jre" + java;
-        startProcess(command,jre);
+        startProcess(command, new H2CO3GameHelper(), jre);
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void startProcess(String[] command, String jre) {
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int screenHeight = getResources().getDisplayMetrics().heightPixels;
-        H2CO3LauncherBridge bridge = H2CO3LauncherHelper.launchAPIInstaller(H2CO3Tools.CONTEXT, command, jre);
+    public void startProcess(String[] command, H2CO3GameHelper gameHelper, String jre) {
+        H2CO3LauncherBridge bridge = H2CO3LauncherHelper.launchAPIInstaller(H2CO3Tools.CONTEXT, gameHelper, command, jre);
         H2CO3LauncherBridgeCallBack callback = new H2CO3LauncherBridgeCallBack() {
             /**
              * @param surface
