@@ -21,32 +21,43 @@ public class H2CO3LauncherRuntimeDialog extends H2CO3CustomViewDialog implements
     public H2CO3LauncherRuntimeDialog(Context context) {
         super(context);
         setTitle(org.koishi.launcher.h2co3.resources.R.string.title_runtime);
-        this.setCustomView(R.layout.custom_dialog_runtime);
-        initViews();
+        setCustomView(R.layout.custom_dialog_runtime);
         gameHelper = new H2CO3GameHelper();
+        initViews();
     }
 
     public void initViews() {
         buttons = new H2CO3CardView[BUTTON_COUNT];
-        buttons[0] = findViewById(R.id.button_jre_8);
-        buttons[1] = findViewById(R.id.button_jre_11);
-        buttons[2] = findViewById(R.id.button_jre_17);
-        buttons[3] = findViewById(R.id.button_jre_21);
+        javaPaths = new String[]{
+                H2CO3Tools.JAVA_8_PATH,
+                H2CO3Tools.JAVA_11_PATH,
+                H2CO3Tools.JAVA_17_PATH,
+                H2CO3Tools.JAVA_21_PATH
+        };
 
-        javaPaths = new String[BUTTON_COUNT];
-        javaPaths[0] = H2CO3Tools.JAVA_8_PATH;
-        javaPaths[1] = H2CO3Tools.JAVA_11_PATH;
-        javaPaths[2] = H2CO3Tools.JAVA_17_PATH;
-        javaPaths[3] = H2CO3Tools.JAVA_21_PATH;
-
-        for (int i = 0; i < buttons.length; i++) {
+        for (int i = 0; i < BUTTON_COUNT; i++) {
+            buttons[i] = findViewById(getButtonId(i));
             buttons[i].setOnClickListener(this);
             updateButtonStrokeWidth(i);
         }
     }
 
+    private int getButtonId(int index) {
+        return switch (index) {
+            case 0 -> R.id.button_jre_8;
+            case 1 -> R.id.button_jre_11;
+            case 2 -> R.id.button_jre_17;
+            case 3 -> R.id.button_jre_21;
+            default -> throw new IllegalArgumentException("Invalid button index");
+        };
+    }
+
     private void updateButtonStrokeWidth(int index) {
-        buttons[index].setStrokeWidth(gameHelper.getJavaPath().equals(javaPaths[index]) ? 11 : 0);
+        if (gameHelper != null) {
+            buttons[index].setStrokeWidth(gameHelper.getJavaPath().equals(javaPaths[index]) ? 11 : 0);
+        } else {
+            buttons[index].setStrokeWidth(0);
+        }
     }
 
     @Override
@@ -56,7 +67,7 @@ public class H2CO3LauncherRuntimeDialog extends H2CO3CustomViewDialog implements
 
     @Override
     public void onClick(View v) {
-        for (int i = 0; i < buttons.length; i++) {
+        for (int i = 0; i < BUTTON_COUNT; i++) {
             if (v == buttons[i]) {
                 gameHelper.setJavaPath(javaPaths[i]);
                 updateButtonStrokeWidth(i);

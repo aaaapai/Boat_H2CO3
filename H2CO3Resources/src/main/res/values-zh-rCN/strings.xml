@@ -165,5 +165,6 @@
     <string name="title_resourcesPack">ResourcesPack</string>
     <string name="install_installer_not_installed">No Installed</string>
     <string name="install_installer_fabric_api_warning">FabricAPI is a fabric mod</string>
+    <string name="ver_if_remove">Remove this dir?</string>
 
 </resources>

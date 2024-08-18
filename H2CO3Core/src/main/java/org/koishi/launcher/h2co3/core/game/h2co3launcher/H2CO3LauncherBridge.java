@@ -283,7 +283,7 @@ public class H2CO3LauncherBridge implements Serializable {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 String targetLink = link.replaceFirst("^(file://|file:)", "");
                 Uri uri = targetLink.startsWith("http") ? Uri.parse(targetLink) :
-                        FileProvider.getUriForFile(context, "org.koishi.launcher.h2co3.provider", new File(targetLink));
+                        FileProvider.getUriForFile(context, "org.koishi.launcher.h  `2co3.provider", new File(targetLink));
                 intent.setDataAndType(uri, "*/*");
                 context.startActivity(intent);
             } catch (Exception e) {
