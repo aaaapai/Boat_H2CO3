@@ -167,5 +167,12 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
                 }
             });
         }
+
+        public void setItemText(int viewId, String text) {
+            TextView textView = (TextView) getView(viewId);
+            if (textView != null) {
+                textView.setText(text);
+            }
+        }
     }
 }

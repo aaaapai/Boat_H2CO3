@@ -60,7 +60,9 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
         View view = inflater.inflate(R.layout.fragment_download_mc_choose_version, container, false);
         initView(view);
         initListeners();
-        setupRecyclerView();
+        versionAdapter = new VersionAdapter(filteredList, requireActivity());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(versionAdapter);
         eMessageImageButton.setOnClickListener(v -> refreshVersions());
         fetchVersionsFromApi();
         return view;
@@ -75,18 +77,14 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
         progressIndicator = view.findViewById(R.id.progressIndicator);
     }
 
-    private void setupRecyclerView() {
-        versionAdapter = new VersionAdapter(filteredList, requireActivity());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(versionAdapter);
-    }
-
     private void initListeners() {
         typeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> filterVersions(checkedId));
     }
 
     private void refreshVersions() {
-        toggleLoadingState(true);
+        eMessageLayout.setVisibility(View.GONE);
+        progressIndicator.show();
+        recyclerView.setVisibility(View.VISIBLE);
         fetchVersionsFromApi();
     }
 
@@ -101,57 +99,35 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
         executor.execute(() -> {
             HttpURLConnection con = null;
             try {
-                con = createConnection(apiUrl);
+                URL url = new URL(apiUrl);
+                con = (HttpURLConnection) url.openConnection();
+                con.setConnectTimeout(5000);
+                if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    throw new IOException("HTTP error code: " + con.getResponseCode());
+                }
                 String response = readStream(con.getInputStream());
                 List<Version> versionList = getVersionList(response);
-                updateUIWithFetchedVersions(versionList);
-            } catch (IOException | JSONException e) {
-                handleFetchError(e);
+                uiHandler.post(() -> {
+                    this.versionList.clear();
+                    this.versionList.addAll(versionList);
+                    filterVersions(typeRadioGroup.getCheckedRadioButtonId());
+                    progressIndicator.hide();
+                    isFetching = false;
+                });
+            } catch (Exception e) {
+                uiHandler.post(() -> {
+                    eMessageLayout.setVisibility(View.VISIBLE);
+                    eMessageText.setText(e.getMessage());
+                    progressIndicator.hide();
+                    recyclerView.setVisibility(View.GONE);
+                    isFetching = false;
+                });
             } finally {
                 if (con != null) {
                     con.disconnect();
                 }
             }
         });
-    }
-
-    private HttpURLConnection createConnection(String apiUrl) throws IOException {
-        URL url = new URL(apiUrl);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setConnectTimeout(5000);
-        if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            throw new IOException("HTTP error code: " + con.getResponseCode());
-        }
-        return con;
-    }
-
-    private void updateUIWithFetchedVersions(List<Version> versionList) {
-        uiHandler.post(() -> {
-            this.versionList.clear();
-            this.versionList.addAll(versionList);
-            filterVersions(typeRadioGroup.getCheckedRadioButtonId());
-            toggleLoadingState(false);
-        });
-    }
-
-    private void handleFetchError(Exception e) {
-        uiHandler.post(() -> {
-            eMessageLayout.setVisibility(View.VISIBLE);
-            eMessageText.setText(e.getMessage());
-            toggleLoadingState(false);
-        });
-    }
-
-    private void toggleLoadingState(boolean isLoading) {
-        if (isLoading) {
-            eMessageLayout.setVisibility(View.GONE);
-            eMessageImageButton.setVisibility(View.GONE);
-            progressIndicator.show();
-            recyclerView.setVisibility(View.VISIBLE);
-        } else {
-            progressIndicator.hide();
-            isFetching = false;
-        }
     }
 
     private String readStream(InputStream inputStream) throws IOException {
@@ -173,23 +149,18 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
                     (checkedId == R.id.rb_old_beta && ("old_alpha".equals(versionType) || "old_beta".equals(versionType)));
         }).collect(Collectors.toList());
 
-        updateFilteredList(newFilteredList);
-    }
-
-    private void updateFilteredList(List<Version> newFilteredList) {
         int oldSize = filteredList.size();
+        int newSize = newFilteredList.size();
+
         filteredList.clear();
         filteredList.addAll(newFilteredList);
-        notifyAdapterChanges(oldSize);
-    }
 
-    private void notifyAdapterChanges(int oldSize) {
-        int newSize = filteredList.size();
         if (oldSize > newSize) {
             versionAdapter.notifyItemRangeRemoved(newSize, oldSize - newSize);
         } else if (oldSize < newSize) {
             versionAdapter.notifyItemRangeInserted(oldSize, newSize - oldSize);
         }
+
         for (int i = 0; i < Math.min(oldSize, newSize); i++) {
             versionAdapter.notifyItemChanged(i);
         }
