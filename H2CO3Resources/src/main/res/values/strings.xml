@@ -203,9 +203,26 @@
     <string name="title_quilt" translatable="false">Quilt</string>
     <string name="title_qsl_qfapi" translatable="false">QSL &amp; QSAPI</string>
     <string name="title_liteloader" translatable="false">LiteLoader</string>
-    <string name="install_installer_not_installed">No Installed</string>
-    <string name="install_installer_fabric_api_warning">FabricAPI is a fabric mod</string>
     <string name="ver_if_remove">Remove this dir?</string>
 
+    <string name="install_installer_fabric" translatable="false">Fabric</string>
+    <string name="install_installer_fabric_api" translatable="false">Fabric API</string>
+    <string name="install_installer_fabric_api_warning">Warning: Fabric API is a mod, and will be installed into the mod directory of the game instance. Please do not change the working directory of the game, or the Fabric API will not work. If you do want to change these settings, you should reinstall it.</string>
+    <string name="install_installer_forge" translatable="false">Forge</string>
+    <string name="install_installer_neoforge" translatable="false">NeoForge</string>
+    <string name="install_installer_game" translatable="false">Minecraft</string>
+    <string name="install_installer_incompatible">Incompatible with %s</string>
+    <string name="install_installer_install">Install %s</string>
+    <string name="install_installer_install_offline">Install/Update from Local File</string>
+    <string name="install_installer_install_offline_extension">Forge/OptiFine installer</string>
+    <string name="install_installer_liteloader" translatable="false">LiteLoader</string>
+    <string name="install_installer_not_installed">Not Selected</string>
+    <string name="install_installer_optifine" translatable="false">OptiFine</string>
+    <string name="install_installer_quilt" translatable="false">Quilt</string>
+    <string name="install_installer_quilt_api" translatable="false">QSL/QFAPI</string>
+
+    <string name="assets_download">Downloading Assets</string>
+    <string name="assets_download_all">Validating assets integrity</string>
+    <string name="assets_index_malformed">Index files of downloaded assets were corrupted.</string>
 
 </resources>
