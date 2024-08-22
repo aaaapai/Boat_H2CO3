@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -62,22 +63,19 @@ public class DirectoryFragment extends H2CO3Fragment {
     private static final int MSG_ADD_NEW_DIRECTORY = 1;
     private static final int MSG_SHOW_ERROR = 2;
 
-
     private H2CO3LinearProgress dirProgressBar, verProgressBar;
-
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
-                case 0 -> dialogBuilder.create().dismiss();
-                case 1 -> {
+                case MSG_DIALOG_DISMISS -> dialogBuilder.create().dismiss();
+                case MSG_ADD_NEW_DIRECTORY -> {
                     dialogBuilder.create().dismiss();
                     addNewDirectory();
                 }
-                case 2 ->
-                        H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_add_done));
+                case MSG_SHOW_ERROR -> H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_add_done));
             }
         }
     };
@@ -146,8 +144,8 @@ public class DirectoryFragment extends H2CO3Fragment {
 
     private void addNewDirectory() {
         executorService.execute(() -> {
+            if (nameEditText == null) return;
             try {
-                if (nameEditText == null) return; // 防止空指针异常
                 JSONObject newDir = new JSONObject();
                 newDir.put("path", H2CO3Dir);
                 newDir.put("name", nameEditText.getText().toString().trim());
@@ -206,10 +204,10 @@ public class DirectoryFragment extends H2CO3Fragment {
         executorService.execute(() -> {
             try {
                 AssetsUtils.extractZipFromAssets(requireActivity(), "pack.zip", H2CO3Dir);
-                handler.sendEmptyMessage(1);
+                handler.sendEmptyMessage(MSG_ADD_NEW_DIRECTORY);
             } catch (IOException e) {
                 H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_not_right_dir) + e);
-                handler.sendEmptyMessage(0);
+                handler.sendEmptyMessage(MSG_DIALOG_DISMISS);
             }
         });
     }
@@ -326,9 +324,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                 if (position >= 0 && position < dirs.length()) {
                     dirs.remove(position);
                     saveJsonObj(dirsJsonObj);
-                    requireActivity().runOnUiThread(() -> {
-                        dirAdapter.remove(position);
-                    });
+                    requireActivity().runOnUiThread(() -> dirAdapter.remove(position));
                 }
             } catch (JSONException e) {
                 logError(e);
@@ -384,26 +380,26 @@ public class DirectoryFragment extends H2CO3Fragment {
         return dirList;
     }
 
-
     public void updateVerList(String path) {
         executorService.execute(() -> {
-            File directory = new File(path);
-            if (directory.isDirectory()) {
-                String[] filesArray = directory.list();
-                if (filesArray != null) {
-                    List<String> files = Arrays.asList(filesArray);
-                    files.sort(Collator.getInstance(Locale.CHINA)::compare);
-                    requireActivity().runOnUiThread(() -> {
-                        verRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-                        verAdapter = new MCVersionListAdapter(requireActivity(), files, this, gameHelper, path);
-                        verRecyclerView.setAdapter(verAdapter);
-                    });
-                } else {
-                    requireActivity().runOnUiThread(() -> verRecyclerView.setAdapter(null));
-                }
-            } else {
-                requireActivity().runOnUiThread(() -> verRecyclerView.setAdapter(null));
-            }
+            List<String> files = getFilesList(path);
+            requireActivity().runOnUiThread(() -> {
+                verRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+                verAdapter = new MCVersionListAdapter(requireActivity(), files, this, gameHelper, path);
+                verRecyclerView.setAdapter(verAdapter);
+                verAdapter.updatePath(path);
+            });
         });
+    }
+
+    private List<String> getFilesList(String path) {
+        File directory = new File(path);
+        if (!directory.isDirectory()) {
+            return Collections.emptyList();
+        }
+        String[] filesArray = directory.list();
+        List<String> files = (filesArray != null) ? Arrays.asList(filesArray) : Collections.emptyList();
+        files.sort(Collator.getInstance(Locale.CHINA)::compare);
+        return files;
     }
 }

@@ -44,17 +44,15 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         navigationView.setCheckedItem(R.id.navigation_home);
         getSupportActionBar().setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.app_name));
 
-        // 预加载所有 Fragment
         preLoadFragments();
 
-        // 初始化当前 Fragment
-        switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.title_home);
+        switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.app_name);
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 setNavigationItemChecked(R.id.navigation_home);
-                switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.title_home);
+                switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.app_name);
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
