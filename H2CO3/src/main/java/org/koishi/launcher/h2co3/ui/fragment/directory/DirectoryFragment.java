@@ -74,7 +74,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                 case MSG_DIALOG_DISMISS -> dialogBuilder.create().dismiss();
                 case MSG_ADD_NEW_DIRECTORY -> {
                     dialogBuilder.create().dismiss();
-                    addNewDirectory();
+                    updateDirAdapter();
                 }
                 case MSG_SHOW_ERROR -> H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_add_done));
             }
@@ -135,7 +135,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                     defaultDir.put("name", "Default Directory");
                     dirsJsonObj.getJSONArray("dirs").put(defaultDir);
                     saveJsonObj(dirsJsonObj);
-                    requireActivity().runOnUiThread(() -> dirAdapter.updateData(getDirList()));
+                    updateDirAdapter();
                 } catch (JSONException e) {
                     logError(e);
                 }
@@ -145,19 +145,26 @@ public class DirectoryFragment extends H2CO3Fragment {
 
     private void addNewDirectory() {
         executorService.execute(() -> {
-            if (nameEditText == null) return;
+            if (nameEditText == null || H2CO3Dir == null) return;
+            String name = nameEditText.getText().toString().trim();
+            if (name.isEmpty()) return;
+
             try {
                 JSONObject newDir = new JSONObject();
                 newDir.put("path", H2CO3Dir);
-                newDir.put("name", nameEditText.getText().toString().trim());
+                newDir.put("name", name);
                 dirsJsonObj.getJSONArray("dirs").put(newDir);
                 saveJsonObj(dirsJsonObj);
-                requireActivity().runOnUiThread(() -> dirAdapter.updateData(getDirList()));
+                handler.sendEmptyMessage(MSG_ADD_NEW_DIRECTORY);
                 H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_add_done));
             } catch (JSONException e) {
                 logError(e);
             }
         });
+    }
+
+    private void updateDirAdapter() {
+        requireActivity().runOnUiThread(() -> dirAdapter.updateData(getDirList()));
     }
 
     private void showDirDialog() {
@@ -197,11 +204,11 @@ public class DirectoryFragment extends H2CO3Fragment {
 
         H2CO3Dir = path;
         newDir();
-        dirAdapter.updateData(getDirList());
         dialog.dismiss();
     }
 
     private void newDir() {
+        if (H2CO3Dir == null) return;
         executorService.execute(() -> {
             try {
                 AssetsUtils.extractZipFromAssets(requireActivity(), "pack.zip", H2CO3Dir);
@@ -218,25 +225,25 @@ public class DirectoryFragment extends H2CO3Fragment {
         super.onResume();
         String currentDir = gameHelper.getGameDirectory();
         File f = new File(currentDir);
-        if (dirAdapter != null) {
-            dirAdapter.updateData(getDirList());
-        }
-        if (!f.exists() || !f.isDirectory()) {
-            setNewDir(h2co3Directory);
+
+        dirAdapter = new DirectoryListAdapter(getDirList(), requireActivity(), dirsJsonObj, gameHelper, this);
+        dirAdapter.updateData(getDirList());
+
+        verAdapter = new MCVersionListAdapter(requireActivity(), getVerList(gameHelper.getGameCurrentVersion()), this, gameHelper, gameHelper.getGameCurrentVersion());
+        verAdapter.updateData(getVerList(currentDir));
+
+        if (!f.isDirectory()) {
+            setDir(h2co3Directory);
             H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_null_dir));
-            removeDir(currentDir);
-            if (dirAdapter != null) {
-                dirAdapter.updateData(getDirList());
-            }
         }
     }
 
-    private void setNewDir(String newDir) {
-        gameHelper.setGameDirectory(newDir);
-        gameHelper.setGameAssets(newDir + "/assets/virtual/legacy");
-        gameHelper.setGameAssetsRoot(newDir + "/assets");
-        gameHelper.setGameCurrentVersion(newDir + "/versions");
-        updateVerList(newDir + "/versions");
+    private void setDir(String dir) {
+        gameHelper.setGameDirectory(dir);
+        gameHelper.setGameAssets(dir + "/assets/virtual/legacy");
+        gameHelper.setGameAssetsRoot(dir + "/assets");
+        gameHelper.setGameCurrentVersion(dir + "/versions");
+        updateVerList(dir + "/versions");
     }
 
     private JSONObject getJsonObj() {
@@ -245,15 +252,11 @@ public class DirectoryFragment extends H2CO3Fragment {
             if (jsonFile.exists()) {
                 String jsonStr = FileTools.readFileToString(jsonFile);
                 return new JSONObject(jsonStr);
-            } else {
-                JSONObject jsonObj = createNewJsonObj();
-                saveJsonObj(jsonObj);
-                return jsonObj;
             }
         } catch (JSONException e) {
             logError(e);
         }
-        return new JSONObject();
+        return createNewJsonObj();
     }
 
     private JSONObject createNewJsonObj() {
@@ -275,24 +278,6 @@ public class DirectoryFragment extends H2CO3Fragment {
         File jsonFile = H2CO3Tools.DIRS_CONFIG_FILE;
         FileTools.writeFile(jsonFile, jsonObj.toString());
         this.dirsJsonObj = jsonObj;
-    }
-
-    private void removeDir(String dir) {
-        executorService.execute(() -> {
-            try {
-                JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
-                for (int i = 0; i < dirs.length(); i++) {
-                    JSONObject dirObj = dirs.getJSONObject(i);
-                    if (dirObj.getString("path").equals(dir)) {
-                        dirs.remove(i);
-                        saveJsonObj(dirsJsonObj);
-                        break;
-                    }
-                }
-            } catch (JSONException e) {
-                logError(e);
-            }
-        });
     }
 
     private boolean hasData(String dir) {
@@ -325,11 +310,18 @@ public class DirectoryFragment extends H2CO3Fragment {
                 if (position >= 0 && position < dirs.length()) {
                     dirs.remove(position);
                     saveJsonObj(dirsJsonObj);
-                    requireActivity().runOnUiThread(() -> dirAdapter.remove(position));
+                    updateDirAdapterOnRemove(position);
                 }
             } catch (JSONException e) {
                 logError(e);
             }
+        });
+    }
+
+    private void updateDirAdapterOnRemove(int position) {
+        requireActivity().runOnUiThread(() -> {
+            dirAdapter.notifyItemRemoved(position);
+            dirAdapter.updateData(getDirList());
         });
     }
 
@@ -368,17 +360,16 @@ public class DirectoryFragment extends H2CO3Fragment {
     }
 
     private List<String> getDirList() {
-        List<String> dirList = new ArrayList<>();
+        List<String> updatedList = new ArrayList<>();
         try {
             JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
             for (int i = 0; i < dirs.length(); i++) {
-                JSONObject dirObj = dirs.getJSONObject(i);
-                dirList.add(dirObj.getString("name"));
+                updatedList.add(dirs.getJSONObject(i).getString("name"));
             }
         } catch (JSONException e) {
             logError(e);
         }
-        return dirList;
+        return updatedList;
     }
 
     public void updateVerList(String path) {
@@ -398,7 +389,11 @@ public class DirectoryFragment extends H2CO3Fragment {
         if (!directory.isDirectory()) {
             return Collections.emptyList();
         }
-        return Arrays.stream(directory.list())
+        String[] fileList = directory.list();
+        if (fileList == null) {
+            return Collections.emptyList();
+        }
+        return Arrays.stream(fileList)
                 .sorted(Collator.getInstance(Locale.CHINA)::compare)
                 .collect(Collectors.toList());
     }

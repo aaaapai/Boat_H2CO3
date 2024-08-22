@@ -1,9 +1,3 @@
-/*
- * //
- * // Created by cainiaohh on 2024-03-31.
- * //
- */
-
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
 import android.content.Context;
@@ -64,7 +58,6 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_download_mc_choose_version, container, false);
-        if (view == null) return null; // Check for null
         initView(view);
         initListeners();
         versionAdapter = new VersionAdapter(filteredList, requireActivity());
@@ -112,22 +105,15 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
                 if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     throw new IOException("HTTP error code: " + con.getResponseCode());
                 }
-                try (InputStream in = con.getInputStream();
-                     BufferedReader bfr = new BufferedReader(new InputStreamReader(in))) {
-                    StringBuilder str = new StringBuilder();
-                    String temp;
-                    while ((temp = bfr.readLine()) != null) {
-                        str.append(temp).append("\n");
-                    }
-                    List<Version> versionList = getVersionList(str);
-                    uiHandler.post(() -> {
-                        this.versionList.clear();
-                        this.versionList.addAll(versionList);
-                        filterVersions(typeRadioGroup.getCheckedRadioButtonId());
-                        progressIndicator.hide();
-                        isFetching = false;
-                    });
-                }
+                String response = readStream(con.getInputStream());
+                List<Version> versionList = getVersionList(response);
+                uiHandler.post(() -> {
+                    this.versionList.clear();
+                    this.versionList.addAll(versionList);
+                    filterVersions(typeRadioGroup.getCheckedRadioButtonId());
+                    progressIndicator.hide();
+                    isFetching = false;
+                });
             } catch (Exception e) {
                 uiHandler.post(() -> {
                     eMessageLayout.setVisibility(View.VISIBLE);
@@ -143,6 +129,17 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
         });
     }
 
+    private String readStream(InputStream inputStream) throws IOException {
+        StringBuilder str = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                str.append(line).append("\n");
+            }
+        }
+        return str.toString();
+    }
+
     private void filterVersions(int checkedId) {
         List<Version> newFilteredList = versionList.stream().filter(version -> {
             String versionType = version.versionType();
@@ -151,15 +148,12 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
                     (checkedId == R.id.rb_old_beta && ("old_alpha".equals(versionType) || "old_beta".equals(versionType)));
         }).collect(Collectors.toList());
 
-        // Calculate the differences between the old and new filtered lists
         int oldSize = filteredList.size();
         int newSize = newFilteredList.size();
 
-        // Update the filtered list
         filteredList.clear();
         filteredList.addAll(newFilteredList);
 
-        // Notify the adapter of the changes
         if (oldSize > newSize) {
             versionAdapter.notifyItemRangeRemoved(newSize, oldSize - newSize);
         } else if (oldSize < newSize) {
@@ -172,8 +166,8 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
     }
 
     @NotNull
-    private List<Version> getVersionList(StringBuilder str) throws JSONException {
-        JSONObject jsonObject = new JSONObject(str.toString());
+    private List<Version> getVersionList(String response) throws JSONException {
+        JSONObject jsonObject = new JSONObject(response);
         JSONArray versionsArray = jsonObject.getJSONArray("versions");
         List<Version> versionList = new ArrayList<>();
         for (int i = 0; i < versionsArray.length(); i++) {
@@ -213,7 +207,7 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
 
         @Override
         public int getLayoutId() {
-            return R.layout.item_version; // 返回 item 的布局 ID
+            return R.layout.item_version;
         }
 
         public class ViewHolder extends BaseViewHolder implements View.OnClickListener {
@@ -238,7 +232,10 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
                     bundle.putString("versionName", version.versionName());
                     EditVersionFragment editVersionFragment = new EditVersionFragment(ChooseMcVersionFragment.this, bundle);
                     getParentFragmentManager().beginTransaction()
-                            .setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit, org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop)
+                            .setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter,
+                                    org.koishi.launcher.h2co3.resources.R.anim.fragment_exit,
+                                    org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop,
+                                    org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop)
                             .add(R.id.fragmentContainerView, editVersionFragment)
                             .hide(ChooseMcVersionFragment.this)
                             .commit();
@@ -247,5 +244,7 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
         }
     }
 
-    public record Version(String versionName, String versionType, String versionUrl, String versionSha1) {}
+    public record Version(String versionName, String versionType, String versionUrl,
+                          String versionSha1) {
+    }
 }
