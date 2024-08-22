@@ -103,7 +103,7 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
         if (position < 0 || position >= data.size()) return;
         data.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, data.size() - position - 1);
+        notifyItemRangeChanged(position, data.size() - position);
     }
 
     protected abstract void bindData(BaseViewHolder holder, int position);

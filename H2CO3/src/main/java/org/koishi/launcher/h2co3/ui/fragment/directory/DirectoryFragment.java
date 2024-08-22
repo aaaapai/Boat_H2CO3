@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class DirectoryFragment extends H2CO3Fragment {
 
@@ -382,7 +383,7 @@ public class DirectoryFragment extends H2CO3Fragment {
 
     public void updateVerList(String path) {
         executorService.execute(() -> {
-            List<String> files = getFilesList(path);
+            List<String> files = getVerList(path);
             requireActivity().runOnUiThread(() -> {
                 verRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
                 verAdapter = new MCVersionListAdapter(requireActivity(), files, this, gameHelper, path);
@@ -392,14 +393,13 @@ public class DirectoryFragment extends H2CO3Fragment {
         });
     }
 
-    private List<String> getFilesList(String path) {
+    private List<String> getVerList(String path) {
         File directory = new File(path);
         if (!directory.isDirectory()) {
             return Collections.emptyList();
         }
-        String[] filesArray = directory.list();
-        List<String> files = (filesArray != null) ? Arrays.asList(filesArray) : Collections.emptyList();
-        files.sort(Collator.getInstance(Locale.CHINA)::compare);
-        return files;
+        return Arrays.stream(directory.list())
+                .sorted(Collator.getInstance(Locale.CHINA)::compare)
+                .collect(Collectors.toList());
     }
 }
