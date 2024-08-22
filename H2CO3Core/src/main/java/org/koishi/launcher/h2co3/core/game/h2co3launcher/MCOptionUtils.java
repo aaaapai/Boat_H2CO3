@@ -1,5 +1,6 @@
 package org.koishi.launcher.h2co3.core.game.h2co3launcher;
 
+import android.content.Context;
 import android.os.FileObserver;
 
 import androidx.annotation.Nullable;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 public class MCOptionUtils {
     private static final String OPTIONS_FILE_NAME = "options.txt";
@@ -34,7 +36,12 @@ public class MCOptionUtils {
     }
 
     private static void loadOptionsFromFile(String filePath) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new IOException("Options file not found: " + filePath);
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 int firstColonIndex = line.indexOf(OPTION_SEPARATOR);
@@ -52,9 +59,10 @@ public class MCOptionUtils {
         }
 
         parameterMap.clear();
+        String optionsFilePath = getOptionsFilePath(gameDir);
 
         try {
-            loadOptionsFromFile(getOptionsFilePath(gameDir));
+            loadOptionsFromFile(optionsFilePath);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load options", e);
         }
@@ -73,14 +81,13 @@ public class MCOptionUtils {
     }
 
     public static List<String> getOptionAsList(String key) {
-        String value = getOption(key);
-        if (value == null || value.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return Arrays.asList(value.replace("[", "").replace("]", "").split(VALUE_SEPARATOR));
+        return Optional.ofNullable(getOption(key))
+                .filter(value -> !value.isEmpty())
+                .map(value -> Arrays.asList(value.replace("[", "").replace("]", "").split(VALUE_SEPARATOR)))
+                .orElse(Collections.emptyList());
     }
 
-    public static void saveOptions(String gameDir) {
+    public static void saveOptions(Context context, String gameDir) {
         StringBuilder result = new StringBuilder();
         for (String key : parameterMap.keySet()) {
             result.append(key)
@@ -92,14 +99,20 @@ public class MCOptionUtils {
         try {
             H2CO3Tools.write(getOptionsFilePath(gameDir), result.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Failed to save options", e);
+            H2CO3Tools.showError(context, "Failed to save options: " + e.getMessage());
         }
     }
 
     public static int getMcScale(String gameDir) {
         loadOptions(gameDir);
         String str = getOption("guiScale");
-        int guiScale = (str == null ? DEFAULT_GUI_SCALE : Integer.parseInt(str));
+        int guiScale = DEFAULT_GUI_SCALE;
+
+        try {
+            guiScale = Optional.ofNullable(str).map(Integer::parseInt).orElse(DEFAULT_GUI_SCALE);
+        } catch (NumberFormatException e) {
+            // Log or handle the error as needed
+        }
 
         int scale = Math.min(1920 / 320, 1080 / 240);
         if (scale < guiScale || guiScale == DEFAULT_GUI_SCALE) {

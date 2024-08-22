@@ -130,7 +130,7 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overlay);
-        H2CO3GameHelper gameHelper = new H2CO3GameHelper();
+        gameHelper = new H2CO3GameHelper();
         mainTextureView = findViewById(R.id.main_game_render_view);
         mainTextureView.setSurfaceTextureListener(this);
         baseLayout = findViewById(R.id.main_base);
@@ -226,12 +226,11 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     private void configureSurfaceTexture(SurfaceTexture surface, int width, int height) {
         int scaleFactor = 1;
         surface.setDefaultBufferSize(width * scaleFactor, height * scaleFactor);
-        //TODO:Fix these bugs
-//        MCOptionUtils.saveOptions(H2CO3GameHelper.getGameDirectory());
-//        MCOptionUtils.setOption("overrideWidth", String.valueOf(width * scaleFactor));
-//        MCOptionUtils.setOption("overrideHeight", String.valueOf(height * scaleFactor));
-//        MCOptionUtils.setOption("fullscreen", "true");
-//        MCOptionUtils.saveOptions(H2CO3GameHelper.getGameDirectory());
+        MCOptionUtils.saveOptions(this, gameHelper.getGameDirectory());
+        MCOptionUtils.setOption("overrideWidth", String.valueOf(width * scaleFactor));
+        MCOptionUtils.setOption("overrideHeight", String.valueOf(height * scaleFactor));
+        MCOptionUtils.setOption("fullscreen", "true");
+        MCOptionUtils.saveOptions(this, gameHelper.getGameDirectory());
     }
 
     @Override
