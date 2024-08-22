@@ -43,8 +43,12 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.navigation_home);
         getSupportActionBar().setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.app_name));
-        initFragment(getHomeFragment());
-        setNavigationItemChecked(R.id.navigation_home);
+
+        // 预加载所有 Fragment
+        preLoadFragments();
+
+        // 初始化当前 Fragment
+        switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.title_home);
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -61,31 +65,26 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         navigationView = findViewById(R.id.nav);
     }
 
+    private void preLoadFragments() {
+        homeFragment = new HomeFragment();
+        directoryFragment = new DirectoryFragment();
+        manageFragment = new ManageFragment();
+        downloadFragment = new DownloadListFragment();
+    }
+
     private HomeFragment getHomeFragment() {
-        if (homeFragment == null) {
-            homeFragment = new HomeFragment();
-        }
         return homeFragment;
     }
 
     private DirectoryFragment getDirectoryFragment() {
-        if (directoryFragment == null) {
-            directoryFragment = new DirectoryFragment();
-        }
         return directoryFragment;
     }
 
     private ManageFragment getManageFragment() {
-        if (manageFragment == null) {
-            manageFragment = new ManageFragment();
-        }
         return manageFragment;
     }
 
     private DownloadListFragment getDownloadFragment() {
-        if (downloadFragment == null) {
-            downloadFragment = new DownloadListFragment();
-        }
         return downloadFragment;
     }
 
@@ -106,11 +105,6 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
                 transaction.commit();
             }
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        // Handle click events
     }
 
     @Override
@@ -161,5 +155,10 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
             switchFragment(getDownloadFragment(), org.koishi.launcher.h2co3.resources.R.string.title_download);
         }
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

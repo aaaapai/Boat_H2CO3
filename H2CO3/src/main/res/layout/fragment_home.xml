@@ -86,6 +86,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:indeterminate="true"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -199,7 +200,7 @@
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
-                    <org.koishi.launcher.h2co3.resources.component.NestedRecyclerView
+                    <org.koishi.launcher.h2co3.resources.component.H2CO3RecyclerView
                         android:id="@+id/recycler_view_user_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />

@@ -54,21 +54,23 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_record"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="start"
                         android:gravity="center_vertical"
                         android:singleLine="true"
+                        android:scrollHorizontally="true"
                         android:text=""
                         android:textSize="13.5sp" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_path"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="start"
                         android:gravity="center_vertical"
                         android:singleLine="true"
+                        android:scrollHorizontally="true"
                         android:text=""
                         android:textSize="11.5sp" />
 

@@ -6,6 +6,7 @@
 
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
+import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class ChooseMcVersionFragment extends H2CO3Fragment {
 
@@ -64,7 +67,7 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
         if (view == null) return null; // Check for null
         initView(view);
         initListeners();
-        versionAdapter = new VersionAdapter(filteredList);
+        versionAdapter = new VersionAdapter(filteredList, requireActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(versionAdapter);
         eMessageImageButton.setOnClickListener(v -> refreshVersions());
@@ -88,7 +91,7 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
     private void refreshVersions() {
         eMessageLayout.setVisibility(View.GONE);
         eMessageImageButton.setVisibility(View.GONE);
-        progressIndicator.setVisibility(View.VISIBLE);
+        progressIndicator.show();
         fetchVersionsFromApi();
     }
 
@@ -141,16 +144,31 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
     }
 
     private void filterVersions(int checkedId) {
-        filteredList.clear();
-        for (Version version : versionList) {
+        List<Version> newFilteredList = versionList.stream().filter(version -> {
             String versionType = version.versionType();
-            if ((checkedId == R.id.rb_release && "release".equals(versionType)) ||
+            return (checkedId == R.id.rb_release && "release".equals(versionType)) ||
                     (checkedId == R.id.rb_snapshot && "snapshot".equals(versionType)) ||
-                    (checkedId == R.id.rb_old_beta && ("old_alpha".equals(versionType) || "old_beta".equals(versionType)))) {
-                filteredList.add(version);
-            }
+                    (checkedId == R.id.rb_old_beta && ("old_alpha".equals(versionType) || "old_beta".equals(versionType)));
+        }).collect(Collectors.toList());
+
+        // Calculate the differences between the old and new filtered lists
+        int oldSize = filteredList.size();
+        int newSize = newFilteredList.size();
+
+        // Update the filtered list
+        filteredList.clear();
+        filteredList.addAll(newFilteredList);
+
+        // Notify the adapter of the changes
+        if (oldSize > newSize) {
+            versionAdapter.notifyItemRangeRemoved(newSize, oldSize - newSize);
+        } else if (oldSize < newSize) {
+            versionAdapter.notifyItemRangeInserted(oldSize, newSize - oldSize);
         }
-        versionAdapter.notifyDataSetChanged();
+
+        for (int i = 0; i < Math.min(oldSize, newSize); i++) {
+            versionAdapter.notifyItemChanged(i);
+        }
     }
 
     @NotNull
@@ -172,33 +190,33 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
         executor.shutdown();
     }
 
-    class VersionAdapter extends RecyclerView.Adapter<VersionAdapter.ViewHolder> {
-        private final List<Version> versionList;
+    class VersionAdapter extends H2CO3RecycleAdapter<Version> {
 
-        public VersionAdapter(List<Version> versionList) {
-            this.versionList = versionList;
+        public VersionAdapter(List<Version> versionList, Context context) {
+            super(versionList, context);
         }
 
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_version, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Version version = versionList.get(position);
-            holder.versionNameTextView.setText(version.versionName());
-            holder.versionTypeTextView.setText(version.versionType());
+        protected void bindData(BaseViewHolder holder, int position) {
+            Version version = data.get(position);
+            ViewHolder viewHolder = (ViewHolder) holder;
+            viewHolder.versionNameTextView.setText(version.versionName());
+            viewHolder.versionTypeTextView.setText(version.versionType());
         }
 
         @Override
-        public int getItemCount() {
-            return versionList.size();
+        public int getLayoutId() {
+            return R.layout.item_version; // 返回 item 的布局 ID
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public class ViewHolder extends BaseViewHolder implements View.OnClickListener {
             public TextView versionNameTextView;
             public TextView versionTypeTextView;
             public H2CO3CardView versionCardView;
@@ -215,7 +233,7 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
             public void onClick(View v) {
                 int position = getBindingAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    Version version = versionList.get(position);
+                    Version version = data.get(position);
                     Bundle bundle = new Bundle();
                     bundle.putString("versionName", version.versionName());
                     EditVersionFragment editVersionFragment = new EditVersionFragment(ChooseMcVersionFragment.this, bundle);

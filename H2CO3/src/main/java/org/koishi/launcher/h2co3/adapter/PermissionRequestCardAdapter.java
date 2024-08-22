@@ -11,43 +11,42 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.koishi.launcher.h2co3.R;
+import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter;
 import org.koishi.launcher.h2co3.utils.bean.ui.PermissionRequestCard;
 
 import java.util.List;
 
-public class PermissionRequestCardAdapter extends RecyclerView.Adapter<PermissionRequestCardAdapter.ViewHolder> {
+public class PermissionRequestCardAdapter extends H2CO3RecycleAdapter<PermissionRequestCard> {
 
-    private final Context context;
-    private final List<PermissionRequestCard> permissionRequestCards;
     private final LayoutInflater inflater;
 
     public PermissionRequestCardAdapter(Context context, List<PermissionRequestCard> permissionRequestCards) {
-        this.context = context;
-        this.permissionRequestCards = permissionRequestCards;
+        super(permissionRequestCards, context);
         this.inflater = LayoutInflater.from(context);
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_permission_request, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        PermissionRequestCard permissionRequestCard = permissionRequestCards.get(position);
-        holder.shapeableImageView.setImageResource(permissionRequestCard.getIconRes());
-        holder.title.setText(permissionRequestCard.getTitleRes());
-        holder.description.setText(permissionRequestCard.getDescriptionRes());
+    protected void bindData(BaseViewHolder holder, int position) {
+        PermissionRequestCard permissionRequestCard = data.get(position);
+        ViewHolder viewHolder = (ViewHolder) holder;
+        viewHolder.shapeableImageView.setImageResource(permissionRequestCard.getIconRes());
+        viewHolder.title.setText(permissionRequestCard.getTitleRes());
+        viewHolder.description.setText(permissionRequestCard.getDescriptionRes());
     }
 
     @Override
-    public int getItemCount() {
-        return permissionRequestCards.size();
+    public int getLayoutId() {
+        return R.layout.item_permission_request;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends BaseViewHolder {
         public ImageView shapeableImageView;
         public TextView title;
         public TextView description;

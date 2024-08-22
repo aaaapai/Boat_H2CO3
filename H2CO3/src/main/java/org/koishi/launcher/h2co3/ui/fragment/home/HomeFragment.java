@@ -149,6 +149,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         findView();
+        loadingNoticeProgress.show();
         try {
             init();
         } catch (JSONException | IOException e) {
@@ -191,7 +192,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        reLoadUser();
+        loadUser();
         setupUserAddButton();
         fetchNotifications();
         run = true;
@@ -437,11 +438,17 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         }
     }
 
-    public void reLoadUser() throws JSONException, IOException {
+    public void loadUser() throws JSONException, IOException {
         userList.clear();
         userList = H2CO3Auth.getUserList(new JSONObject(H2CO3Auth.getUserJson()));
         adapterUser = new HomeListUserAdapter(this, userList);
         recyclerView.setAdapter(adapterUser);
+    }
+
+    public void reLoadUser() throws JSONException, IOException {
+        userList.clear();
+        userList = H2CO3Auth.getUserList(new JSONObject(H2CO3Auth.getUserJson()));
+        adapterUser.updateData(userList);
     }
 
     @Override

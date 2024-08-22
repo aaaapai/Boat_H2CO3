@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.koishi.launcher.h2co3.resources.R;
+import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,6 @@ import java.util.List;
 public class LogcatView extends RecyclerView {
 
     private LogcatAdapter adapter;
-    private int lastScrollPosition = 0;
 
     public LogcatView(Context context) {
         super(context);
@@ -57,7 +57,6 @@ public class LogcatView extends RecyclerView {
     }
 
     public void addLog(String log) {
-        lastScrollPosition = ((LinearLayoutManager) getLayoutManager()).findLastVisibleItemPosition();
         adapter.addLog(log);
         scrollToPosition(adapter.getItemCount() - 1);
     }
@@ -66,46 +65,42 @@ public class LogcatView extends RecyclerView {
         adapter.clearLogs();
     }
 
-    private class LogcatAdapter extends RecyclerView.Adapter<LogcatAdapter.LogViewHolder> {
-
-        private final List<String> logs;
+    private class LogcatAdapter extends H2CO3RecycleAdapter<String> {
 
         public LogcatAdapter() {
-            logs = new ArrayList<>();
+            super(new ArrayList<>(), getContext());
         }
 
         public void addLog(String log) {
-            logs.add(log);
-            notifyItemInserted(logs.size() - 1);
+            data.add(log);
+            notifyItemInserted(data.size() - 1);
         }
 
         public void clearLogs() {
-            logs.clear();
+            data.clear();
             notifyDataSetChanged();
         }
 
         @NonNull
         @Override
-        public LogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_log, parent, false);
             return new LogViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull LogViewHolder holder, int position) {
-            String log = logs.get(position);
-            holder.logTextView.setText(log);
-            if (position != lastScrollPosition) {
-                scrollToPosition(lastScrollPosition);
-            }
+        protected void bindData(BaseViewHolder holder, int position) {
+            String log = data.get(position);
+            LogViewHolder logViewHolder = (LogViewHolder) holder;
+            logViewHolder.logTextView.setText(log);
         }
 
         @Override
-        public int getItemCount() {
-            return logs.size();
+        public int getLayoutId() {
+            return R.layout.item_log;
         }
 
-        private class LogViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
+        private class LogViewHolder extends BaseViewHolder implements View.OnLongClickListener {
 
             private final TextView logTextView;
 
@@ -117,9 +112,9 @@ public class LogcatView extends RecyclerView {
 
             @Override
             public boolean onLongClick(View v) {
-                int position = getAdapterPosition();
+                int position = getBindingAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
-                    String log = logs.get(position);
+                    String log = data.get(position);
                     ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("Log", log);
                     clipboard.setPrimaryClip(clip);

@@ -18,11 +18,11 @@ public class H2CO3Auth {
 
     public static void addUserToJson(String name, String email, String password, String userType, String apiUrl, String authSession, String uuid, String skinTexture, String token, String refreshToken, String clientToken, Boolean isOffline, boolean isSelected) {
         try {
-            JSONObject json;
+            JSONObject jsonObj;
             if (usersFile.exists()) {
-                json = new JSONObject(readFileContent(usersFile));
+                jsonObj = new JSONObject(readFileContent(usersFile));
             } else {
-                json = new JSONObject();
+                jsonObj = new JSONObject();
             }
             JSONObject userData = new JSONObject();
             userData.put(H2CO3Tools.LOGIN_USER_EMAIL, email);
@@ -38,10 +38,10 @@ public class H2CO3Auth {
             userData.put(H2CO3Tools.LOGIN_IS_OFFLINE, isOffline);
             userData.put(H2CO3Tools.LOGIN_IS_SELECTED, isSelected);
             userData.put(H2CO3Tools.LOGIN_INFO, new JSONArray().put(0, name).put(1, isOffline));
-            json.put(name, userData);
+            jsonObj.put(name, userData);
 
-            writeFileContent(usersFile, json.toString());
-            parseJsonToUser(json);
+            writeFileContent(usersFile, jsonObj.toString());
+            parseJsonToUser(jsonObj);
         } catch (JSONException ignored) {
         } catch (IOException e) {
             throw new RuntimeException(e);
