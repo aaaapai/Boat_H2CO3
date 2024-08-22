@@ -1,10 +1,10 @@
 package org.koishi.launcher.h2co3.core.game;
 
-import org.koishi.launcher.h2co3.core.download.LibrariesDownloadInfo;
-import org.koishi.launcher.h2co3.core.download.Library;
-import org.koishi.launcher.h2co3.core.download.LibraryDownloadInfo;
-import org.koishi.launcher.h2co3.core.download.ReleaseType;
-import org.koishi.launcher.h2co3.core.download.Version;
+import org.koishi.launcher.h2co3.core.game.download.LibrariesDownloadInfo;
+import org.koishi.launcher.h2co3.core.game.download.Library;
+import org.koishi.launcher.h2co3.core.game.download.LibraryDownloadInfo;
+import org.koishi.launcher.h2co3.core.game.download.ReleaseType;
+import org.koishi.launcher.h2co3.core.game.download.Version;
 import org.koishi.launcher.h2co3.core.utils.Artifact;
 
 import java.io.File;

@@ -2,9 +2,9 @@ package org.koishi.launcher.h2co3.core.game;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.koishi.launcher.h2co3.core.download.LibrariesDownloadInfo;
-import org.koishi.launcher.h2co3.core.download.Library;
-import org.koishi.launcher.h2co3.core.download.LibraryDownloadInfo;
+import org.koishi.launcher.h2co3.core.game.download.LibrariesDownloadInfo;
+import org.koishi.launcher.h2co3.core.game.download.Library;
+import org.koishi.launcher.h2co3.core.game.download.LibraryDownloadInfo;
 import org.koishi.launcher.h2co3.core.utils.Artifact;
 import org.koishi.launcher.h2co3.core.utils.CompatibilityRule;
 import org.koishi.launcher.h2co3.core.utils.ExtractRules;

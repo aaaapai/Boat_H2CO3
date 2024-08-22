@@ -18,8 +18,9 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
-import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridge;
-import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridgeCallBack;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridgeCallBack;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextureView;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
@@ -36,20 +37,19 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
     private TimerTask systemUiTimerTask;
     public static IH2CO3Launcher h2co3LauncherInterface;
 
-    private final View.OnSystemUiVisibilityChangeListener onSystemUiVisibilityChangeListener = new View.OnSystemUiVisibilityChangeListener() {
-        @Override
-        public void onSystemUiVisibilityChange(int visibility) {
-            if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                if (systemUiTimerTask != null) {
-                    systemUiTimerTask.cancel();
-                }
-                systemUiTimerTask = new TimerTask() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(() -> hideSystemUI(getWindow().getDecorView()));
-                    }
-                };
+    public H2CO3GameHelper gameHelper;
+
+    private final View.OnSystemUiVisibilityChangeListener onSystemUiVisibilityChangeListener = visibility -> {
+        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+            if (systemUiTimerTask != null) {
+                systemUiTimerTask.cancel();
             }
+            systemUiTimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    runOnUiThread(() -> hideSystemUI(getWindow().getDecorView()));
+                }
+            };
         }
     };
 
@@ -70,16 +70,16 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
 
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
-        return false;
+        // Properly release resources if needed
+        return true;
     }
 
     @Override
     public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
-        if (output == 1) {
-            h2co3LauncherCallback.onPicOutput();
-            output++;
-        }
-        if (output < 1) {
+        if (output < 2) {
+            if (output == 1) {
+                h2co3LauncherCallback.onPicOutput();
+            }
             output++;
         }
     }
@@ -100,30 +100,20 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
 
     @Override
     public void addContentView(View view, ViewGroup.LayoutParams params) {
-        if (params instanceof RelativeLayout.LayoutParams) {
-            baseLayout.addView(view, params);
-        } else {
-            RelativeLayout.LayoutParams newParams = new RelativeLayout.LayoutParams(params.width, params.height);
-            baseLayout.addView(view, newParams);
-        }
+        RelativeLayout.LayoutParams newParams = (params instanceof RelativeLayout.LayoutParams)
+                ? (RelativeLayout.LayoutParams) params
+                : new RelativeLayout.LayoutParams(params.width, params.height);
+        baseLayout.addView(view, newParams);
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (h2co3LauncherInterface.dispatchKeyEvent(event)) {
-            return true;
-        }
-
-        return super.dispatchKeyEvent(event);
+        return h2co3LauncherInterface.dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
     }
 
     @Override
     public boolean dispatchGenericMotionEvent(MotionEvent event) {
-        if (h2co3LauncherInterface.dispatchGenericMotionEvent(event)) {
-            return true;
-        }
-
-        return super.dispatchGenericMotionEvent(event);
+        return h2co3LauncherInterface.dispatchGenericMotionEvent(event) || super.dispatchGenericMotionEvent(event);
     }
 
     public int[] getPointer() {
@@ -146,23 +136,17 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         View decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener(hasFocus ? onSystemUiVisibilityChangeListener : null);
         if (hasFocus) {
-            decorView.setOnSystemUiVisibilityChangeListener(onSystemUiVisibilityChangeListener);
             hideSystemUI(decorView);
-        } else {
-            decorView.setOnSystemUiVisibilityChangeListener(null);
-            if (systemUiTimerTask != null) {
-                systemUiTimerTask.cancel();
-            }
-        }
-        if (hasFocus) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        } else if (systemUiTimerTask != null) {
+            systemUiTimerTask.cancel();
         }
     }
 
@@ -179,19 +163,12 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
     }
 
     public interface IH2CO3Launcher {
-
         void onActivityCreate(H2CO3LauncherActivity H2CO3LauncherActivity);
-
         void setGrabCursor(boolean isGrabbed);
-
         void onStop();
-
         void onResume();
-
         void onPause();
-
         boolean dispatchKeyEvent(KeyEvent event);
-
         boolean dispatchGenericMotionEvent(MotionEvent event);
     }
 }

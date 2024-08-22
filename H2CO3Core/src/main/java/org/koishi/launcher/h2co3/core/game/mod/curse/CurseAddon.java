@@ -18,7 +18,7 @@
 package org.koishi.launcher.h2co3.core.game.mod.curse;
 
 import org.jetbrains.annotations.Nullable;
-import org.koishi.launcher.h2co3.core.download.ModLoaderType;
+import org.koishi.launcher.h2co3.core.game.download.ModLoaderType;
 import org.koishi.launcher.h2co3.core.game.mod.RemoteMod;
 import org.koishi.launcher.h2co3.core.game.mod.RemoteModRepository;
 import org.koishi.launcher.h2co3.core.utils.Lang;

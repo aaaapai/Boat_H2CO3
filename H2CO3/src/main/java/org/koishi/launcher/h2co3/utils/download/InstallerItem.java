@@ -1,13 +1,13 @@
 package org.koishi.launcher.h2co3.utils.download;
 
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.FABRIC;
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.FABRIC_API;
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.FORGE;
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.LITELOADER;
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.NEO_FORGE;
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.OPTIFINE;
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.QUILT;
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.QUILT_API;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.FABRIC;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.FABRIC_API;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.FORGE;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.LITELOADER;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.NEO_FORGE;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.OPTIFINE;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.QUILT;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.QUILT_API;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,8 +21,8 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import com.google.android.material.card.MaterialCardView;
 
 import org.koishi.launcher.h2co3.R;
-import org.koishi.launcher.h2co3.core.download.LibraryAnalyzer;
-import org.koishi.launcher.h2co3.core.download.VersionNumber;
+import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
+import org.koishi.launcher.h2co3.core.game.download.VersionNumber;
 import org.koishi.launcher.h2co3.core.fakefx.beans.InvalidationListener;
 import org.koishi.launcher.h2co3.core.fakefx.beans.binding.Bindings;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.BooleanProperty;

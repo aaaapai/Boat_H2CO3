@@ -17,14 +17,14 @@
  */
 package org.koishi.launcher.h2co3.core.game.mod.multimc;
 
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.FABRIC;
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.FORGE;
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.LITELOADER;
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.NEO_FORGE;
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.QUILT;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.FABRIC;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.FORGE;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.LITELOADER;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.NEO_FORGE;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.QUILT;
 
-import org.koishi.launcher.h2co3.core.download.DefaultGameRepository;
-import org.koishi.launcher.h2co3.core.download.LibraryAnalyzer;
+import org.koishi.launcher.h2co3.core.game.download.DefaultGameRepository;
+import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
 import org.koishi.launcher.h2co3.core.game.mod.ModAdviser;
 import org.koishi.launcher.h2co3.core.game.mod.Modpack;
 import org.koishi.launcher.h2co3.core.game.mod.ModpackExportInfo;

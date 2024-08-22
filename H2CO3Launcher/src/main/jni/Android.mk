@@ -1,61 +1,27 @@
 LOCAL_PATH := $(call my-dir)
-HERE_PATH := $(LOCAL_PATH)
-
-# include $(HERE_PATH)/crash_dump/libbase/Android.mk
-# include $(HERE_PATH)/crash_dump/libbacktrace/Android.mk
-# include $(HERE_PATH)/crash_dump/debuggerd/Android.mk
-
-
-LOCAL_PATH := $(HERE_PATH)
-
 
 include $(CLEAR_VARS)
-LOCAL_MODULE            := xhook
-LOCAL_SRC_FILES         := xhook/xhook.c \
-                           xhook/xh_core.c \
-                           xhook/xh_elf.c \
-                           xhook/xh_jni.c \
-                           xhook/xh_log.c \
-                           xhook/xh_util.c \
-                           xhook/xh_version.c
-LOCAL_C_INCLUDES        := $(LOCAL_PATH)/xhook
-LOCAL_CFLAGS            := -Wall -Wextra -Werror -fvisibility=hidden
-LOCAL_LDLIBS            := -llog
+LOCAL_MODULE            := angle_gles2
+LOCAL_SRC_FILES         := tinywrapper/angle-gles/$(TARGET_ARCH_ABI)/libGLESv2_angle.so
+include $(PREBUILT_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE            := tinywrapper
+LOCAL_SHARED_LIBRARIES  := angle_gles2
+LOCAL_SRC_FILES         := tinywrapper/main.c tinywrapper/string_utils.c
+LOCAL_C_INCLUDES        := $(LOCAL_PATH)/tinywrapper
 include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE     := h2co3Launcher
-LOCAL_SRC_FILES  := xhook/xh_core.c \
-                    xhook/xh_elf.c \
-                    xhook/xh_jni.c \
-                    xhook/xh_log.c \
-                    xhook/xh_util.c \
-                    xhook/xh_version.c \
-                    xhook/xhook.c\
-                    h2co3Launcher/h2co3Launcher_loader.c \
-                    h2co3Launcher/h2co3Launcher_bridge.c \
-                    h2co3Launcher/h2co3Launcher_event.c
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/h2co3Launcher/include \
-                    $(LOCAL_PATH)/xhook
-LOCAL_CFLAGS     := -Wall -Wall -Werror
-LOCAL_LDLIBS     := -llog -ldl -landroid
+LOCAL_MODULE            := h2co3Launcher
+LOCAL_SHARED_LIBRARIES  := bytehook
+LOCAL_SRC_FILES         := h2co3Launcher/h2co3Launcher_bridge.c \
+                           h2co3Launcher/h2co3Launcher_event.c \
+                           h2co3Launcher/h2co3Launcher_loader.c \
+                           h2co3Launcher/jre_launcher.c
+LOCAL_C_INCLUDES        := $(LOCAL_PATH)/h2co3Launcher/include
+LOCAL_LDLIBS            := -llog -ldl -landroid
 include $(BUILD_SHARED_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := istdio
-LOCAL_SHARED_LIBRARIES := xhook
-LOCAL_SRC_FILES := \
-    stdio_is.c
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/xhook/include
-include $(BUILD_SHARED_LIBRARY)
-
-#ifeq ($(TARGET_ARCH_ABI), arm64-v8a)
-include $(CLEAR_VARS)
-LOCAL_MODULE            := linkerhook
-LOCAL_SRC_FILES         := driver_helper/hook.c
-LOCAL_LDFLAGS           := -z global
-include $(BUILD_SHARED_LIBRARY)
-#endif
 
 include $(CLEAR_VARS)
 LOCAL_MODULE            := glfw
@@ -86,115 +52,35 @@ LOCAL_LDLIBS            += -lEGL -lGLESv2
 endif
 include $(BUILD_SHARED_LIBRARY)
 
+#ifeq ($(TARGET_ARCH_ABI), arm64-v8a)
 include $(CLEAR_VARS)
+LOCAL_MODULE            := linkerhook
+LOCAL_SRC_FILES         := driver_helper/hook.c
+LOCAL_LDFLAGS           := -z global
+include $(BUILD_SHARED_LIBRARY)
+#endif
 
-LOCAL_MODULE := gl4es_114
-
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/gl4es_114/include
-
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES) -DBCMHOST
-
-LOCAL_SRC_FILES := \
-	gl4es_114/gl/arbconverter.c \
-	gl4es_114/gl/arbgenerator.c \
-	gl4es_114/gl/arbhelper.c \
-	gl4es_114/gl/arbparser.c \
-	gl4es_114/gl/array.c \
-	gl4es_114/gl/blend.c \
-	gl4es_114/gl/blit.c \
-	gl4es_114/gl/buffers.c \
-	gl4es_114/gl/build_info.c \
-	gl4es_114/gl/debug.c \
-	gl4es_114/gl/decompress.c \
-	gl4es_114/gl/depth.c \
-	gl4es_114/gl/directstate.c \
-	gl4es_114/gl/drawing.c \
-	gl4es_114/gl/enable.c \
-	gl4es_114/gl/envvars.c \
-	gl4es_114/gl/eval.c \
-	gl4es_114/gl/face.c \
-	gl4es_114/gl/fog.c \
-	gl4es_114/gl/fpe.c \
-	gl4es_114/gl/fpe_cache.c \
-	gl4es_114/gl/fpe_shader.c \
-	gl4es_114/gl/framebuffers.c \
-	gl4es_114/gl/gl_lookup.c \
-	gl4es_114/gl/getter.c \
-	gl4es_114/gl/gl4es.c \
-	gl4es_114/gl/glstate.c \
-	gl4es_114/gl/hint.c \
-	gl4es_114/gl/init.c \
-	gl4es_114/gl/light.c \
-	gl4es_114/gl/line.c \
-	gl4es_114/gl/list.c \
-	gl4es_114/gl/listdraw.c \
-	gl4es_114/gl/listrl.c \
-	gl4es_114/gl/loader.c \
-	gl4es_114/gl/logs.c \
-	gl4es_114/gl/matrix.c \
-	gl4es_114/gl/matvec.c \
-	gl4es_114/gl/oldprogram.c \
-	gl4es_114/gl/pixel.c \
-	gl4es_114/gl/planes.c \
-	gl4es_114/gl/pointsprite.c \
-	gl4es_114/gl/preproc.c \
-	gl4es_114/gl/program.c \
-	gl4es_114/gl/queries.c \
-	gl4es_114/gl/raster.c \
-	gl4es_114/gl/render.c \
-	gl4es_114/gl/shader.c \
-	gl4es_114/gl/shaderconv.c \
-	gl4es_114/gl/shader_hacks.c \
-	gl4es_114/gl/stack.c \
-	gl4es_114/gl/stencil.c \
-	gl4es_114/gl/string_utils.c \
-	gl4es_114/gl/stubs.c \
-	gl4es_114/gl/texenv.c \
-	gl4es_114/gl/texgen.c \
-	gl4es_114/gl/texture.c \
-	gl4es_114/gl/texture_compressed.c \
-	gl4es_114/gl/texture_params.c \
-	gl4es_114/gl/texture_read.c \
-	gl4es_114/gl/texture_3d.c \
-	gl4es_114/gl/uniform.c \
-	gl4es_114/gl/vertexattrib.c \
-	gl4es_114/gl/wrap/gl4eswraps.c \
-	gl4es_114/gl/wrap/gles.c \
-	gl4es_114/gl/wrap/glstub.c \
-	gl4es_114/gl/math/matheval.c \
-	gl4es_114/glx/hardext.c \
-	gl4es_114/glx/glx.c \
-	gl4es_114/glx/lookup.c \
-	gl4es_114/glx/gbm.c \
-	gl4es_114/glx/streaming.c \
-	gl4es_114/gl/vgpu/shaderconv.c
-
-LOCAL_CFLAGS += -g -std=gnu99 -funwind-tables -O3 -fvisibility=hidden -include gl4es_114/include/android_debug.h
-LOCAL_CFLAGS += -DNOX11
-LOCAL_CFLAGS += -DNO_GBM
-LOCAL_CFLAGS += -Wimplicit-function-declaration
-
-LOCAL_LDLIBS := -llog -ldl -landroid
-
+include $(CLEAR_VARS)
+LOCAL_MODULE            := awt_headless
 include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE            := angle_gles2
-LOCAL_SRC_FILES         := tinywrapper/angle-gles/$(TARGET_ARCH_ABI)/libGLESv2_angle.so
-include $(PREBUILT_SHARED_LIBRARY)
+LOCAL_MODULE            := awt_xawt
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/awt_xawt
+LOCAL_SHARED_LIBRARIES  := awt_headless
+LOCAL_SRC_FILES         := awt_xawt/xawt_fake.c
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE            := awt
+LOCAL_SHARED_LIBRARIES  := h2co3Launcher
+LOCAL_SRC_FILES         := awt/awt_bridge.c
+include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE            := libffi
 LOCAL_SRC_FILES         := lwjgl/libffi/$(TARGET_ARCH_ABI)/libffi.a
 include $(PREBUILT_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE            := tinywrapper
-LOCAL_SHARED_LIBRARIES  := angle_gles2
-LOCAL_SRC_FILES         := tinywrapper/main.c \
-                           tinywrapper/string_utils.c
-LOCAL_C_INCLUDES        := $(LOCAL_PATH)/tinywrapper
-include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE            := lwjgl
@@ -446,35 +332,4 @@ LOCAL_SRC_FILES         := lwjgl/opengl/org_lwjgl_opengl_AMDDebugOutput.c \
                            lwjgl/opengl/org_lwjgl_opengl_OVRMultiview.c
 LOCAL_CFLAGS            := -O2 -Wall -c -fPIC -std=c99 -Wunused -DLWJGL_H2CO3LAUNCHER -Wunused-value
 include $(BUILD_SHARED_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := h2co3_exec_awt
-LOCAL_SHARED_LIBRARIES  := h2co3Launcher
-LOCAL_SRC_FILES := awt/awt_bridge.c
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/h2co3Launcher/include
-include $(BUILD_SHARED_LIBRARY)
-
-# Helper to get current thread
-# include $(CLEAR_VARS)
-# LOCAL_MODULE := thread64helper
-# LOCAL_SRC_FILES := thread_helper.cpp
-# include $(BUILD_SHARED_LIBRARY)
-
-# fake lib for linker
-include $(CLEAR_VARS)
-LOCAL_MODULE := awt_headless
-include $(BUILD_SHARED_LIBRARY)
-
-# libawt_xawt without X11, used to get Caciocavallo working
-LOCAL_PATH := $(HERE_PATH)/awt_xawt
-include $(CLEAR_VARS)
-LOCAL_MODULE := awt_xawt
-# LOCAL_CFLAGS += -DHEADLESS
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
-LOCAL_SHARED_LIBRARIES := awt_headless
-LOCAL_SRC_FILES := xawt_fake.c
-include $(BUILD_SHARED_LIBRARY)
-
-# delete fake libs after linked
-$(info $(shell (rm $(HERE_PATH)/../jniLibs/*/libawt_headless.so)))
-
+$(call import-module,prefab/bytehook)

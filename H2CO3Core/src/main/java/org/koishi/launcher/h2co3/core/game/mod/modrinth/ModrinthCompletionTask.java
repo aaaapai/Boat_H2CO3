@@ -17,8 +17,8 @@
  */
 package org.koishi.launcher.h2co3.core.game.mod.modrinth;
 
-import org.koishi.launcher.h2co3.core.download.DefaultDependencyManager;
-import org.koishi.launcher.h2co3.core.download.DefaultGameRepository;
+import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.DefaultGameRepository;
 import org.koishi.launcher.h2co3.core.game.mod.ModpackCompletionException;
 import org.koishi.launcher.h2co3.core.utils.Logging;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;

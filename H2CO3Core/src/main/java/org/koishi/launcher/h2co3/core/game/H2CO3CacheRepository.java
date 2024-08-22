@@ -1,6 +1,6 @@
 package org.koishi.launcher.h2co3.core.game;
 
-import org.koishi.launcher.h2co3.core.download.DefaultCacheRepository;
+import org.koishi.launcher.h2co3.core.game.download.DefaultCacheRepository;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.SimpleStringProperty;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.StringProperty;
 

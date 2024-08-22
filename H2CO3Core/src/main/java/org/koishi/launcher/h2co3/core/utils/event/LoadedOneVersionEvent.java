@@ -19,7 +19,7 @@ package org.koishi.launcher.h2co3.core.utils.event;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jetbrains.annotations.NotNull;
-import org.koishi.launcher.h2co3.core.download.Version;
+import org.koishi.launcher.h2co3.core.game.download.Version;
 import org.koishi.launcher.h2co3.core.game.GameRepository;
 
 /**

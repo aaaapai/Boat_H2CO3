@@ -3,7 +3,7 @@ package org.koishi.launcher.h2co3.core.game.mod.modinfo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-import org.koishi.launcher.h2co3.core.download.ModLoaderType;
+import org.koishi.launcher.h2co3.core.game.download.ModLoaderType;
 import org.koishi.launcher.h2co3.core.game.mod.LocalModFile;
 import org.koishi.launcher.h2co3.core.game.mod.ModManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;

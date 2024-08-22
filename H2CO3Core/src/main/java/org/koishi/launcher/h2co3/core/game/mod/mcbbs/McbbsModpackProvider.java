@@ -22,7 +22,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.koishi.launcher.h2co3.core.download.DefaultDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.game.LaunchOptions;
 import org.koishi.launcher.h2co3.core.game.mod.MismatchedModpackTypeException;
 import org.koishi.launcher.h2co3.core.game.mod.Modpack;

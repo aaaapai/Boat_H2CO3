@@ -18,14 +18,14 @@
 package org.koishi.launcher.h2co3.core.game.mod.mcbbs;
 
 
-import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.MINECRAFT;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.MINECRAFT;
 
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 
 import org.jetbrains.annotations.Nullable;
-import org.koishi.launcher.h2co3.core.download.DefaultDependencyManager;
-import org.koishi.launcher.h2co3.core.download.Library;
+import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.Library;
 import org.koishi.launcher.h2co3.core.game.LaunchOptions;
 import org.koishi.launcher.h2co3.core.game.mod.Modpack;
 import org.koishi.launcher.h2co3.core.game.mod.ModpackManifest;

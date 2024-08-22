@@ -2,7 +2,7 @@ package org.koishi.launcher.h2co3.core.game.mod;
 
 import static org.koishi.launcher.h2co3.core.utils.NetworkUtils.encodeLocation;
 
-import org.koishi.launcher.h2co3.core.download.ModLoaderType;
+import org.koishi.launcher.h2co3.core.game.download.ModLoaderType;
 import org.koishi.launcher.h2co3.core.game.mod.curse.CurseForgeRemoteModRepository;
 import org.koishi.launcher.h2co3.core.game.mod.modrinth.ModrinthRemoteModRepository;
 import org.koishi.launcher.h2co3.core.utils.task.FileDownloadTask;

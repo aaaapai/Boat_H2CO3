@@ -10,7 +10,7 @@
         app:layout_constraintBottom_toTopOf="@+id/bottom"
         app:layout_constraintTop_toTopOf="parent">
 
-        <org.koishi.launcher.h2co3.resources.component.NestedRecyclerView
+        <org.koishi.launcher.h2co3.resources.component.H2CO3RecyclerView
             android:id="@+id/list_left"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
             app:layout_constraintGuide_percent="@dimen/guide_r" />
 
 
-        <org.koishi.launcher.h2co3.resources.component.NestedRecyclerView
+        <org.koishi.launcher.h2co3.resources.component.H2CO3RecyclerView
             android:id="@+id/list_right"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

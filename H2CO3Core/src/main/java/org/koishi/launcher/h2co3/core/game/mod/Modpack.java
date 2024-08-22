@@ -17,7 +17,7 @@
  */
 package org.koishi.launcher.h2co3.core.game.mod;
 
-import org.koishi.launcher.h2co3.core.download.DefaultDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 
 import java.io.File;

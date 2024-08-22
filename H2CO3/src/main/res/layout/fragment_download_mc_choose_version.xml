@@ -93,7 +93,7 @@
 
         </RadioGroup>
 
-        <org.koishi.launcher.h2co3.resources.component.NestedRecyclerView
+        <org.koishi.launcher.h2co3.resources.component.H2CO3RecyclerView
             android:id="@+id/loadingversionFileListView1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

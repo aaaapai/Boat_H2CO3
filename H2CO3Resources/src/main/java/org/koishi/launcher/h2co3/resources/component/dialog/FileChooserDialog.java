@@ -46,7 +46,7 @@ public class FileChooserDialog implements FileAdapter.OnClickListener {
         View root = LayoutInflater.from(context).inflate(R.layout.file_chooser_dialog, null);
         this.recyclerView = root.findViewById(R.id.recycler_view);
 
-        this.fileAdapter = new FileAdapter(getFiles(), this);
+        this.fileAdapter = new FileAdapter(getFiles(), this, context);
 
         recyclerView.setAdapter(fileAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));

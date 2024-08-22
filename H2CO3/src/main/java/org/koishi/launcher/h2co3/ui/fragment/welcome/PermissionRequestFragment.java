@@ -20,7 +20,7 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.adapter.PermissionRequestCardAdapter;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.utils.RuntimeUtils;
-import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
+import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 import org.koishi.launcher.h2co3.ui.H2CO3MainActivity;
 import org.koishi.launcher.h2co3.utils.bean.ui.PermissionRequestCard;
 

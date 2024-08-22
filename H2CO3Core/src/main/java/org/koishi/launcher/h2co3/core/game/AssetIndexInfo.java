@@ -17,7 +17,7 @@
  */
 package org.koishi.launcher.h2co3.core.game;
 
-import org.koishi.launcher.h2co3.core.download.IdDownloadInfo;
+import org.koishi.launcher.h2co3.core.game.download.IdDownloadInfo;
 
 public class AssetIndexInfo extends IdDownloadInfo {
 
