@@ -9,6 +9,8 @@ import org.koishi.launcher.h2co3.control.ckb.achieve.CkbManager;
 import org.koishi.launcher.h2co3.control.ckb.button.GameButton;
 import org.koishi.launcher.h2co3.control.ckb.button.GameButtonOld;
 import org.koishi.launcher.h2co3.control.definitions.map.MouseMap;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.ColorUtils;
 
 import java.io.File;
@@ -45,7 +47,7 @@ public class GameButtonConverter {
             CkbManager.outputFile(keyboardRecorder, newFileName);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         }
     }
@@ -67,7 +69,7 @@ public class GameButtonConverter {
             Reader reader = new InputStreamReader(inputStream);
             return gson.fromJson(reader, GameButtonOld[].class);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return null;
         }
     }

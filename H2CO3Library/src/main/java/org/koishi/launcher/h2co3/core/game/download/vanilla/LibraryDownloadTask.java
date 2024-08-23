@@ -23,6 +23,7 @@ import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.download.AbstractDependencyManager;
 import org.koishi.launcher.h2co3.core.game.download.DefaultCacheRepository;
 import org.koishi.launcher.h2co3.core.game.download.Library;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.DigestUtils;
 import org.koishi.launcher.h2co3.core.utils.NetworkUtils;
 import org.koishi.launcher.h2co3.core.utils.Pack200Utils;
@@ -96,7 +97,7 @@ public class LibraryDownloadTask extends Task<Void> {
             }
             return valid;
         } catch (IOException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return false;
     }
@@ -121,7 +122,7 @@ public class LibraryDownloadTask extends Task<Void> {
             boolean failed = !checksums.contains(files.get("checksums.sha1"));
             if (!failed) {
                 for (String hash : hashes) {
-                    if ((!hash.trim().equals("")) && (hash.contains(" "))) {
+                    if ((!hash.trim().isEmpty()) && (hash.contains(" "))) {
                         String[] e = hash.split(" ");
                         String validChecksum = e[0];
                         String target = hash.substring(validChecksum.length() + 1);

@@ -1,5 +1,8 @@
 package org.koishi.launcher.h2co3.core.utils;
 
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
@@ -20,7 +23,7 @@ public enum OperatingSystem {
             try {
                 nativeCharset = Charset.forName(nativeEncoding);
             } catch (UnsupportedCharsetException e) {
-                e.printStackTrace();
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         }
 

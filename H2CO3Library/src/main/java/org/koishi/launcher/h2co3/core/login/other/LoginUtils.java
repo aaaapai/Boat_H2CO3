@@ -2,6 +2,9 @@ package org.koishi.launcher.h2co3.core.login.other;
 
 import com.google.gson.Gson;
 
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
+
 import java.io.IOException;
 import java.util.Objects;
 
@@ -74,7 +77,7 @@ public class LoginUtils {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return null;
     }

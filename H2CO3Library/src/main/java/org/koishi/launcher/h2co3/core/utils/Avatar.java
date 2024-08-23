@@ -12,6 +12,9 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
+
 import java.io.ByteArrayOutputStream;
 
 public class Avatar {
@@ -51,7 +54,7 @@ public class Avatar {
             byte[] bitmapArray = Base64.decode(string, Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return null;
         }
     }

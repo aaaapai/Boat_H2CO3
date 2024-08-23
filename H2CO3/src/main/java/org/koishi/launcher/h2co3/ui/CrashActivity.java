@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.resources.component.H2CO3ToolBar;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
@@ -60,7 +61,7 @@ public class CrashActivity extends H2CO3Activity {
                 f.write(bug);
                 f.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         });
     }

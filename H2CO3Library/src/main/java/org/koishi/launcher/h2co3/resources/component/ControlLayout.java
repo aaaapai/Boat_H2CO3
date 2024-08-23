@@ -10,6 +10,8 @@ import android.view.TextureView;
 import android.view.ViewGroup;
 
 import org.jetbrains.annotations.NotNull;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 
 import java.util.LinkedList;
 
@@ -73,7 +75,7 @@ public class ControlLayout extends TextureView implements TextureView.SurfaceTex
                 }
             }
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, throwable.getMessage());
         }
     }
 

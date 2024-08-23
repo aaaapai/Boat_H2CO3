@@ -1,7 +1,6 @@
 package org.koishi.launcher.h2co3.handler;
 
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,9 +11,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import org.koishi.launcher.h2co3.core.H2CO3Auth;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.login.Texture.Texture;
 import org.koishi.launcher.h2co3.core.login.Texture.TextureType;
 import org.koishi.launcher.h2co3.core.login.microsoft.MicrosoftLoginUtils;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.Avatar;
 import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 
@@ -74,7 +75,7 @@ public class HomeLoginHandler extends Handler {
                             }
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                     }
                 });
                 executorService.shutdown();
@@ -98,7 +99,7 @@ public class HomeLoginHandler extends Handler {
         try (InputStream inputStream = fragment.requireActivity().getAssets().open("drawable/alex.png")) {
             return BitmapFactory.decodeStream(inputStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return null;
         }
     }
@@ -112,7 +113,7 @@ public class HomeLoginHandler extends Handler {
             httpURLConnection.connect();
             return BitmapFactory.decodeStream(httpURLConnection.getInputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return null;
         } finally {
             if (httpURLConnection != null) {

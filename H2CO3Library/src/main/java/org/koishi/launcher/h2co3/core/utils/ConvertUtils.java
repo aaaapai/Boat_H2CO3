@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.TypedValue;
 
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -67,7 +70,7 @@ public class ConvertUtils {
         try {
             saveBitmap(bitmap, path);
         } catch (IOException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 }

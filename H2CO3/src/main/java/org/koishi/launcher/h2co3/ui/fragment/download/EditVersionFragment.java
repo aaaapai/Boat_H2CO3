@@ -27,6 +27,7 @@ import org.koishi.launcher.h2co3.core.game.download.RemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.VersionList;
 import org.koishi.launcher.h2co3.core.game.H2CO3CacheRepository;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 import org.koishi.launcher.h2co3.core.utils.task.TaskExecutor;
@@ -206,7 +207,7 @@ public class EditVersionFragment extends H2CO3Fragment {
                         } else {
                             if (executor.getException() != null) {
                                 paneAlert.dismiss();
-                                H2CO3Tools.showError(requireContext(), String.valueOf(executor.getException()));
+                                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, String.valueOf(executor.getException()));
                             }
                         }
                     });
@@ -263,7 +264,7 @@ public class EditVersionFragment extends H2CO3Fragment {
 
                 Schedulers.androidUIThread().execute(() -> {
                     if (currentVersionList.getVersions(gameVersion).isEmpty()) {
-                        H2CO3Tools.showError(requireContext(), "Null");
+                        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Null");
                         chooseInstallerVersionDialogAlert.dismiss();
                         installerVersionListView.setVisibility(View.GONE);
                     } else {
