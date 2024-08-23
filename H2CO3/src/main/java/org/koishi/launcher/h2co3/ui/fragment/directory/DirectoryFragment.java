@@ -204,6 +204,7 @@ public class DirectoryFragment extends H2CO3Fragment {
 
         H2CO3Dir = path;
         newDir();
+        addNewDirectory();
         dialog.dismiss();
     }
 
@@ -226,6 +227,8 @@ public class DirectoryFragment extends H2CO3Fragment {
         String currentDir = gameHelper.getGameDirectory();
         File f = new File(currentDir);
 
+        dirsJsonObj = getJsonObj();
+
         dirAdapter = new DirectoryListAdapter(getDirList(), requireActivity(), dirsJsonObj, gameHelper, this);
         dirAdapter.updateData(getDirList());
 
@@ -246,7 +249,7 @@ public class DirectoryFragment extends H2CO3Fragment {
         updateVerList(dir + "/versions");
     }
 
-    private JSONObject getJsonObj() {
+    public JSONObject getJsonObj() {
         try {
             File jsonFile = H2CO3Tools.DIRS_CONFIG_FILE;
             if (jsonFile.exists()) {
@@ -384,7 +387,7 @@ public class DirectoryFragment extends H2CO3Fragment {
         });
     }
 
-    private List<String> getVerList(String path) {
+    public List<String> getVerList(String path) {
         File directory = new File(path);
         if (!directory.isDirectory()) {
             return Collections.emptyList();

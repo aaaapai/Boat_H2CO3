@@ -212,7 +212,7 @@ public class EditVersionFragment extends H2CO3Fragment {
                     });
                 }
             });
-            pane.setExecutor(executor);
+            pane.setExecutor(executor, true);
             paneAlert.show();
             executor.start();
         });

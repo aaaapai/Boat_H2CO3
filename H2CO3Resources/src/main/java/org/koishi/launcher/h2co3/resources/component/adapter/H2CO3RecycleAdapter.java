@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.koishi.launcher.h2co3.core.utils.task.Task;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,23 +29,11 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
     private View mFooterView;
     private boolean isHasHeader = false;
     private boolean isHasFooter = false;
+    private boolean isUpdating = false;
 
     public H2CO3RecycleAdapter(List<T> data, Context mContext) {
         this.data = data;
         this.mContext = mContext;
-    }
-
-    @NonNull
-    @Override
-    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == ITEM_TYPE_FOOTER) {
-            return new BaseViewHolder(mFooterView);
-        }
-        if (viewType == ITEM_TYPE_HEADER) {
-            return new BaseViewHolder(mHeaderView);
-        }
-        View view = LayoutInflater.from(parent.getContext()).inflate(getLayoutId(), parent, false);
-        return new BaseViewHolder(view);
     }
 
     @Override
@@ -55,8 +45,15 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
 
         if (dataPosition >= 0 && dataPosition < data.size()) {
             bindData(holder, dataPosition);
+
             //holder.itemView.setAlpha(0f);
-           // holder.itemView.animate().alpha(1f).setDuration(100).start();
+            //holder.itemView.animate().alpha(1f).setDuration(100).start();
+
+            holder.setItemClickListener(v -> {
+                if (mRvItemOnclickListener != null) {
+                    mRvItemOnclickListener.RvItemOnclick(dataPosition);
+                }
+            });
         }
     }
 
@@ -74,6 +71,21 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
         notifyItemInserted(getItemCount() - 1);
     }
 
+    @NonNull
+    @Override
+    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == ITEM_TYPE_FOOTER) {
+            if (mFooterView == null) throw new IllegalStateException("Footer view is not set");
+            return new BaseViewHolder(mFooterView);
+        }
+        if (viewType == ITEM_TYPE_HEADER) {
+            if (mHeaderView == null) throw new IllegalStateException("Header view is not set");
+            return new BaseViewHolder(mHeaderView);
+        }
+        View view = LayoutInflater.from(parent.getContext()).inflate(getLayoutId(), parent, false);
+        return new BaseViewHolder(view);
+    }
+
     @Override
     public int getItemViewType(int position) {
         if (isHasHeader && position == 0) {
@@ -86,10 +98,12 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
     }
 
     public void updateData(List<T> newData) {
-        if (newData == null || newData.isEmpty()) return;
+        if (isUpdating || newData == null || newData.isEmpty()) return;
+        isUpdating = true;
         this.data.clear();
         this.data.addAll(newData);
         notifyItemRangeChanged(0, newData.size());
+        isUpdating = false;
     }
 
     public void addData(List<T> newData) {
@@ -99,11 +113,11 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
         notifyItemRangeInserted(startPosition, newData.size());
     }
 
-    public void remove(int position) {
-        if (position < 0 || position >= data.size()) return;
-        data.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, data.size() - position);
+    public void remove(int index) {
+        if (data == null || index < 0 || index >= data.size()) return;
+        data.remove(index);
+        notifyItemRemoved(index);
+        notifyItemRangeChanged(index, data.size() - index);
     }
 
     protected abstract void bindData(BaseViewHolder holder, int position);
@@ -135,6 +149,7 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
 
     public static class BaseViewHolder extends RecyclerView.ViewHolder {
         private final Map<Integer, View> mViewMap;
+        private boolean isClickable = true;
 
         public BaseViewHolder(View itemView) {
             super(itemView);
@@ -143,6 +158,23 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
 
         public View getView(int id) {
             return mViewMap.computeIfAbsent(id, itemView::findViewById);
+        }
+
+        public void setItemClickListener(View.OnClickListener listener) {
+            itemView.setOnClickListener(v -> {
+                if (isClickable) {
+                    isClickable = false;
+                    listener.onClick(v);
+                    itemView.postDelayed(() -> isClickable = true, 200);
+                }
+            });
+        }
+
+        public void setItemText(int viewId, String text) {
+            TextView textView = (TextView) getView(viewId);
+            if (textView != null) {
+                textView.setText(text);
+            }
         }
     }
 }

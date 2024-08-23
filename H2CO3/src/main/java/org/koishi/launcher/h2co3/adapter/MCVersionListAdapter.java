@@ -29,6 +29,8 @@ public class MCVersionListAdapter extends H2CO3RecycleAdapter<String> {
     private final H2CO3GameHelper gameHelper;
     private String path;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private boolean isVersionItemClickable = true;
+    private boolean isDeleteButtonClickable = true;
 
     public MCVersionListAdapter(Context context, List<String> list, DirectoryFragment directoryFragment, H2CO3GameHelper gameHelper, String path) {
         super(list, context);
@@ -56,15 +58,25 @@ public class MCVersionListAdapter extends H2CO3RecycleAdapter<String> {
             versionItemView.setStrokeWidth(verF.equals(gameHelper.getGameCurrentVersion()) ? 13 : 3);
 
             versionItemView.setOnClickListener(v -> {
-                if (isDirectory) {
-                    gameHelper.setGameCurrentVersion(verF);
-                    for (int i = 0; i < getItemCount(); i++) {
-                        notifyItemChanged(i);
+                if (isVersionItemClickable) {
+                    isVersionItemClickable = false;
+                    if (isDirectory) {
+                        gameHelper.setGameCurrentVersion(verF);
+                        for (int i = 0; i < getItemCount(); i++) {
+                            notifyItemChanged(i);
+                        }
                     }
+                    v.postDelayed(() -> isVersionItemClickable = true, 200);
                 }
             });
 
-            deleteVerButton.setOnClickListener(v -> showDeleteDialog(position));
+            deleteVerButton.setOnClickListener(v -> {
+                if (isDeleteButtonClickable) {
+                    isDeleteButtonClickable = false;
+                    showDeleteDialog(position);
+                    v.postDelayed(() -> isDeleteButtonClickable = true, 200);
+                }
+            });
         }
     }
 
@@ -81,7 +93,7 @@ public class MCVersionListAdapter extends H2CO3RecycleAdapter<String> {
         executorService.execute(() -> {
             File versionDir = new File(gameHelper.getGameDirectory(), "versions/" + data.get(position));
             try {
-                if (versionDir.isDirectory()) {
+                if (versionDir.isDirectory() && versionDir.getCanonicalPath().startsWith(new File(gameHelper.getGameDirectory(), "versions").getCanonicalPath())) {
                     FileTools.deleteDirectory(versionDir);
                 } else {
                     deleteFile(versionDir);
@@ -89,9 +101,7 @@ public class MCVersionListAdapter extends H2CO3RecycleAdapter<String> {
                 ((H2CO3Activity) mContext).runOnUiThread(() -> {
                     data.remove(position);
                     notifyItemRemoved(position);
-                    if (!data.isEmpty()) {
-                        notifyItemRangeChanged(position, data.size() - position);
-                    }
+                    notifyItemRangeChanged(position, data.size() - position);
                 });
                 directoryFragment.handler.sendEmptyMessage(2);
             } catch (IOException e) {

@@ -83,8 +83,8 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
 
     private void refreshVersions() {
         eMessageLayout.setVisibility(View.GONE);
-        eMessageImageButton.setVisibility(View.GONE);
         progressIndicator.show();
+        recyclerView.setVisibility(View.VISIBLE);
         fetchVersionsFromApi();
     }
 
@@ -119,6 +119,7 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
                     eMessageLayout.setVisibility(View.VISIBLE);
                     eMessageText.setText(e.getMessage());
                     progressIndicator.hide();
+                    recyclerView.setVisibility(View.GONE);
                     isFetching = false;
                 });
             } finally {

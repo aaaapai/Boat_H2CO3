@@ -59,9 +59,12 @@ public class RemoteVersionListAdapter extends H2CO3RecycleAdapter<RemoteVersion>
 
     @Override
     protected void bindData(BaseViewHolder holder, int position) {
-        RemoteVersion remoteVersion = data.get(position);
-        ViewHolder viewHolder = (ViewHolder) holder;
-        viewHolder.bind(remoteVersion);
+        if (holder instanceof ViewHolder) {
+            RemoteVersion remoteVersion = data.get(position);
+            ((ViewHolder) holder).bind(remoteVersion);
+        } else {
+            throw new ClassCastException("Invalid ViewHolder type");
+        }
     }
 
     @Override
@@ -103,5 +106,12 @@ public class RemoteVersionListAdapter extends H2CO3RecycleAdapter<RemoteVersion>
             version.setText(remoteVersion.getSelfVersion());
             tag.setText(getTag(remoteVersion));
         }
+    }
+
+    @NonNull
+    @Override
+    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_remote_version, parent, false);
+        return new ViewHolder(view);
     }
 }
