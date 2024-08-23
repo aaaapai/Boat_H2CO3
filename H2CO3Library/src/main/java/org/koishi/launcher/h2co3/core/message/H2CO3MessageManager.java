@@ -20,7 +20,7 @@ import java.util.Map;
 public class H2CO3MessageManager {
     private final NotificationAdapter adapter;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private final List<Runnable> pendingRemovals = new ArrayList<>();
+    private final List<NotificationItem> pendingRemovals = new ArrayList<>();
     private static RecyclerView recyclerView = null;
 
     public H2CO3MessageManager(NotificationAdapter adapter, RecyclerView recyclerView) {
@@ -32,8 +32,11 @@ public class H2CO3MessageManager {
         NotificationItem item = new NotificationItem(type, message);
         handler.post(() -> adapter.addNotification(item));
 
-        Runnable removalTask = () -> adapter.removeNotification(item);
-        pendingRemovals.add(removalTask);
+        Runnable removalTask = () -> {
+            adapter.removeNotification(item);
+            pendingRemovals.remove(item);
+        };
+        pendingRemovals.add(item);
         handler.postDelayed(removalTask, 5000);
     }
 
@@ -89,7 +92,7 @@ public class H2CO3MessageManager {
         }
 
         public List<NotificationItem> getNotifications() {
-            return new ArrayList<>(data);
+            return data;
         }
 
         public void removeNotification(NotificationItem item) {
