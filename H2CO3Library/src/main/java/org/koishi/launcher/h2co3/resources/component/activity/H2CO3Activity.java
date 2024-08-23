@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class H2CO3Activity extends MaterialActivity {
-    public H2CO3MessageManager h2CO3MessageManager;
+    public H2CO3MessageManager h2co3MessageManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,8 @@ public class H2CO3Activity extends MaterialActivity {
             rootLayout.addView(messageListView, params);
         }
         H2CO3MessageManager.NotificationAdapter adapter = new H2CO3MessageManager.NotificationAdapter(this, new ArrayList<>());
-        h2CO3MessageManager = new H2CO3MessageManager(adapter, messageListView);
+        h2co3MessageManager = new H2CO3MessageManager(adapter, messageListView);
+        H2CO3Tools.setH2CO3MessageManager(h2co3MessageManager);
         messageListView.setLayoutManager(new LinearLayoutManager(this));
         messageListView.setAdapter(adapter);
     }

@@ -19,6 +19,7 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.application.H2CO3Application;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter;
@@ -69,7 +70,7 @@ public class DirectoryListAdapter extends H2CO3RecycleAdapter<String> {
             configureCardView(cardView, directoryPath);
             configureButtons(position, removeButton, deleteButton, directoryPath);
         } catch (JSONException e) {
-            H2CO3Tools.showError(mContext, "Error loading directory data.");
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Error loading directory data.");
         }
     }
 
@@ -134,7 +135,7 @@ public class DirectoryListAdapter extends H2CO3RecycleAdapter<String> {
                                 FileTools.deleteDirectory(directoryFile);
                                 ((H2CO3Activity) mContext).runOnUiThread(() -> mRvItemOnclickListener.RvItemOnclick(position));
                             } catch (IOException e) {
-                                H2CO3Tools.showError(mContext, "Error deleting directory.");
+                                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Error deleting directory.");
                             }
                         });
                     }

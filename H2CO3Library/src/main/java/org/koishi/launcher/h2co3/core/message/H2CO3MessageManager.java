@@ -55,7 +55,7 @@ public class H2CO3MessageManager {
             super(new ArrayList<>(notifications), context);
             colorMap = new HashMap<>();
             colorMap.put(NotificationItem.Type.DEBUG, R.color.app_blue_normal);
-            colorMap.put(NotificationItem.Type.ERROR, R.color.md_theme_error);
+            colorMap.put(NotificationItem.Type.ERROR, R.color.md_theme_errorContainer);
             colorMap.put(NotificationItem.Type.INFO, R.color.app_green_normal);
             colorMap.put(NotificationItem.Type.WARNING, R.color.md_theme_errorContainer);
         }

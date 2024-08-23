@@ -27,6 +27,7 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.control.ckb.button.GameButton;
 import org.koishi.launcher.h2co3.control.ckb.support.CustomizeKeyboardMaker;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.resources.component.dialog.DialogUtils;
 import org.koishi.launcher.h2co3.resources.component.dialog.support.DialogSupports;
@@ -140,7 +141,7 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
         if (!mManager.loadKeyboard(fileName)) {
             DialogUtils.createSingleChoiceDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_error), mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_failed_to_import_keyboard_layout), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_ok), null);
         } else {
-            H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_successed_to_import_keyboard_layout));
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_successed_to_import_keyboard_layout));
         }
     }
 
@@ -155,11 +156,11 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
         if (v == buttonExport) {
             String fn = editFileName.getText().toString();
             if (fn.isEmpty()) {
-                H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_filename_can_not_be_void));
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_filename_can_not_be_void));
                 return;
             }
             if (fn.equals(CkbManager.LAST_KEYBOARD_LAYOUT_NAME)) {
-                H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_please_change_file_name));
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_please_change_file_name));
                 return;
             }
 

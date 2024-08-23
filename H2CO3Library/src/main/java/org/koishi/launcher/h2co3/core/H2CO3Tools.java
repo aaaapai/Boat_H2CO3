@@ -10,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.Architecture;
 
 import java.io.File;
@@ -94,6 +95,7 @@ public class H2CO3Tools {
     private static final String VIRGL_TEST_SOCKET_NAME = ".virgl_test";
     private static final String VIRGL_TEST_SOCKET_PATH = H2CO3Tools.CACHE_DIR + "/" + VIRGL_TEST_SOCKET_NAME;
 
+    private static H2CO3MessageManager h2co3MessageManager;
     @SuppressLint("SdCardPath")
     public static void loadPaths(Context context) {
         CONTEXT = context;
@@ -180,6 +182,14 @@ public class H2CO3Tools {
         if (!file.exists()) {
             file.mkdirs();
         }
+    }
+
+    public static void setH2CO3MessageManager(H2CO3MessageManager h2co3MessageManager) {
+        H2CO3Tools.h2co3MessageManager = h2co3MessageManager;
+    }
+
+    public static H2CO3MessageManager getH2CO3MessageManager() {
+        return h2co3MessageManager;
     }
 
     public static <T> T getH2CO3LauncherValue(String key, T defaultValue, Class<T> type) {
@@ -284,8 +294,7 @@ public class H2CO3Tools {
         };
     }
 
-    public static void showError(Context context, String message) {
-        View view = ((MaterialActivity) context).findViewById(android.R.id.content);
-        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+    public static void showError(H2CO3MessageManager.NotificationItem.Type type, String message) {
+        H2CO3Tools.h2co3MessageManager.addNotification(type, message);
     }
 }

@@ -60,6 +60,7 @@ import org.koishi.launcher.h2co3.core.login.bean.UserBean;
 import org.koishi.launcher.h2co3.core.login.other.AuthResult;
 import org.koishi.launcher.h2co3.core.login.other.LoginUtils;
 import org.koishi.launcher.h2co3.core.login.other.Servers;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Button;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
@@ -513,7 +514,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 recyclerView.setAdapter(adapterUser);
             });
         } catch (JSONException | IOException e) {
-            H2CO3Tools.showError(requireActivity(), e.getMessage());
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -527,7 +528,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 }
             });
         } catch (JSONException | IOException e) {
-            H2CO3Tools.showError(requireActivity(), e.getMessage());
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
