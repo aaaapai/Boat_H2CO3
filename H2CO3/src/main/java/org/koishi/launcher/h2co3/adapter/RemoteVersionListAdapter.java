@@ -46,10 +46,6 @@ public class RemoteVersionListAdapter extends H2CO3RecycleAdapter<RemoteVersion>
         iconMap.put(QuiltRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_quilt);
         iconMap.put(QuiltAPIRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_quilt);
         iconMap.put(GameRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_mods);
-
-        tagMap.put(GameRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.string.download_release);
-        tagMap.put(GameRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.string.download_snapshot);
-        tagMap.put(GameRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.string.download_old_beta);
     }
 
     public RemoteVersionListAdapter(Context context, List<RemoteVersion> list, OnRemoteVersionSelectListener listener) {

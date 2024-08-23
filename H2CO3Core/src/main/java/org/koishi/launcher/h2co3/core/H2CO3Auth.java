@@ -11,6 +11,7 @@ import org.koishi.launcher.h2co3.core.login.bean.UserBean;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -92,7 +93,7 @@ public class H2CO3Auth {
         setUserState(emptyUser);
     }
 
-    public static List<UserBean> getUserList(JSONObject obj) throws IOException {
+    public static ArrayList<UserBean> getUserList(JSONObject obj) throws IOException {
         userList.clear();
         parseJsonToUser(obj);
         return userList;

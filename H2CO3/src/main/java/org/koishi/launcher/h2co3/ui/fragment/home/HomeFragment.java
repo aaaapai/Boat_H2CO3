@@ -69,7 +69,7 @@ import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3ProgressDialog;
 import org.koishi.launcher.h2co3.ui.H2CO3LauncherClientActivity;
 import org.koishi.launcher.h2co3.ui.MicrosoftLoginActivity;
 import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
-import org.koishi.launcher.h2co3.utils.HomeLoginHandler;
+import org.koishi.launcher.h2co3.handler.HomeLoginHandler;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -83,8 +83,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author caini
@@ -111,7 +109,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     private TextInputLayout loginPasswordLayout;
     private H2CO3Button login, homeUserListButton;
     private LinearProgressIndicator loadingNoticeProgress;
-    private List<UserBean> userList = new ArrayList<>();
+    private ArrayList<UserBean> userList = new ArrayList<>();
     private Spinner serverSpinner;
     private H2CO3Button register;
     private Servers servers;
@@ -131,11 +129,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 progressDialog.dismiss();
                 if (authResult.getSelectedProfile() != null) {
                     H2CO3Auth.addUserToJson(authResult.getSelectedProfile().getName(), user, pass, "2", currentBaseUrl, authResult.getSelectedProfile().getId(), UUID.randomUUID().toString(), "0", authResult.getAccessToken(), "0", "0", true, false);
-                    try {
-                        reLoadUser();
-                    } catch (JSONException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    reLoadUser();
                     loginDialogAlert.dismiss();
                 } else {
                     String[] items = authResult.getAvailableProfiles().stream().map(AuthResult.AvailableProfiles::getName).toArray(String[]::new);
@@ -144,11 +138,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                     alertDialogBuilder.setItems(items, (dialog, which) -> {
                         AuthResult.AvailableProfiles selectedProfile = authResult.getAvailableProfiles().get(which);
                         H2CO3Auth.addUserToJson(selectedProfile.getName(), user, pass, "2", currentBaseUrl, selectedProfile.getId(), UUID.randomUUID().toString(), "0", authResult.getAccessToken(), "0", "0", true, false);
-                        try {
-                            reLoadUser();
-                        } catch (JSONException | IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                        reLoadUser();
                         loginDialogAlert.dismiss();
                     });
                     alertDialogBuilder.setNegativeButton(requireActivity().getString(org.koishi.launcher.h2co3.resources.R.string.button_cancel), null);
@@ -257,14 +247,13 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        reLoadUser();
+        loadUser();
 
         @SuppressLint("InflateParams") View contentView1 = LayoutInflater.from(requireActivity()).inflate(R.layout.item_user_add, null);
         H2CO3CardView userAdd = contentView1.findViewById(R.id.login_user_add);
         userAdd.setOnClickListener(v1 -> showLoginDialog());
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
+        H2CO3Application.sExecutorService.execute(() -> {
             try {
                 URL url = new URL("https://gitee.com/cainiaohanhanyai/cnhhfile/raw/master/Documents/Notification.txt");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -515,11 +504,36 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         }
     }
 
-    public void reLoadUser() throws JSONException, IOException {
+    public void loadUser() {
+        try {
+            userList = new ArrayList<>();
+            updateUserList();
+            runOnUiThread(() -> {
+                adapterUser = new HomeListUserAdapter(HomeFragment.this, userList);
+                recyclerView.setAdapter(adapterUser);
+            });
+        } catch (JSONException | IOException e) {
+            H2CO3Tools.showError(requireActivity(), e.getMessage());
+        }
+    }
+
+    public void reLoadUser() {
+        try {
+            updateUserList();
+            runOnUiThread(() -> {
+                if (adapterUser != null) {
+                    adapterUser = new HomeListUserAdapter(HomeFragment.this, userList);
+                    recyclerView.setAdapter(adapterUser);
+                }
+            });
+        } catch (JSONException | IOException e) {
+            H2CO3Tools.showError(requireActivity(), e.getMessage());
+        }
+    }
+
+    private void updateUserList() throws JSONException, IOException {
         userList.clear();
-        userList = H2CO3Auth.getUserList(new JSONObject(H2CO3Auth.getUserJson()));
-        adapterUser = new HomeListUserAdapter(this, userList);
-        recyclerView.setAdapter(adapterUser);
+        userList.addAll(H2CO3Auth.getUserList(new JSONObject(H2CO3Auth.getUserJson())));
     }
 
     @Override

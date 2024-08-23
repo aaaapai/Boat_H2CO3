@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class H2CO3Settings {
 
-    public static final List<UserBean> userList = new ArrayList<>();
+    public static final ArrayList<UserBean> userList = new ArrayList<>();
     /************账户相关
      *
      */
