@@ -90,10 +90,9 @@ public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickLis
         FileDownloadTask.speedEvent.channel(FileDownloadTask.SpeedEvent.class).registerWeak(speedEventHandler);
     }
 
-    @SuppressLint("SetTextI18n")
     private @NonNull Consumer<FileDownloadTask.SpeedEvent> getSpeedEventConsumer() {
         DecimalFormat df = new DecimalFormat("#.##");
-        return speedEvent -> {
+        @SuppressLint("SetTextI18n") Consumer<FileDownloadTask.SpeedEvent> speedEventHandler = speedEvent -> {
             double speed = speedEvent.getSpeed();
             String[] units = new String[]{"B/s", "KB/s", "MB/s"};
             int unitIndex = 0;
@@ -105,6 +104,7 @@ public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickLis
             double finalSpeed = speed;
             Schedulers.androidUIThread().execute(() -> speedView.setText(df.format(finalSpeed) + " " + finalUnit));
         };
+        return speedEventHandler;
     }
 
     public void setAlertDialog(AlertDialog dialog) {
@@ -251,14 +251,15 @@ public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickLis
 
                 private void updateStageNode(String stage, Consumer<StageNode> action) {
                     Schedulers.androidUIThread().execute(() -> {
-                        int index = stageNodes.indexOf(new StageNode(getContext(), stage));
-                        if (index >= 0) {
-                            action.accept(stageNodes.get(index));
-                            notifyItemChanged(index);
+                        for (int i = 0; i < stageNodes.size(); i++) {
+                            if (stageNodes.get(i).stage.equals(stage)) {
+                                action.accept(stageNodes.get(i));
+                                notifyItemChanged(i);
+                                break;
+                            }
                         }
                     });
                 }
-
 
                 private void setTaskName(Task<?> task) {
                     String name = getTaskName(task);

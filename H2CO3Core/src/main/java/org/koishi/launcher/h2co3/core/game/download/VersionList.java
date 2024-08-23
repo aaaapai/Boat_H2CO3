@@ -117,7 +117,7 @@ public abstract class VersionList<T extends RemoteVersion> {
     public final Collection<T> getVersions(String gameVersion) {
         lock.readLock().lock();
         try {
-            return Collections.unmodifiableCollection(new ArrayList<>(getVersionsImpl(gameVersion)));
+            return Collections.unmodifiableCollection(getVersionsImpl(gameVersion));
         } finally {
             lock.readLock().unlock();
         }
@@ -133,10 +133,10 @@ public abstract class VersionList<T extends RemoteVersion> {
     public Optional<T> getVersion(String gameVersion, String remoteVersion) {
         lock.readLock().lock();
         try {
-            T result = null;
-            for (T it : versions.get(gameVersion))
-                if (remoteVersion.equals(it.getSelfVersion()))
-                    result = it;
+            T result = versions.get(gameVersion).stream()
+                    .filter(it -> remoteVersion.equals(it.getSelfVersion()))
+                    .findFirst()
+                    .orElse(null);
             return Optional.ofNullable(result);
         } finally {
             lock.readLock().unlock();

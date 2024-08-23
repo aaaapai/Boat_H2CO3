@@ -1,23 +1,4 @@
-/*
- * Hello Minecraft! Launcher
- * Copyright (C) 2020  huangyuhui <huanghongxun2008@126.com> and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
 package org.koishi.launcher.h2co3.core.game.download;
-
-import static org.koishi.launcher.h2co3.core.utils.Pair.pair;
 
 import org.koishi.launcher.h2co3.core.game.download.fabric.FabricAPIVersionList;
 import org.koishi.launcher.h2co3.core.game.download.fabric.FabricVersionList;
@@ -28,12 +9,14 @@ import org.koishi.launcher.h2co3.core.game.download.neoforge.NeoForgeBMCLVersion
 import org.koishi.launcher.h2co3.core.game.download.optifine.OptiFineBMCLVersionList;
 import org.koishi.launcher.h2co3.core.game.download.quilt.QuiltAPIVersionList;
 import org.koishi.launcher.h2co3.core.game.download.quilt.QuiltVersionList;
-import org.koishi.launcher.h2co3.core.utils.Pair;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class BMCLAPIDownloadProvider implements DownloadProvider {
+    private static final String VERSION_MANIFEST_URL = "/mc/game/version_manifest.json";
+    private static final String ASSETS_URL = "/assets/";
+
     private final String apiRoot;
     private final GameVersionList game;
     private final FabricVersionList fabric;
@@ -44,9 +27,12 @@ public final class BMCLAPIDownloadProvider implements DownloadProvider {
     private final OptiFineBMCLVersionList optifine;
     private final QuiltVersionList quilt;
     private final QuiltAPIVersionList quiltApi;
-    private final List<Pair<String, String>> replacement;
+    private final Map<String, String> replacementMap;
 
     public BMCLAPIDownloadProvider(String apiRoot) {
+        if (apiRoot == null || apiRoot.isEmpty()) {
+            throw new IllegalArgumentException("apiRoot cannot be null or empty");
+        }
         this.apiRoot = apiRoot;
         this.game = new GameVersionList(this);
         this.fabric = new FabricVersionList(this);
@@ -57,24 +43,24 @@ public final class BMCLAPIDownloadProvider implements DownloadProvider {
         this.optifine = new OptiFineBMCLVersionList(apiRoot);
         this.quilt = new QuiltVersionList(this);
         this.quiltApi = new QuiltAPIVersionList(this);
-        this.replacement = Arrays.asList(
-                pair("https://bmclapi2.bangbang93.com", apiRoot),
-                pair("https://launchermeta.mojang.com", apiRoot),
-                pair("https://piston-meta.mojang.com", apiRoot),
-                pair("https://piston-data.mojang.com", apiRoot),
-                pair("https://launcher.mojang.com", apiRoot),
-                pair("https://libraries.minecraft.net", apiRoot + "/libraries"),
-                pair("http://files.minecraftforge.net/maven", apiRoot + "/maven"),
-                pair("https://files.minecraftforge.net/maven", apiRoot + "/maven"),
-                pair("https://maven.minecraftforge.net", apiRoot + "/maven"),
-                pair("https://maven.neoforged.net/releases/net/neoforged/forge", apiRoot + "/maven/net/neoforged/forge"),
-                pair("http://dl.liteloader.com/versions/versions.json", apiRoot + "/maven/com/mumfrey/liteloader/versions.json"),
-                pair("http://dl.liteloader.com/versions", apiRoot + "/maven"),
-                pair("https://meta.fabricmc.net", apiRoot + "/fabric-meta"),
-                pair("https://maven.fabricmc.net", apiRoot + "/maven"),
-                pair("https://authlib-injector.yushi.moe", apiRoot + "/mirrors/authlib-injector"),
-                pair("https://repo1.maven.org/maven2", "https://mirrors.cloud.tencent.com/nexus/repository/maven-public")
-        );
+        this.replacementMap = new HashMap<>() {{
+            put("https://bmclapi2.bangbang93.com", apiRoot);
+            put("https://launchermeta.mojang.com", apiRoot);
+            put("https://piston-meta.mojang.com", apiRoot);
+            put("https://piston-data.mojang.com", apiRoot);
+            put("https://launcher.mojang.com", apiRoot);
+            put("https://libraries.minecraft.net", apiRoot + "/libraries");
+            put("http://files.minecraftforge.net/maven", apiRoot + "/maven");
+            put("https://files.minecraftforge.net/maven", apiRoot + "/maven");
+            put("https://maven.minecraftforge.net", apiRoot + "/maven");
+            put("https://maven.neoforged.net/releases/net/neoforged/forge", apiRoot + "/maven/net/neoforged/forge");
+            put("http://dl.liteloader.com/versions/versions.json", apiRoot + "/maven/com/mumfrey/liteloader/versions.json");
+            put("http://dl.liteloader.com/versions", apiRoot + "/maven");
+            put("https://meta.fabricmc.net", apiRoot + "/fabric-meta");
+            put("https://maven.fabricmc.net", apiRoot + "/maven");
+            put("https://authlib-injector.yushi.moe", apiRoot + "/mirrors/authlib-injector");
+            put("https://repo1.maven.org/maven2", "https://mirrors.cloud.tencent.com/nexus/repository/maven-public");
+        }};
     }
 
     public String getApiRoot() {
@@ -83,12 +69,12 @@ public final class BMCLAPIDownloadProvider implements DownloadProvider {
 
     @Override
     public String getVersionListURL() {
-        return apiRoot + "/mc/game/version_manifest.json";
+        return apiRoot + VERSION_MANIFEST_URL;
     }
 
     @Override
     public String getAssetBaseURL() {
-        return apiRoot + "/assets/";
+        return apiRoot + ASSETS_URL;
     }
 
     @Override
@@ -109,12 +95,11 @@ public final class BMCLAPIDownloadProvider implements DownloadProvider {
 
     @Override
     public String injectURL(String baseURL) {
-        for (Pair<String, String> pair : replacement) {
-            if (baseURL.startsWith(pair.getKey())) {
-                return pair.getValue() + baseURL.substring(pair.getKey().length());
+        for (Map.Entry<String, String> entry : replacementMap.entrySet()) {
+            if (baseURL.startsWith(entry.getKey())) {
+                return entry.getValue() + baseURL.substring(entry.getKey().length());
             }
         }
-
         return baseURL;
     }
 
