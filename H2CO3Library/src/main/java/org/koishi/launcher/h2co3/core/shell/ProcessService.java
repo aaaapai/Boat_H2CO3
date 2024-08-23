@@ -13,7 +13,7 @@ import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridgeCallBack;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherHelper;
-import org.koishi.launcher.h2co3.core.utils.Logging;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 
 import java.io.File;
@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-import java.util.logging.Level;
 
 public class ProcessService extends Service {
 
@@ -47,9 +46,6 @@ public class ProcessService extends Service {
         H2CO3LauncherBridge bridge = H2CO3LauncherHelper.launchAPIInstaller(H2CO3Tools.CONTEXT, gameHelper, command, jre);
         H2CO3LauncherBridgeCallBack callback = new H2CO3LauncherBridgeCallBack() {
             /**
-             * @param surface
-             * @param width
-             * @param height
              */
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
@@ -57,9 +53,6 @@ public class ProcessService extends Service {
             }
 
             /**
-             * @param surface
-             * @param width
-             * @param height
              */
             @Override
             public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
@@ -86,7 +79,7 @@ public class ProcessService extends Service {
                         FileTools.writeTextWithAppendMode(new File(bridge.getLogPath()), log + "\n");
                     }
                 } catch (IOException e) {
-                    Logging.LOG.log(Level.WARNING, "Can't log game log to target file", e.getMessage());
+                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
             }
 
@@ -107,11 +100,10 @@ public class ProcessService extends Service {
             }
 
             /**
-             * @param e
              */
             @Override
             public void onError(Exception e) {
-
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
 
             @Override
@@ -124,7 +116,7 @@ public class ProcessService extends Service {
             try {
                 bridge.execute(null, callback);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         }, 1000);
     }
@@ -138,7 +130,7 @@ public class ProcessService extends Service {
             socket.send(packet);
             socket.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         stopSelf();
     }

@@ -155,11 +155,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 progressDialog.dismiss();
                 adapterUser.notifyDataSetChanged();
                 loginDialogAlert.dismiss();
-                alertDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
-                alertDialogBuilder.setTitle(org.koishi.launcher.h2co3.library.R.string.title_warn);
-                alertDialogBuilder.setMessage(error);
-                alertDialogBuilder.setPositiveButton(requireActivity().getString(org.koishi.launcher.h2co3.library.R.string.button_ok), null);
-                alertDialogBuilder.show();
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, error);
             });
         }
     };
@@ -232,13 +228,13 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         findView();
         try {
             init();
-        } catch (JSONException | IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return view;
     }
 
-    private void init() throws JSONException, IOException {
+    private void init() throws IOException {
         String userJson = H2CO3Auth.getUserJson();
         if (TextUtils.isEmpty(userJson) || "{}".equals(userJson)) {
             FileTools.writeFile(usersFile, "{}");
@@ -410,7 +406,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         });
     }
 
-    private void addUserAndReload(String username) throws JSONException, IOException {
+    private void addUserAndReload(String username) throws IOException {
         H2CO3Auth.addUserToJson(username, "0", "0", "0", "0", "0", UUID.randomUUID().toString(), "0", "0", "0", "0", true, false);
         reLoadUser();
         loginDialogAlert.dismiss();
@@ -461,7 +457,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 currentBaseUrl = server.getBaseUrl();
                 String currentRegisterUrl = server.getRegister();
             } catch (Exception e) {
-                e.printStackTrace();
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         }
     }
@@ -489,7 +485,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                     serverList.add("无认证服务器");
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         } else {
             serverList.add("无法读取服务器列表");

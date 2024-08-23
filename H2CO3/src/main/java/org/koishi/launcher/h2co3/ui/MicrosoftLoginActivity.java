@@ -14,6 +14,8 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import org.koishi.launcher.h2co3.R;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
 import java.io.IOException;
@@ -71,7 +73,7 @@ public class MicrosoftLoginActivity extends H2CO3Activity {
                 try {
                     clearWebViewCache(MicrosoftLoginActivity.this);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
                 finish();
                 return true;

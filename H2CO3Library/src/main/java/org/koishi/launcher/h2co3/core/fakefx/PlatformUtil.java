@@ -1,5 +1,8 @@
 package org.koishi.launcher.h2co3.core.fakefx;
 
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -180,7 +183,7 @@ public class PlatformUtil {
             p.load(in);
             in.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         if (javafxPlatform == null) {
             javafxPlatform = p.getProperty("javafx.platform");

@@ -20,7 +20,9 @@ import org.koishi.launcher.h2co3.control.controller.Controller;
 import org.koishi.launcher.h2co3.control.definitions.map.MouseMap;
 import org.koishi.launcher.h2co3.control.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.control.input.HwInput;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -107,17 +109,12 @@ public class Mouse implements HwInput {
 
     @Override
     public boolean onMotionKey(MotionEvent event) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            doMotion(event);
-        }
+        doMotion(event);
         return true;
     }
 
     //主要的控制逻辑处理
     private void doMotion(MotionEvent event) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            return;
-        }
 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_BUTTON_PRESS:
@@ -165,16 +162,12 @@ public class Mouse implements HwInput {
 
     @Override
     public void onPaused() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            cancelTimer();
-        }
+        cancelTimer();
     }
 
     @Override
     public void onResumed() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createTimer();
-        }
+        createTimer();
     }
 
     @Override
@@ -183,26 +176,24 @@ public class Mouse implements HwInput {
     }
 
     private void createTimer() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mTimer = new Timer();
-            mTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (!mController.getClient().getViewsParent().isFocusable())
-                        mController.getClient().getViewsParent().setFocusable(true);
-                    if (!mController.getClient().getViewsParent().hasPointerCapture()) {
-                        mController.getClient().getViewsParent().requestPointerCapture();
-                    }
+        mTimer = new Timer();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (!mController.getClient().getViewsParent().isFocusable())
+                    mController.getClient().getViewsParent().setFocusable(true);
+                if (!mController.getClient().getViewsParent().hasPointerCapture()) {
+                    mController.getClient().getViewsParent().requestPointerCapture();
                 }
-            }, 0, 500);
-        }
+            }
+        }, 0, 500);
     }
 
     private void cancelTimer() {
         try {
             mTimer.cancel();
         } catch (Exception e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 

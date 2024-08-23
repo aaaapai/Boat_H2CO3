@@ -7,6 +7,8 @@ import android.os.Looper;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.koishi.launcher.h2co3.library.R;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
@@ -20,7 +22,6 @@ import java.util.Map;
 public class H2CO3MessageManager {
     private final NotificationAdapter adapter;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private final List<NotificationItem> pendingRemovals = new ArrayList<>();
     private static RecyclerView recyclerView = null;
 
     public H2CO3MessageManager(NotificationAdapter adapter, RecyclerView recyclerView) {
@@ -34,10 +35,8 @@ public class H2CO3MessageManager {
 
         Runnable removalTask = () -> {
             adapter.removeNotification(item);
-            pendingRemovals.remove(item);
         };
-        pendingRemovals.add(item);
-        handler.postDelayed(removalTask, 5000);
+        handler.postDelayed(removalTask, 3700);
     }
 
     public List<NotificationItem> getNotifications() {
@@ -69,9 +68,18 @@ public class H2CO3MessageManager {
             H2CO3CardView itemCardView = holder.itemView.findViewById(R.id.message_item_view);
             H2CO3TextView messageTextView = holder.itemView.findViewById(R.id.tv_message);
             H2CO3TextView typeTextView = holder.itemView.findViewById(R.id.tv_type);
+
             messageTextView.setText(notification.message());
             typeTextView.setText(String.valueOf(notification.type()));
             itemCardView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), colorMap.get(notification.type())));
+
+            itemCardView.setOnClickListener(v -> {
+                new MaterialAlertDialogBuilder(mContext)
+                        .setTitle("Message Type" + ": " + notification.type())
+                        .setMessage(notification.message())
+                        .setPositiveButton("OK", null)
+                        .show();
+            });
         }
 
         @Override

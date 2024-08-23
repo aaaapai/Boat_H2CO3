@@ -7,13 +7,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.koishi.launcher.h2co3.core.login.bean.UserBean;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public class H2CO3Auth {
 
@@ -84,7 +84,7 @@ public class H2CO3Auth {
                 userList.add(user);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ public class H2CO3Auth {
         try {
             return readFileContent(usersFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return "";
     }
@@ -130,7 +130,7 @@ public class H2CO3Auth {
             writeFileContent(usersFile, json);
             parseJsonToUser(jsonObject);
         } catch (JSONException | IOException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 

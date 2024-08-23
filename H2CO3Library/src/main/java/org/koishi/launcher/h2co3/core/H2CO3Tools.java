@@ -3,9 +3,6 @@ package org.koishi.launcher.h2co3.core;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
-import android.view.View;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
@@ -22,8 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-
-import rikka.material.app.MaterialActivity;
 
 public class H2CO3Tools {
 
@@ -261,7 +256,7 @@ public class H2CO3Tools {
             defaultConfigJson.put(key, value);
             Files.write(configPath, defaultConfigJson.toString().getBytes());
         } catch (JSONException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 

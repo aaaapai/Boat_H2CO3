@@ -16,6 +16,7 @@ import org.koishi.launcher.h2co3.control.ckb.support.GameButtonRecorder;
 import org.koishi.launcher.h2co3.control.ckb.support.KeyboardRecorder;
 import org.koishi.launcher.h2co3.control.controller.Controller;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 import org.koishi.launcher.h2co3.resources.component.dialog.DialogUtils;
 import org.koishi.launcher.h2co3.resources.component.dialog.support.DialogSupports;
@@ -63,7 +64,7 @@ public class CkbManager {
         try (BufferedWriter out = Files.newBufferedWriter(file.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
             out.write(jsonString);
         } catch (IOException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -187,7 +188,7 @@ public class CkbManager {
             loadKeyboard(kr);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             handleLoadError(file);
             return false;
         }

@@ -1,5 +1,8 @@
 package org.koishi.launcher.h2co3.core.fakefx.property.adapter;
 
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
+
 import java.lang.ref.PhantomReference;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
@@ -42,11 +45,10 @@ public class Disposer implements Runnable {
             try {
                 Object obj = queue.remove();
                 ((Reference) obj).clear();
-                Runnable rec = (Runnable) records.remove(obj);
+                Runnable rec = records.remove(obj);
                 rec.run();
             } catch (Exception e) {
-                System.out.println("Exception while removing reference: " + e);
-                e.printStackTrace();
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         }
     }

@@ -1,6 +1,5 @@
 package org.koishi.launcher.h2co3.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,7 +7,9 @@ import android.widget.ImageView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.koishi.launcher.h2co3.R;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Button;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
@@ -105,7 +106,7 @@ public class MCVersionListAdapter extends H2CO3RecycleAdapter<String> {
                 });
                 directoryFragment.handler.sendEmptyMessage(2);
             } catch (IOException e) {
-                e.printStackTrace();
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         });
     }

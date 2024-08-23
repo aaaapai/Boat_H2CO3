@@ -36,7 +36,9 @@ import org.koishi.launcher.h2co3.control.definitions.map.KeyMap;
 import org.koishi.launcher.h2co3.control.definitions.map.MouseMap;
 import org.koishi.launcher.h2co3.control.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.control.input.OnscreenInput;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.resources.component.dialog.DialogUtils;
 import org.koishi.launcher.h2co3.resources.component.dialog.support.DialogSupports;
 
@@ -204,7 +206,7 @@ public class OnscreenTouchpad implements OnscreenInput, KeyMap, MouseMap {
                                     try {
                                         Thread.sleep(20);
                                     } catch (InterruptedException e) {
-                                        e.printStackTrace();
+                                        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                                     }
                                     sendMouseEvent(MOUSEMAP_BUTTON_LEFT, false);
                                 } else {
