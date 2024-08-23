@@ -334,7 +334,7 @@ public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickLis
 
                 message = getStageMessage(stageKey, stageValue);
                 title.setText(message);
-                icon.setImageDrawable(context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_menu_custom));
+                icon.setImageDrawable(context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_menu_custom));
             }
 
             private String getStageMessage(String stageKey, String stageValue) {
@@ -357,15 +357,15 @@ public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickLis
             public void begin() {
                 if (started) return;
                 started = true;
-                icon.setImageDrawable(context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_arrow_right_black));
+                icon.setImageDrawable(context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_arrow_right_black));
             }
 
             public void fail() {
-                icon.setImageDrawable(context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
+                icon.setImageDrawable(context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.xicon));
             }
 
             public void succeed() {
-                icon.setImageDrawable(context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_baseline_done_24));
+                icon.setImageDrawable(context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_baseline_done_24));
             }
 
             public void count() {

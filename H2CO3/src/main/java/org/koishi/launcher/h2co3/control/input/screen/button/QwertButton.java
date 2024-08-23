@@ -14,10 +14,10 @@ public class QwertButton extends BaseButton {
 
     public QwertButton(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        TypedArray array = context.obtainStyledAttributes(attrs, org.koishi.launcher.h2co3.resources.R.styleable.QwertButton);
-        setCharNone(array.getString(org.koishi.launcher.h2co3.resources.R.styleable.QwertButton_char_none));
-        setCharShift(array.getString(org.koishi.launcher.h2co3.resources.R.styleable.QwertButton_char_shift));
-        setCharCaps(array.getString(org.koishi.launcher.h2co3.resources.R.styleable.QwertButton_char_capslock));
+        TypedArray array = context.obtainStyledAttributes(attrs, org.koishi.launcher.h2co3.library.R.styleable.QwertButton);
+        setCharNone(array.getString(org.koishi.launcher.h2co3.library.R.styleable.QwertButton_char_none));
+        setCharShift(array.getString(org.koishi.launcher.h2co3.library.R.styleable.QwertButton_char_shift));
+        setCharCaps(array.getString(org.koishi.launcher.h2co3.library.R.styleable.QwertButton_char_capslock));
         array.recycle();
     }
 

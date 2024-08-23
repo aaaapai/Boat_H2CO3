@@ -38,7 +38,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Boat_H2CO3"
 include ':H2CO3'
-include ':H2CO3Resources'
-include ':H2CO3Core'
+include ':H2CO3Library'
 include ':H2CO3Launcher'
 include ':LWJGL-H2CO3'

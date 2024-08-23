@@ -49,14 +49,11 @@ public class CustomizeKeyboardEditorActivity extends H2CO3Activity implements Vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //隐藏系统状态栏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_ckbe);
-
-        //初始化
+        showMessageListView();
         initUI();
 
-        //窗口
         getWindow().getDecorView().post(() -> {
             hideSystemUI(getWindow().getDecorView());
             mTimer = new Timer();
@@ -112,7 +109,7 @@ public class CustomizeKeyboardEditorActivity extends H2CO3Activity implements Vi
         });
 
         //设置背景
-        mLayoutMain.setBackground(new BitmapDrawable(getResources(), PicUtils.blur(this, BLUR_RADIUS, ((BitmapDrawable) Objects.requireNonNull(ContextCompat.getDrawable(this, org.koishi.launcher.h2co3.resources.R.drawable.background))).getBitmap())));
+        mLayoutMain.setBackground(new BitmapDrawable(getResources(), PicUtils.blur(this, BLUR_RADIUS, ((BitmapDrawable) Objects.requireNonNull(ContextCompat.getDrawable(this, org.koishi.launcher.h2co3.library.R.drawable.background))).getBitmap())));
 
         //初始化控制器
         mController = new H2CO3VirtualController(this, new H2CO3LauncherBridge(), KeyEvent.KEYMAP_TO_X) {

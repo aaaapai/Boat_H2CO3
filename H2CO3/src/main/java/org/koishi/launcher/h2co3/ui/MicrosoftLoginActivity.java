@@ -31,7 +31,7 @@ public class MicrosoftLoginActivity extends H2CO3Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_microsoft_login);
-
+        showMessageListView();
         progressBar = findViewById(R.id.web_loading_progress);
         webView = findViewById(R.id.microsoft_login_webview);
         initWebView();

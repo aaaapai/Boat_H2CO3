@@ -30,9 +30,10 @@ public class CrashActivity extends H2CO3Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crash);
-        H2CO3ToolBar toolbar = findViewById(org.koishi.launcher.h2co3.resources.R.id.toolbar);
+        showMessageListView();
+        H2CO3ToolBar toolbar = findViewById(org.koishi.launcher.h2co3.library.R.id.toolbar);
         //setSupportActionBar(toolbar);
-        toolbar.setTitle(getResources().getString(org.koishi.launcher.h2co3.resources.R.string.crash_title));
+        toolbar.setTitle(getResources().getString(org.koishi.launcher.h2co3.library.R.string.crash_title));
         crash = findViewById(R.id.crash);
         Button restart = findViewById(R.id.restart);
         restart.setOnClickListener(rv -> restart());

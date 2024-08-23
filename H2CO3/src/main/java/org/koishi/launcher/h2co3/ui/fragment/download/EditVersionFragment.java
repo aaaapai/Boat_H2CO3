@@ -124,7 +124,7 @@ public class EditVersionFragment extends H2CO3Fragment {
 
     private void navigateBack() {
         getParentFragmentManager().beginTransaction()
-                .setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit, org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop)
+                .setCustomAnimations(org.koishi.launcher.h2co3.library.R.anim.fragment_enter, org.koishi.launcher.h2co3.library.R.anim.fragment_exit, org.koishi.launcher.h2co3.library.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.library.R.anim.fragment_exit_pop)
                 .remove(EditVersionFragment.this)
                 .show(chooseMcVersionFragment)
                 .commit();
@@ -164,8 +164,8 @@ public class EditVersionFragment extends H2CO3Fragment {
     private void showFabricApiWarning() {
         H2CO3MessageDialog builder = new H2CO3MessageDialog(getContext());
         builder.setCancelable(false);
-        builder.setMessage(requireContext().getString(org.koishi.launcher.h2co3.resources.R.string.install_installer_fabric_api_warning));
-        builder.setNegativeButton(requireContext().getString(org.koishi.launcher.h2co3.resources.R.string.button_cancel), null);
+        builder.setMessage(requireContext().getString(org.koishi.launcher.h2co3.library.R.string.install_installer_fabric_api_warning));
+        builder.setNegativeButton(requireContext().getString(org.koishi.launcher.h2co3.library.R.string.button_cancel), null);
         builder.create().show();
     }
 
@@ -237,7 +237,7 @@ public class EditVersionFragment extends H2CO3Fragment {
 
         chooseInstallerVersionDialog = new H2CO3CustomViewDialog(requireActivity());
         chooseInstallerVersionDialog.setCustomView(R.layout.dialog_installer_version);
-        chooseInstallerVersionDialog.setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.title_activity_login));
+        chooseInstallerVersionDialog.setTitle(getString(org.koishi.launcher.h2co3.library.R.string.title_activity_login));
         installerVersionListView = chooseInstallerVersionDialog.findViewById(R.id.list_left);
 
         chooseInstallerVersionDialogAlert = chooseInstallerVersionDialog.create();

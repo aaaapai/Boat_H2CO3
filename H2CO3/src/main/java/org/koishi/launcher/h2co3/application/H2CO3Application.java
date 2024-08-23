@@ -13,7 +13,7 @@ import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import cat.ereza.customactivityoncrash.config.CaocConfig;
 import com.orhanobut.logger.Logger;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.resources.R;
+import org.koishi.launcher.h2co3.library.R;
 import org.koishi.launcher.h2co3.ui.CrashActivity;
 
 import java.util.concurrent.ExecutorService;

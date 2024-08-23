@@ -59,7 +59,7 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
     private void initFragment(H2CO3Fragment fragment) {
         if (currentFragment != fragment) {
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop);
+            transaction.setCustomAnimations(org.koishi.launcher.h2co3.library.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.library.R.anim.fragment_exit_pop);
             if (fragment.isAdded()) {
                 transaction.show(fragment);
             } else {

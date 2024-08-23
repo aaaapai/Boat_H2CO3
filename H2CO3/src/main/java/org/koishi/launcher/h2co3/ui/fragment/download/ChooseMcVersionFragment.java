@@ -233,10 +233,10 @@ public class ChooseMcVersionFragment extends H2CO3Fragment {
                     bundle.putString("versionName", version.versionName());
                     EditVersionFragment editVersionFragment = new EditVersionFragment(ChooseMcVersionFragment.this, bundle);
                     getParentFragmentManager().beginTransaction()
-                            .setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter,
-                                    org.koishi.launcher.h2co3.resources.R.anim.fragment_exit,
-                                    org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop,
-                                    org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop)
+                            .setCustomAnimations(org.koishi.launcher.h2co3.library.R.anim.fragment_enter,
+                                    org.koishi.launcher.h2co3.library.R.anim.fragment_exit,
+                                    org.koishi.launcher.h2co3.library.R.anim.fragment_enter_pop,
+                                    org.koishi.launcher.h2co3.library.R.anim.fragment_exit_pop)
                             .add(R.id.fragmentContainerView, editVersionFragment)
                             .hide(ChooseMcVersionFragment.this)
                             .commit();

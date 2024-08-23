@@ -1,6 +1,7 @@
 package org.koishi.launcher.h2co3.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.google.android.material.navigation.NavigationView;
 import org.jetbrains.annotations.NotNull;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 import org.koishi.launcher.h2co3.resources.component.H2CO3ToolBar;
 import org.koishi.launcher.h2co3.ui.fragment.directory.DirectoryFragment;
@@ -36,26 +38,31 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        showMessageListView();
         initUI();
         toolbar.inflateMenu(R.menu.home_toolbar);
         setSupportActionBar(toolbar);
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.navigation_home);
-        getSupportActionBar().setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.app_name));
+        getSupportActionBar().setTitle(getString(org.koishi.launcher.h2co3.library.R.string.app_name));
 
         preLoadFragments();
 
-        switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.app_name);
+        switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.library.R.string.app_name);
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 setNavigationItemChecked(R.id.navigation_home);
-                switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.app_name);
+                h2CO3MessageManager.addNotification(H2CO3MessageManager.NotificationItem.Type.DEBUG, "这是一个调试信息");
+                h2CO3MessageManager.addNotification(H2CO3MessageManager.NotificationItem.Type.ERROR, "发生了一个错误");
+                Log.e("TEST", h2CO3MessageManager.getNotifications().toString());
+                switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.library.R.string.app_name);
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
+
     }
 
     private void initUI() {
@@ -89,7 +96,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
     private void initFragment(H2CO3Fragment fragment) {
         if (currentFragment != fragment) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop);
+            transaction.setCustomAnimations(org.koishi.launcher.h2co3.library.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.library.R.anim.fragment_exit_pop);
             if (fragment != null) {
                 if (fragment.isAdded()) {
                     transaction.show(fragment);
@@ -115,10 +122,10 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_item_home) {
             setNavigationItemChecked(R.id.navigation_home);
-            switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.app_name);
+            switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.library.R.string.app_name);
         } else if (item.getItemId() == R.id.action_item_setting) {
             setNavigationItemChecked(R.id.navigation_manage);
-            switchFragment(getManageFragment(), org.koishi.launcher.h2co3.resources.R.string.title_manage);
+            switchFragment(getManageFragment(), org.koishi.launcher.h2co3.library.R.string.title_manage);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -144,13 +151,13 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         setNavigationItemChecked(menuItem.getItemId());
 
         if (menuItem.getItemId() == R.id.navigation_home) {
-            switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.resources.R.string.app_name);
+            switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.library.R.string.app_name);
         } else if (menuItem.getItemId() == R.id.navigation_directory) {
-            switchFragment(getDirectoryFragment(), org.koishi.launcher.h2co3.resources.R.string.title_directory);
+            switchFragment(getDirectoryFragment(), org.koishi.launcher.h2co3.library.R.string.title_directory);
         } else if (menuItem.getItemId() == R.id.navigation_manage) {
-            switchFragment(getManageFragment(), org.koishi.launcher.h2co3.resources.R.string.title_manage);
+            switchFragment(getManageFragment(), org.koishi.launcher.h2co3.library.R.string.title_manage);
         } else if (menuItem.getItemId() == R.id.navigation_download) {
-            switchFragment(getDownloadFragment(), org.koishi.launcher.h2co3.resources.R.string.title_download);
+            switchFragment(getDownloadFragment(), org.koishi.launcher.h2co3.library.R.string.title_download);
         }
         return true;
     }

@@ -86,19 +86,19 @@ public class InstallerItem {
     private Drawable getDrawable(Context context, LibraryAnalyzer.LibraryType id) {
         return switch (id) {
             case FORGE ->
-                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_forge);
+                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_forge);
             case NEO_FORGE ->
-                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_neoforge);
+                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_neoforge);
             case LITELOADER ->
-                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_liteloader);
+                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_liteloader);
             case OPTIFINE ->
-                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_optifine);
+                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_optifine);
             case FABRIC, FABRIC_API ->
-                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_fabric);
+                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_fabric);
             case QUILT, QUILT_API ->
-                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_quilt);
+                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_quilt);
             default ->
-                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_mods);
+                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_mods);
         };
     }
 
@@ -253,7 +253,7 @@ public class InstallerItem {
                 } else if (incompatibleWith != null) {
                     return AndroidUtils.getLocalizedText(context, "install_installer_incompatible", AndroidUtils.getLocalizedText(context, "install_installer_" + incompatibleWith));
                 } else if (version == null) {
-                    return context.getString(org.koishi.launcher.h2co3.resources.R.string.install_installer_not_installed);
+                    return context.getString(org.koishi.launcher.h2co3.library.R.string.install_installer_not_installed);
                 } else {
                     return version;
                 }

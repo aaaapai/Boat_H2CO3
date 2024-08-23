@@ -76,7 +76,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                     dialogBuilder.create().dismiss();
                     updateDirAdapter();
                 }
-                case MSG_SHOW_ERROR -> H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_add_done));
+                case MSG_SHOW_ERROR -> H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.library.R.string.ver_add_done));
             }
         }
     };
@@ -156,7 +156,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                 dirsJsonObj.getJSONArray("dirs").put(newDir);
                 saveJsonObj(dirsJsonObj);
                 handler.sendEmptyMessage(MSG_ADD_NEW_DIRECTORY);
-                H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_add_done));
+                H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.library.R.string.ver_add_done));
             } catch (JSONException e) {
                 logError(e);
             }
@@ -170,14 +170,14 @@ public class DirectoryFragment extends H2CO3Fragment {
     private void showDirDialog() {
         dialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
         View dialogView = requireActivity().getLayoutInflater().inflate(R.layout.custom_dialog_directory, null);
-        dialogBuilder.setView(dialogView).setTitle(org.koishi.launcher.h2co3.resources.R.string.add_directory);
+        dialogBuilder.setView(dialogView).setTitle(org.koishi.launcher.h2co3.library.R.string.add_directory);
 
         MaterialButton cancel = dialogView.findViewById(R.id.custom_dir_cancel);
         MaterialButton add = dialogView.findViewById(R.id.custom_dir_ok);
         TextInputLayout nameLay = dialogView.findViewById(R.id.dialog_dir_name_lay);
         nameEditText = dialogView.findViewById(R.id.dialog_dir_name);
         TextInputLayout pathLay = dialogView.findViewById(R.id.dialog_dir_path_lay);
-        pathLay.setError(getString(org.koishi.launcher.h2co3.resources.R.string.ver_input_hint));
+        pathLay.setError(getString(org.koishi.launcher.h2co3.library.R.string.ver_input_hint));
         add.setEnabled(false);
         TextInputEditText pathEditText = dialogView.findViewById(R.id.dialog_dir_path);
         pathEditText.addTextChangedListener(new DirectoryTextWatcher(pathLay, add));
@@ -198,7 +198,7 @@ public class DirectoryFragment extends H2CO3Fragment {
         }
 
         if (hasData(path) || isNameExists(name)) {
-            H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_already_exists));
+            H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.library.R.string.ver_already_exists));
             return;
         }
 
@@ -215,7 +215,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                 AssetsUtils.extractZipFromAssets(requireActivity(), "pack.zip", H2CO3Dir);
                 handler.sendEmptyMessage(MSG_ADD_NEW_DIRECTORY);
             } catch (IOException e) {
-                H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_not_right_dir) + e);
+                H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.library.R.string.ver_not_right_dir) + e);
                 handler.sendEmptyMessage(MSG_DIALOG_DISMISS);
             }
         });
@@ -237,7 +237,7 @@ public class DirectoryFragment extends H2CO3Fragment {
 
         if (!f.isDirectory()) {
             setDir(h2co3Directory);
-            H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_null_dir));
+            H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.library.R.string.ver_null_dir));
         }
     }
 
@@ -356,7 +356,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                 pathLay.setErrorEnabled(false);
                 addButton.setEnabled(true);
             } else {
-                pathLay.setError(getString(org.koishi.launcher.h2co3.resources.R.string.ver_input_hint));
+                pathLay.setError(getString(org.koishi.launcher.h2co3.library.R.string.ver_input_hint));
                 addButton.setEnabled(false);
             }
         }

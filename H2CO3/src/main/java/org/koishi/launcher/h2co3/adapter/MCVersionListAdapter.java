@@ -54,8 +54,8 @@ public class MCVersionListAdapter extends H2CO3RecycleAdapter<String> {
             versionName.setText(version);
             boolean isDirectory = versionDir.isDirectory();
             versionItemView.setVisibility(isDirectory ? View.VISIBLE : View.GONE);
-            versionIcon.setImageDrawable(isDirectory ? mContext.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_list_ver) : mContext.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
             versionItemView.setStrokeWidth(verF.equals(gameHelper.getGameCurrentVersion()) ? 13 : 3);
+            versionItemView.setClickable(verF.equals(gameHelper.getGameCurrentVersion()));
 
             versionItemView.setOnClickListener(v -> {
                 if (isVersionItemClickable) {
@@ -82,8 +82,8 @@ public class MCVersionListAdapter extends H2CO3RecycleAdapter<String> {
 
     private void showDeleteDialog(int position) {
         new MaterialAlertDialogBuilder(mContext)
-                .setTitle(org.koishi.launcher.h2co3.resources.R.string.title_action)
-                .setMessage(org.koishi.launcher.h2co3.resources.R.string.ver_if_del)
+                .setTitle(org.koishi.launcher.h2co3.library.R.string.title_action)
+                .setMessage(org.koishi.launcher.h2co3.library.R.string.ver_if_del)
                 .setPositiveButton("Yes", (dialog, which) -> deleteVersion(position))
                 .setNegativeButton("No", null)
                 .show();

@@ -12,8 +12,8 @@ public class MouseButton extends BaseButton {
 
     public MouseButton(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        TypedArray array = context.obtainStyledAttributes(attrs, org.koishi.launcher.h2co3.resources.R.styleable.MouseButton);
-        setMouseName(array.getString(org.koishi.launcher.h2co3.resources.R.styleable.MouseButton_mouse_name));
+        TypedArray array = context.obtainStyledAttributes(attrs, org.koishi.launcher.h2co3.library.R.styleable.MouseButton);
+        setMouseName(array.getString(org.koishi.launcher.h2co3.library.R.styleable.MouseButton_mouse_name));
         array.recycle();
     }
 

@@ -43,12 +43,15 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
         this.fragment = fragment;
         this.selectedPosition = -1;
 
+        setUserIcons();
+        View footerView = LayoutInflater.from(context).inflate(R.layout.item_user_add, null);
+        setFooterView(footerView);
+    }
+
+    private void setUserIcons() {
         for (UserBean user : data) {
             user.setUserIcon(getUserIcon(user));
         }
-
-        View footerView = LayoutInflater.from(context).inflate(R.layout.item_user_add, null);
-        setFooterView(footerView);
     }
 
     @Override
@@ -58,10 +61,9 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
 
     @Override
     protected void bindData(BaseViewHolder holder, int position) {
-        int viewType = getItemViewType(position);
-        if (viewType == ITEM_TYPE_NORMAL) {
+        if (getItemViewType(position) == ITEM_TYPE_NORMAL) {
             bindUserViewHolder((ViewHolder) holder, position);
-        } else if (viewType == ITEM_TYPE_FOOTER) {
+        } else {
             bindAddViewHolder((ViewHolder) holder);
         }
     }
@@ -70,14 +72,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View itemView;
-        if (viewType == ITEM_TYPE_NORMAL) {
-            itemView = inflater.inflate(R.layout.item_user_list, parent, false);
-        } else if (viewType == ITEM_TYPE_FOOTER) {
-            itemView = inflater.inflate(R.layout.item_user_add, parent, false);
-        } else {
-            throw new IllegalStateException("Unexpected view type: " + viewType);
-        }
+        View itemView = inflater.inflate(viewType == ITEM_TYPE_NORMAL ? R.layout.item_user_list : R.layout.item_user_add, parent, false);
         return new ViewHolder(itemView);
     }
 
@@ -88,41 +83,34 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
 
     private void bindUserViewHolder(ViewHolder holder, int position) {
         UserBean user = data.get(position);
+        holder.selectorCardView.setStrokeWidth(user.isSelected() ? 13 : 3);
+        holder.selectorCardView.setClickable(!user.isSelected());
+
         if (user.isSelected()) {
             selectedPosition = position;
             updateUserState(user);
-            holder.selectorCardView.setStrokeWidth(13);
-            holder.selectorCardView.setClickable(false);
         } else {
-            holder.selectorCardView.setStrokeWidth(3);
-            holder.selectorCardView.setClickable(true);
-            holder.selectorCardView.setOnClickListener(v -> {
-                int newPosition = holder.getBindingAdapterPosition();
-                if (newPosition != RecyclerView.NO_POSITION) {
-                    selectedPosition = newPosition;
-                    try {
-                        updateSelectedUser(selectedPosition);
-                        fragment.reLoadUser();
-                    } catch (Exception e) {
-                        Log.e("HomeListUserAdapter", "Error updating selected user", e);
-                    }
-                }
-            });
+            holder.selectorCardView.setOnClickListener(v -> handleUserSelection(holder, position));
         }
+
         holder.nameTextView.setText(user.getUserName());
         holder.stateTextView.setText(getUserStateText(user));
+        holder.userIcon.setImageDrawable(user.getUserIcon() != null ? user.getUserIcon() : getUserIcon(user));
 
-        if (user.getUserIcon() == null) {
-            user.setUserIcon(getUserIcon(user));
-        }
-        holder.userIcon.setImageDrawable(user.getUserIcon());
+        holder.removeImageButton.setOnClickListener(v -> showRemoveUserDialog(holder.getBindingAdapterPosition()));
+    }
 
-        holder.removeImageButton.setOnClickListener(v -> {
-            if (!isRemoveUserDialogShowing) {
-                isRemoveUserDialogShowing = true;
-                showRemoveUserDialog(holder.getBindingAdapterPosition());
+    private void handleUserSelection(ViewHolder holder, int position) {
+        int newPosition = holder.getBindingAdapterPosition();
+        if (newPosition != RecyclerView.NO_POSITION) {
+            selectedPosition = newPosition;
+            try {
+                updateSelectedUser(selectedPosition);
+                fragment.reLoadUser();
+            } catch (Exception e) {
+                Log.e("HomeListUserAdapter", "Error updating selected user", e);
             }
-        });
+        }
     }
 
     private void bindAddViewHolder(ViewHolder holder) {
@@ -130,7 +118,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
     }
 
     private Drawable getUserIcon(UserBean user) {
-        Drawable defaultIcon = ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.resources.R.drawable.ic_home_user);
+        Drawable defaultIcon = ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_home_user);
         return user.getIsOffline() || user.getUserIcon() == null ? defaultIcon : user.getUserIcon();
     }
 
@@ -139,7 +127,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
             JSONObject usersJson = new JSONObject(H2CO3Auth.getUserJson());
             UserBean selectedUser = data.get(selectedPosition);
             for (UserBean user : data) {
-                boolean isSelected = user.equals(selectedUser);
+                boolean isSelected = user == selectedUser;
                 user.setIsSelected(isSelected);
                 usersJson.getJSONObject(user.getUserName()).put(H2CO3Tools.LOGIN_IS_SELECTED, isSelected);
             }
@@ -181,20 +169,17 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
     private void resetUserState() {
         UserBean emptyUser = new UserBean();
         setUserState(emptyUser);
-        fragment.homeUserName.setText(context.getString(org.koishi.launcher.h2co3.resources.R.string.user_add));
-        fragment.homeUserState.setText(context.getString(org.koishi.launcher.h2co3.resources.R.string.user_add));
-        fragment.homeUserIcon.setImageDrawable(ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.resources.R.drawable.xicon));
+        fragment.homeUserName.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
+        fragment.homeUserState.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
+        fragment.homeUserIcon.setImageDrawable(ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.xicon));
     }
 
     private String getUserStateText(UserBean user) {
         String userType = user.getUserType();
         return switch (userType) {
-            case "1" ->
-                    context.getString(org.koishi.launcher.h2co3.resources.R.string.user_state_microsoft);
-            case "2" ->
-                    context.getString(org.koishi.launcher.h2co3.resources.R.string.user_state_other) + user.getApiUrl();
-            default ->
-                    context.getString(org.koishi.launcher.h2co3.resources.R.string.user_state_offline);
+            case "1" -> context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_microsoft);
+            case "2" -> context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_other) + user.getApiUrl();
+            default -> context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_offline);
         };
     }
 
@@ -202,9 +187,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
         H2CO3MaterialDialog dialog = new H2CO3MaterialDialog(context);
         dialog.setTitle("确认删除用户");
         dialog.setMessage("确定要删除该用户吗？");
-        dialog.setPositiveButton("确定", (dialogInterface, which) -> {
-            removeUser(position);
-        });
+        dialog.setPositiveButton("确定", (dialogInterface, which) -> removeUser(position));
         dialog.setNegativeButton("取消", (dialogInterface, which) -> isRemoveUserDialogShowing = false);
         dialog.setOnDismissListener(dialogInterface -> isRemoveUserDialogShowing = false);
         dialog.show();

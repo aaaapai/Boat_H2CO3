@@ -115,7 +115,7 @@ public class PermissionRequestFragment extends H2CO3Fragment {
 
     private List<PermissionRequestCard> getPermissionRequestCards() {
         List<PermissionRequestCard> cards = new ArrayList<>();
-        cards.add(new PermissionRequestCard(org.koishi.launcher.h2co3.resources.R.drawable.ic_btm_manager_normal, org.koishi.launcher.h2co3.resources.R.string.storage_permission, org.koishi.launcher.h2co3.resources.R.string.storage_permission_description));
+        cards.add(new PermissionRequestCard(org.koishi.launcher.h2co3.library.R.drawable.ic_btm_manager_normal, org.koishi.launcher.h2co3.library.R.string.storage_permission, org.koishi.launcher.h2co3.library.R.string.storage_permission_description));
         return cards;
     }
 }

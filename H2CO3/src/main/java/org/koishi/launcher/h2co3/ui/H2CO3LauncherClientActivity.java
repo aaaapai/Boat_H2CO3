@@ -130,6 +130,7 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overlay);
+        showMessageListView();
         gameHelper = new H2CO3GameHelper();
         mainTextureView = findViewById(R.id.main_game_render_view);
         mainTextureView.setSurfaceTextureListener(this);
@@ -138,7 +139,7 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
         screenHeight = getResources().getDisplayMetrics().heightPixels;
         cursorIcon = new ImageView(this);
         cursorIcon.setLayoutParams(new ViewGroup.LayoutParams(DisplayUtils.getPxFromDp(this, CURSOR_SIZE), DisplayUtils.getPxFromDp(this, CURSOR_SIZE)));
-        cursorIcon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.cursor5);
+        cursorIcon.setImageResource(org.koishi.launcher.h2co3.library.R.drawable.cursor5);
         this.addView(cursorIcon);
         try {
             launcherLib = launchMinecraft(this, gameHelper, screenWidth, screenHeight);

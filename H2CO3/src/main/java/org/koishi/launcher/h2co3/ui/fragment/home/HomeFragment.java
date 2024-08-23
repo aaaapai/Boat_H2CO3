@@ -141,7 +141,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                         reLoadUser();
                         loginDialogAlert.dismiss();
                     });
-                    alertDialogBuilder.setNegativeButton(requireActivity().getString(org.koishi.launcher.h2co3.resources.R.string.button_cancel), null);
+                    alertDialogBuilder.setNegativeButton(requireActivity().getString(org.koishi.launcher.h2co3.library.R.string.button_cancel), null);
                     alertDialogBuilder.show();
                 }
             });
@@ -155,9 +155,9 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 adapterUser.notifyDataSetChanged();
                 loginDialogAlert.dismiss();
                 alertDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
-                alertDialogBuilder.setTitle(org.koishi.launcher.h2co3.resources.R.string.title_warn);
+                alertDialogBuilder.setTitle(org.koishi.launcher.h2co3.library.R.string.title_warn);
                 alertDialogBuilder.setMessage(error);
-                alertDialogBuilder.setPositiveButton(requireActivity().getString(org.koishi.launcher.h2co3.resources.R.string.button_ok), null);
+                alertDialogBuilder.setPositiveButton(requireActivity().getString(org.koishi.launcher.h2co3.library.R.string.button_ok), null);
                 alertDialogBuilder.show();
             });
         }
@@ -295,7 +295,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
 
         H2CO3CustomViewDialog loginDialog = new H2CO3CustomViewDialog(requireActivity());
         loginDialog.setCustomView(R.layout.custom_dialog_login);
-        loginDialog.setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.title_activity_login));
+        loginDialog.setTitle(getString(org.koishi.launcher.h2co3.library.R.string.title_activity_login));
 
         loginDialogAlert = loginDialog.create();
         loginDialogAlert.show();
@@ -419,7 +419,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
         alertDialogBuilder.setTitle("请选择认证服务器类型");
         alertDialogBuilder.setItems(new String[]{"外置登录", "统一通行证"}, (dialog, which) -> showInputDialog(which));
-        alertDialogBuilder.setNegativeButton(this.getString(org.koishi.launcher.h2co3.resources.R.string.button_cancel), null);
+        alertDialogBuilder.setNegativeButton(this.getString(org.koishi.launcher.h2co3.library.R.string.button_cancel), null);
         alertDialogBuilder.show();
     }
 
@@ -430,8 +430,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         MaterialAlertDialogBuilder inputDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
         inputDialogBuilder.setTitle("提示");
         inputDialogBuilder.setView(editText);
-        inputDialogBuilder.setPositiveButton(this.getString(org.koishi.launcher.h2co3.resources.R.string.button_ok), (dialogInterface, i) -> handleServerSelection(selection, editText.getText().toString()));
-        inputDialogBuilder.setNegativeButton(this.getString(org.koishi.launcher.h2co3.resources.R.string.button_cancel), null);
+        inputDialogBuilder.setPositiveButton(this.getString(org.koishi.launcher.h2co3.library.R.string.button_ok), (dialogInterface, i) -> handleServerSelection(selection, editText.getText().toString()));
+        inputDialogBuilder.setNegativeButton(this.getString(org.koishi.launcher.h2co3.library.R.string.button_cancel), null);
         inputDialogBuilder.show();
     }
 
@@ -553,9 +553,9 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         String userType = H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_USER_TYPE, "0", String.class);
         String userSkinTexture = H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_USER_SKINTEXTURE, "", String.class);
 
-        final String MICROSOFT_USER_STATE = getString(org.koishi.launcher.h2co3.resources.R.string.user_state_microsoft);
-        final String OTHER_USER_STATE = getString(org.koishi.launcher.h2co3.resources.R.string.user_state_other);
-        final String OFFLINE_USER_STATE = getString(org.koishi.launcher.h2co3.resources.R.string.user_state_offline);
+        final String MICROSOFT_USER_STATE = getString(org.koishi.launcher.h2co3.library.R.string.user_state_microsoft);
+        final String OTHER_USER_STATE = getString(org.koishi.launcher.h2co3.library.R.string.user_state_other);
+        final String OFFLINE_USER_STATE = getString(org.koishi.launcher.h2co3.library.R.string.user_state_offline);
 
         switch (userType) {
             case "1":
@@ -564,11 +564,11 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 break;
             case "2":
                 homeUserState.setText(OTHER_USER_STATE + apiUrl);
-                homeUserIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.resources.R.drawable.ic_home_user));
+                homeUserIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.library.R.drawable.ic_home_user));
                 break;
             default:
                 homeUserState.setText(OFFLINE_USER_STATE);
-                homeUserIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.resources.R.drawable.ic_home_user));
+                homeUserIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.library.R.drawable.ic_home_user));
                 break;
         }
         if (TextUtils.isEmpty(homeUserName.getText())) {
@@ -577,8 +577,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     }
 
     private void setDefaultUserState() {
-        homeUserName.setText(getString(org.koishi.launcher.h2co3.resources.R.string.user_add));
-        homeUserState.setText(getString(org.koishi.launcher.h2co3.resources.R.string.user_add));
-        homeUserIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.resources.R.drawable.xicon));
+        homeUserName.setText(getString(org.koishi.launcher.h2co3.library.R.string.user_add));
+        homeUserState.setText(getString(org.koishi.launcher.h2co3.library.R.string.user_add));
+        homeUserIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.library.R.drawable.xicon));
     }
 }
