@@ -278,7 +278,7 @@ public class GameButtonDialog extends Dialog implements View.OnClickListener, Se
         }
 
         if (v == buttonDel) {
-            DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_warn), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_are_you_sure_to_delete_button), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel), new DialogSupports() {
+            DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_warn), mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_are_you_sure_to_delete_button), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_cancel), new DialogSupports() {
                 @Override
                 public void runWhenPositive() {
                     mGameButton.removeSelfFromParent();
@@ -288,7 +288,7 @@ public class GameButtonDialog extends Dialog implements View.OnClickListener, Se
         }
 
         if (v == buttonCopy) {
-            DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_warn), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_are_you_sure_to_clone_button), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel), new DialogSupports() {
+            DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_warn), mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_are_you_sure_to_clone_button), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_cancel), new DialogSupports() {
                 @Override
                 public void runWhenPositive() {
                     buttonOK.performClick();
@@ -611,7 +611,7 @@ public class GameButtonDialog extends Dialog implements View.OnClickListener, Se
         if (color == -1) {
             color = Color.BLACK;
         }
-        DialogUtils.createColorPickerDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_colorpicker), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel), color, DialogUtils.COLORPICKER_LIGHTNESS_ONLY, new DialogSupports() {
+        DialogUtils.createColorPickerDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_colorpicker), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_cancel), color, DialogUtils.COLORPICKER_LIGHTNESS_ONLY, new DialogSupports() {
             @Override
             public void runWhenColorSelected(int[] colors) {
                 if (colors.length >= 1) {

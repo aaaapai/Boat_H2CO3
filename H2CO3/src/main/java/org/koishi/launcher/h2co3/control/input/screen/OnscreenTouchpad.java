@@ -432,7 +432,7 @@ public class OnscreenTouchpad implements OnscreenInput, KeyMap, MouseMap {
             }
 
             if (v == buttonRestore) {
-                DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_warn), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_are_you_sure_to_restore_setting), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel), new DialogSupports() {
+                DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_warn), mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_are_you_sure_to_restore_setting), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_cancel), new DialogSupports() {
                     @Override
                     public void runWhenPositive() {
                         restoreConfig();

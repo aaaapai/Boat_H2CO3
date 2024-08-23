@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
+import org.koishi.launcher.h2co3.application.H2CO3Application;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
@@ -33,10 +34,9 @@ import java.util.concurrent.Executors;
 public class DirectoryListAdapter extends H2CO3RecycleAdapter<String> {
     private final DirectoryFragment directoryFragment;
     private final H2CO3GameHelper gameHelper;
-    private JSONObject directoriesJsonObj;
+    private final JSONObject directoriesJsonObj;
     private final String h2co3DirectoryPath = MINECRAFT_DIR;
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private boolean isRemoveButtonClickable = true, isDeleteButtonClickable = true, isProcessingClick = false;
+    private boolean isRemoveButtonClickable = true, isProcessingClick = false;
 
     public DirectoryListAdapter(List<String> directoryList, Context context, JSONObject directoriesJsonObj, H2CO3GameHelper gameHelper, DirectoryFragment directoryFragment) {
         super(directoryList, context);
@@ -110,8 +110,8 @@ public class DirectoryListAdapter extends H2CO3RecycleAdapter<String> {
 
     private void showRemoveConfirmationDialog(int position) {
         new MaterialAlertDialogBuilder(mContext)
-                .setTitle(org.koishi.launcher.h2co3.resources.R.string.title_action)
-                .setMessage(org.koishi.launcher.h2co3.resources.R.string.ver_if_remove)
+                .setTitle(org.koishi.launcher.h2co3.library.R.string.title_action)
+                .setMessage(org.koishi.launcher.h2co3.library.R.string.ver_if_remove)
                 .setPositiveButton("Yes", (dialogInterface, i) -> {
                     if (mRvItemOnclickListener != null) {
                         mRvItemOnclickListener.RvItemOnclick(position);
@@ -124,12 +124,12 @@ public class DirectoryListAdapter extends H2CO3RecycleAdapter<String> {
 
     private void showDeleteConfirmationDialog(String directoryPath, int position) {
         new MaterialAlertDialogBuilder(mContext)
-                .setTitle(org.koishi.launcher.h2co3.resources.R.string.title_action)
-                .setMessage(org.koishi.launcher.h2co3.resources.R.string.ver_if_del)
+                .setTitle(org.koishi.launcher.h2co3.library.R.string.title_action)
+                .setMessage(org.koishi.launcher.h2co3.library.R.string.ver_if_del)
                 .setPositiveButton("Yes", (dialogInterface, i) -> {
                     File directoryFile = new File(directoryPath);
                     if (directoryFile.exists()) {
-                        executorService.execute(() -> {
+                        H2CO3Application.sExecutorService.execute(() -> {
                             try {
                                 FileTools.deleteDirectory(directoryFile);
                                 ((H2CO3Activity) mContext).runOnUiThread(() -> mRvItemOnclickListener.RvItemOnclick(position));

@@ -44,8 +44,7 @@ configurations.configureEach {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':H2CO3Core')
-    implementation project(path: ':H2CO3Resources')
+    implementation project(path: ':H2CO3Library')
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment:2.7.7'

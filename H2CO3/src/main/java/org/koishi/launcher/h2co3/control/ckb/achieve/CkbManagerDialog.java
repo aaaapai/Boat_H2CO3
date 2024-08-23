@@ -138,9 +138,9 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
     private void loadSelectedFile() {
         String fileName = spinnerSelected.getSelectedItem().toString();
         if (!mManager.loadKeyboard(fileName)) {
-            DialogUtils.createSingleChoiceDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_error), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_failed_to_import_keyboard_layout), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), null);
+            DialogUtils.createSingleChoiceDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_error), mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_failed_to_import_keyboard_layout), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_ok), null);
         } else {
-            H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_successed_to_import_keyboard_layout));
+            H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_successed_to_import_keyboard_layout));
         }
     }
 
@@ -155,11 +155,11 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
         if (v == buttonExport) {
             String fn = editFileName.getText().toString();
             if (fn.isEmpty()) {
-                H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_filename_can_not_be_void));
+                H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_filename_can_not_be_void));
                 return;
             }
             if (fn.equals(CkbManager.LAST_KEYBOARD_LAYOUT_NAME)) {
-                H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_please_change_file_name));
+                H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_please_change_file_name));
                 return;
             }
 
@@ -167,7 +167,7 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
             for (String str : FileTools.listChildFilesFromTargetDir(H2CO3Tools.H2CO3_CONTROL_DIR)) {
                 if (str.equals(fn + ".json")) {
                     run = false;
-                    DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_warn), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_filename_has_been_used), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_over_write), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel), new DialogSupports() {
+                    DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_warn), mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_filename_has_been_used), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_over_write), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_cancel), new DialogSupports() {
                         @Override
                         public void runWhenPositive() {
                             mManager.exportKeyboard(fn);
@@ -183,7 +183,7 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
         if (v == buttonDel) {
             String str = spinnerSelected.getSelectedItem().toString();
             if (!str.isEmpty()) {
-                DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_warn), String.format(mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_are_you_sure_to_delete_file), str), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_delete), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel), new DialogSupports() {
+                DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_warn), String.format(mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_are_you_sure_to_delete_file), str), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_delete), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_cancel), new DialogSupports() {
                     @Override
                     public void runWhenPositive() {
                         removeSelectedFile();
@@ -193,7 +193,7 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
         }
 
         if (v == buttonClear) {
-            DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_warn), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_are_you_sure_to_clear_all_buttons), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel), new DialogSupports() {
+            DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_warn), mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_are_you_sure_to_clear_all_buttons), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_cancel), new DialogSupports() {
                 @Override
                 public void runWhenPositive() {
                     mManager.clearKeyboard();
@@ -202,7 +202,7 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
         }
 
         if (v == buttonDefault) {
-            DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_warn), "您确定要使用默认键盘布局吗？", mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel), new DialogSupports() {
+            DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_warn), "您确定要使用默认键盘布局吗？", mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_cancel), new DialogSupports() {
                 @Override
                 public void runWhenPositive() {
                     super.runWhenPositive();

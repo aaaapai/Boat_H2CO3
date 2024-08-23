@@ -255,7 +255,7 @@ public class H2CO3VirtualController extends BaseController implements View.OnCli
         }
 
         if (v == buttonResetPos) {
-            DialogUtils.createBothChoicesDialog(context, context.getString(org.koishi.launcher.h2co3.resources.R.string.title_note), context.getString(org.koishi.launcher.h2co3.resources.R.string.tips_are_you_sure_to_auto_config_layout), context.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), context.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel), new DialogSupports() {
+            DialogUtils.createBothChoicesDialog(context, context.getString(org.koishi.launcher.h2co3.library.R.string.title_note), context.getString(org.koishi.launcher.h2co3.library.R.string.tips_are_you_sure_to_auto_config_layout), context.getString(org.koishi.launcher.h2co3.library.R.string.title_ok), context.getString(org.koishi.launcher.h2co3.library.R.string.title_cancel), new DialogSupports() {
                 @Override
                 public void runWhenPositive() {
                     resetAllPosOnScreen();

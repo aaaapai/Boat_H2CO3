@@ -16,12 +16,12 @@ import org.koishi.launcher.h2co3.core.game.download.RemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.fabric.FabricAPIRemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.fabric.FabricRemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.forge.ForgeRemoteVersion;
-import org.koishi.launcher.h2co3.core.game.download.vanilla.GameRemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.liteloader.LiteLoaderRemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.neoforge.NeoForgeRemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.optifine.OptiFineRemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.quilt.QuiltAPIRemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.quilt.QuiltRemoteVersion;
+import org.koishi.launcher.h2co3.core.game.download.vanilla.GameRemoteVersion;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter;
@@ -37,19 +37,15 @@ public class RemoteVersionListAdapter extends H2CO3RecycleAdapter<RemoteVersion>
     private static final Map<Class<? extends RemoteVersion>, Integer> tagMap = new HashMap<>();
 
     static {
-        iconMap.put(LiteLoaderRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_liteloader);
-        iconMap.put(OptiFineRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_optifine);
-        iconMap.put(ForgeRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_forge);
-        iconMap.put(NeoForgeRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_neoforge);
-        iconMap.put(FabricRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_fabric);
-        iconMap.put(FabricAPIRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_fabric);
-        iconMap.put(QuiltRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_quilt);
-        iconMap.put(QuiltAPIRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_quilt);
-        iconMap.put(GameRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_mods);
-
-        tagMap.put(GameRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.string.download_release);
-        tagMap.put(GameRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.string.download_snapshot);
-        tagMap.put(GameRemoteVersion.class, org.koishi.launcher.h2co3.resources.R.string.download_old_beta);
+        iconMap.put(LiteLoaderRemoteVersion.class, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_liteloader);
+        iconMap.put(OptiFineRemoteVersion.class, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_optifine);
+        iconMap.put(ForgeRemoteVersion.class, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_forge);
+        iconMap.put(NeoForgeRemoteVersion.class, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_neoforge);
+        iconMap.put(FabricRemoteVersion.class, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_fabric);
+        iconMap.put(FabricAPIRemoteVersion.class, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_fabric);
+        iconMap.put(QuiltRemoteVersion.class, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_quilt);
+        iconMap.put(QuiltAPIRemoteVersion.class, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_quilt);
+        iconMap.put(GameRemoteVersion.class, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_mods);
     }
 
     public RemoteVersionListAdapter(Context context, List<RemoteVersion> list, OnRemoteVersionSelectListener listener) {
@@ -59,9 +55,9 @@ public class RemoteVersionListAdapter extends H2CO3RecycleAdapter<RemoteVersion>
 
     @Override
     protected void bindData(BaseViewHolder holder, int position) {
-        if (holder instanceof ViewHolder) {
+        if (holder instanceof ViewHolder viewHolder) {
             RemoteVersion remoteVersion = data.get(position);
-            ((ViewHolder) holder).bind(remoteVersion);
+            viewHolder.bind(remoteVersion);
         } else {
             throw new ClassCastException("Invalid ViewHolder type");
         }
@@ -74,7 +70,7 @@ public class RemoteVersionListAdapter extends H2CO3RecycleAdapter<RemoteVersion>
 
     private Drawable getIcon(RemoteVersion remoteVersion) {
         Integer tagResId = iconMap.get(remoteVersion.getClass());
-        return ContextCompat.getDrawable(mContext, tagResId != null ? tagResId : org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_mods);
+        return ContextCompat.getDrawable(mContext, tagResId != null ? tagResId : org.koishi.launcher.h2co3.library.R.drawable.ic_mc_mods);
     }
 
     private String getTag(RemoteVersion remoteVersion) {
@@ -98,7 +94,12 @@ public class RemoteVersionListAdapter extends H2CO3RecycleAdapter<RemoteVersion>
             icon = itemView.findViewById(R.id.icon);
             version = itemView.findViewById(R.id.version);
             tag = itemView.findViewById(R.id.tag);
-            parent.setOnClickListener(view -> listener.onSelect(data.get(getBindingAdapterPosition())));
+            parent.setOnClickListener(view -> {
+                int position = getBindingAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    listener.onSelect(data.get(position));
+                }
+            });
         }
 
         public void bind(RemoteVersion remoteVersion) {

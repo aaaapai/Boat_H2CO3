@@ -70,7 +70,7 @@ public class EulaFragment extends H2CO3Fragment implements View.OnClickListener 
                 str = IOUtils.readFullyAsString(requireActivity().getAssets().open( "eula.txt"));
                 load = true;
             } catch (IOException e) {
-                str = getString(org.koishi.launcher.h2co3.resources.R.string.title_error);
+                str = getString(org.koishi.launcher.h2co3.library.R.string.title_error);
                 load = true;
             }
             final String s = str;

@@ -111,8 +111,7 @@ configurations.configureEach {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(path: ':H2CO3Core')
-    implementation project(path: ':H2CO3Resources')
+    implementation project(path: ':H2CO3Library')
     implementation project(path: ':H2CO3Launcher')
 
     // Google

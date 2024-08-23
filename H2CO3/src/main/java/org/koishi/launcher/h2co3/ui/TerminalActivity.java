@@ -33,10 +33,11 @@ public class TerminalActivity extends H2CO3Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_terminal);
+        showMessageListView();
         logWindow = new LineTextView(this);
         logWindow = findViewById(R.id.shell_log_window);
         editText = findViewById(R.id.shell_input);
-        logWindow.append("Welcome to use Fold Craft Launcher!\n");
+        logWindow.append("Welcome to use Boat_H2CO3!\n");
         logWindow.append("Here is the shell command line!\n");
         shellUtil = new ShellUtil(new File(H2CO3Tools.FILES_DIR).getParent(), output -> logWindow.append("\t" + output + "\n"));
         shellUtil.start();

@@ -12,7 +12,7 @@ import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MessageDialog
 class ExitActivity : H2CO3Activity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        showMessageListView()
         val code = intent.getIntExtra(EXTRA_CODE, -1)
 
         val exitDialog = H2CO3MessageDialog(this)

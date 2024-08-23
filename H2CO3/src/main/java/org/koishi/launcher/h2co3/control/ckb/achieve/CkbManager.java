@@ -195,10 +195,10 @@ public class CkbManager {
 
     private void handleLoadError(File file) {
         DialogUtils.createBothChoicesDialog(mContext,
-                mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_note),
-                mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_try_to_convert_keyboard_layout),
-                mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok),
-                mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel),
+                mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_note),
+                mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_try_to_convert_keyboard_layout),
+                mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_ok),
+                mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_cancel),
                 new DialogSupports() {
                     @Override
                     public void runWhenPositive() {
@@ -212,15 +212,15 @@ public class CkbManager {
         GameButtonConverter converter = new GameButtonConverter(mContext);
         if (converter.convertAndOutput(file)) {
             DialogUtils.createSingleChoiceDialog(mContext,
-                    mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_note),
-                    String.format(mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_successed_to_convert_keyboard_file), file.getName()),
-                    mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok),
+                    mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_note),
+                    String.format(mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_successed_to_convert_keyboard_file), file.getName()),
+                    mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_ok),
                     null);
         } else {
             DialogUtils.createSingleChoiceDialog(mContext,
-                    mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_note),
-                    mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_failed_to_convert_keyboard_file),
-                    mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok),
+                    mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_note),
+                    mContext.getString(org.koishi.launcher.h2co3.library.R.string.tips_failed_to_convert_keyboard_file),
+                    mContext.getString(org.koishi.launcher.h2co3.library.R.string.title_ok),
                     null);
         }
     }
