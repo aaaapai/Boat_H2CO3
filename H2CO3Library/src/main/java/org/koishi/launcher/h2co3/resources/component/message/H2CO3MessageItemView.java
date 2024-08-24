@@ -57,8 +57,8 @@ public class H2CO3MessageItemView extends H2CO3CardView {
             colorWarning = ta.getColor(R.styleable.H2CO3MessageItemView_h2co3_color_message_warning, Color.BLACK);
             colorInfo = ta.getColor(R.styleable.H2CO3MessageItemView_h2co3_color_message_info, Color.BLACK);
             colorError = ta.getColor(R.styleable.H2CO3MessageItemView_h2co3_color_message_error, Color.BLACK);
-
-            Log.e("TEST", "H2CO3MessageItemView: " + colorDebug + " " + colorWarning + " " + colorInfo + " " + colorError);
+        }catch (Exception e) {
+            Log.e("H2CO3MessageItemView", "Error initializing attributes", e);
         } finally {
             if (ta != null) {
                 ta.recycle();
