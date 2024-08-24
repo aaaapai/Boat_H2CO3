@@ -21,11 +21,13 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 
 public class ProcessService extends Service {
 
     public static final int PROCESS_SERVICE_PORT = 29118;
     private boolean firstLog = true;
+
 
     @Nullable
     @Override
@@ -44,6 +46,7 @@ public class ProcessService extends Service {
 
     public void startProcess(String[] command, H2CO3GameHelper gameHelper, String jre) {
         H2CO3LauncherBridge bridge = H2CO3LauncherHelper.launchAPIInstaller(H2CO3Tools.CONTEXT, gameHelper, command, jre);
+        File logFile = new File(bridge.getLogPath());
         H2CO3LauncherBridgeCallBack callback = new H2CO3LauncherBridgeCallBack() {
             /**
              */
@@ -73,13 +76,13 @@ public class ProcessService extends Service {
             public void onLog(String log) {
                 try {
                     if (firstLog) {
-                        FileTools.writeText(new File(bridge.getLogPath()), log + "\n");
+                        FileTools.writeText(logFile, log + "\n");
                         firstLog = false;
                     } else {
-                        FileTools.writeTextWithAppendMode(new File(bridge.getLogPath()), log + "\n");
+                        FileTools.writeTextWithAppendMode(logFile, log + "\n");
                     }
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    e.printStackTrace();
                 }
             }
 
@@ -103,7 +106,7 @@ public class ProcessService extends Service {
              */
             @Override
             public void onError(Exception e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                e.printStackTrace();
             }
 
             @Override
@@ -112,25 +115,23 @@ public class ProcessService extends Service {
             }
         };
         Handler handler = new Handler();
-        handler.postDelayed(() -> {
+        handler.post(() -> {
             try {
                 bridge.execute(null, callback);
             } catch (IOException e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                e.printStackTrace();
             }
-        }, 1000);
+        });
     }
 
     private void sendCode(int code) {
-        try {
-            DatagramSocket socket = new DatagramSocket();
+        try (DatagramSocket socket = new DatagramSocket()) {
             socket.connect(new InetSocketAddress("127.0.0.1", PROCESS_SERVICE_PORT));
             byte[] data = (code + "").getBytes();
             DatagramPacket packet = new DatagramPacket(data, data.length);
             socket.send(packet);
-            socket.close();
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            e.printStackTrace();
         }
         stopSelf();
     }

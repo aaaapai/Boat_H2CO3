@@ -70,9 +70,9 @@ import java.util.stream.Stream;
  */
 public class DefaultGameRepository implements GameRepository {
 
-    private final ConcurrentHashMap<File, Optional<String>> gameVersions = new ConcurrentHashMap<>();
-    protected Map<String, Version> versions;
     private File baseDirectory;
+    protected Map<String, Version> versions;
+    private final ConcurrentHashMap<File, Optional<String>> gameVersions = new ConcurrentHashMap<>();
 
     public DefaultGameRepository(File baseDirectory) {
         this.baseDirectory = baseDirectory;
@@ -131,10 +131,14 @@ public class DefaultGameRepository implements GameRepository {
 
     @Override
     public File getRunDirectory(String id) {
-        return switch (getGameDirectoryType(id)) {
-            case VERSION_FOLDER -> getVersionRoot(id);
-            case ROOT_FOLDER -> getBaseDirectory();
-        };
+        switch (getGameDirectoryType(id)) {
+            case VERSION_FOLDER:
+                return getVersionRoot(id);
+            case ROOT_FOLDER:
+                return getBaseDirectory();
+            default:
+                throw new IllegalStateException();
+        }
     }
 
     @Override
@@ -152,7 +156,7 @@ public class DefaultGameRepository implements GameRepository {
         return gameVersions.computeIfAbsent(getVersionJar(version), versionJar -> {
             Optional<String> gameVersion = GameVersion.minecraftVersion(versionJar);
             if (!gameVersion.isPresent()) {
-                LOG.warning("Cannot find out game version of " + version.getId() + ", primary jar: " + versionJar + ", jar exists: " + versionJar.exists());
+                LOG.warning("Cannot find out game version of " + version.getId() + ", primary jar: " + versionJar.toString() + ", jar exists: " + versionJar.exists());
             }
             return gameVersion;
         });
@@ -230,8 +234,7 @@ public class DefaultGameRepository implements GameRepository {
                 }
             }
             return true;
-        } catch (IOException | JsonParseException | VersionNotFoundException |
-                 InvalidPathException e) {
+        } catch (IOException | JsonParseException | VersionNotFoundException | InvalidPathException e) {
             LOG.log(Level.WARNING, "Unable to rename version " + from + " to " + to, e);
             return false;
         }
@@ -243,7 +246,6 @@ public class DefaultGameRepository implements GameRepository {
         if (!versions.containsKey(id))
             return FileTools.deleteDirectoryQuietly(getVersionRoot(id));
         File file = getVersionRoot(id);
-        System.out.println(getVersionRoot(id));
         if (!file.exists())
             return true;
         // test if no file in this version directory is occupied.
@@ -254,6 +256,7 @@ public class DefaultGameRepository implements GameRepository {
         try {
             versions.remove(id);
 
+            // remove json files first to ensure FCL will not recognize this folder as a valid version.
             List<File> jsons = FileTools.listFilesByExtension(removedFile, "json");
             jsons.forEach(f -> {
                 if (!f.delete())
@@ -328,13 +331,14 @@ public class DefaultGameRepository implements GameRepository {
 
                 if (!id.equals(version.getId())) {
                     try {
+                        String from = id;
                         String to = version.getId();
-                        Path fromDir = getVersionRoot(id).toPath();
+                        Path fromDir = getVersionRoot(from).toPath();
                         Path toDir = getVersionRoot(to).toPath();
                         Files.move(fromDir, toDir);
 
-                        Path fromJson = toDir.resolve(id + ".json");
-                        Path fromJar = toDir.resolve(id + ".jar");
+                        Path fromJson = toDir.resolve(from + ".json");
+                        Path fromJar = toDir.resolve(from + ".jar");
                         Path toJson = toDir.resolve(to + ".json");
                         Path toJar = toDir.resolve(to + ".jar");
 
@@ -454,6 +458,8 @@ public class DefaultGameRepository implements GameRepository {
             return assetsDir;
 
         if (index.isVirtual()) {
+            Path resourcesDir = getRunDirectory(version).toPath().resolve("resources");
+
             int cnt = 0;
             int tot = index.getObjects().entrySet().size();
             for (Map.Entry<String, AssetObject> entry : index.getObjects().entrySet()) {
@@ -463,6 +469,12 @@ public class DefaultGameRepository implements GameRepository {
                     cnt++;
                     if (!Files.isRegularFile(target))
                         FileTools.copyFile(original, target);
+
+                    if (index.needMapToResources()) {
+                        target = resourcesDir.resolve(entry.getKey());
+                        if (!Files.isRegularFile(target))
+                            FileTools.copyFile(original, target);
+                    }
                 }
             }
 

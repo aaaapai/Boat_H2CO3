@@ -36,6 +36,7 @@ import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
 import org.koishi.launcher.h2co3.core.game.download.Version;
 import org.koishi.launcher.h2co3.core.game.download.vanilla.GameLibrariesTask;
 import org.koishi.launcher.h2co3.core.game.download.vanilla.VersionJsonDownloadTask;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.shell.ProcessService;
 import org.koishi.launcher.h2co3.core.utils.Artifact;
 import org.koishi.launcher.h2co3.core.utils.CommandBuilder;
@@ -112,9 +113,8 @@ public class ForgeNewInstallTask extends Task<Version> {
                     }
 
                     if (!Objects.equals(code, value)) {
-                        Files.delete(artifact);
-                        LOG.info("Found existing file is not valid: " + artifact);
-
+                        Files.delete(artifact); // 删除不匹配的文件
+                        LOG.info("Found existing file is not valid, deleted: " + artifact);
                         miss = true;
                     }
                 } else {
@@ -177,6 +177,8 @@ public class ForgeNewInstallTask extends Task<Version> {
 
                 if (!Objects.equals(code, entry.getValue())) {
                     Files.delete(artifact);
+                    LOG.info("Checksum mismatch, deleted: " + artifact);
+                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.WARNING, "Deleted file: " + artifact.toString());
                     throw new ChecksumMismatchException("SHA-1", entry.getValue(), code);
                 }
             }

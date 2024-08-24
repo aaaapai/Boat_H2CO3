@@ -54,6 +54,8 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
             @Override
             public void handleOnBackPressed() {
                 setNavigationItemChecked(R.id.navigation_home);
+                h2co3MessageManager.addNotification(H2CO3MessageManager.NotificationItem.Type.INFO, "这是一个调试信息");
+                h2co3MessageManager.addNotification(H2CO3MessageManager.NotificationItem.Type.WARNING, "发生了一个错误");
                 h2co3MessageManager.addNotification(H2CO3MessageManager.NotificationItem.Type.DEBUG, "这是一个调试信息");
                 h2co3MessageManager.addNotification(H2CO3MessageManager.NotificationItem.Type.ERROR, "发生了一个错误");
                 switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.library.R.string.app_name);

@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.login.Texture.Texture;
 import org.koishi.launcher.h2co3.core.login.Texture.TextureType;
-import org.koishi.launcher.h2co3.core.utils.HttpRequest;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.NetworkUtils;
 import org.koishi.launcher.h2co3.core.utils.gson.JsonUtils;
 import org.koishi.launcher.h2co3.core.utils.gson.tools.TolerableValidationException;
@@ -53,33 +53,30 @@ public class MicrosoftLoginUtils {
 
     public static Optional<Map<TextureType, Texture>> getTextures(MinecraftProfileResponse profile) {
         Objects.requireNonNull(profile);
-
         Map<TextureType, Texture> textures = new EnumMap<>(TextureType.class);
-
-        if (!profile.skins.isEmpty()) {
-            textures.put(TextureType.SKIN, new Texture(profile.skins.get(0).url, null));
-        }
-        // if (!profile.capes.isEmpty()) {
-        // textures.put(TextureType.CAPE, new Texture(profile.capes.get(0).url, null);
-        // }
-
+        profile.skins.stream().findFirst().ifPresent(skin -> textures.put(TextureType.SKIN, new Texture(skin.url, null)));
         return Optional.of(textures);
     }
 
     public static MinecraftProfileResponse getMinecraftProfile(String tokenType, String accessToken)
             throws IOException, AuthenticationException {
-        HttpURLConnection conn = HttpRequest.GET(MC_PROFILE_URL)
-                .authorization(tokenType, accessToken)
-                .createConnection();
+        return executeHttpRequest(MC_PROFILE_URL, tokenType, accessToken, MinecraftProfileResponse.class);
+    }
+
+    private static <T> T executeHttpRequest(String urlString, String tokenType, String accessToken, Class<T> responseType)
+            throws IOException, AuthenticationException {
+        HttpURLConnection conn = (HttpURLConnection) new URL(urlString).openConnection();
+        conn.setRequestProperty("Authorization", tokenType + " " + accessToken);
+        conn.setUseCaches(false);
+        conn.connect();
         int responseCode = conn.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
             throw new NoMinecraftJavaEditionProfileException();
         } else if (responseCode != HttpURLConnection.HTTP_OK) {
-            throw new ResponseCodeException(new URL(MC_PROFILE_URL), responseCode);
+            throw new ResponseCodeException(new URL(urlString), responseCode);
         }
-
         String result = NetworkUtils.readData(conn);
-        return JsonUtils.fromNonNullJson(result, MinecraftProfileResponse.class);
+        return JsonUtils.fromNonNullJson(result, responseType);
     }
 
     public static String ofJSONData(Map<String, Object> data) {
@@ -88,9 +85,7 @@ public class MicrosoftLoginUtils {
 
     public static String ofFormData(Map<String, String> data) {
         Uri.Builder builder = new Uri.Builder();
-        for (Map.Entry<String, String> entry : data.entrySet()) {
-            builder.appendQueryParameter(entry.getKey(), entry.getValue());
-        }
+        data.forEach(builder::appendQueryParameter);
         return builder.build().getEncodedQuery();
     }
 
@@ -116,24 +111,17 @@ public class MicrosoftLoginUtils {
     }
 
     private static void throwResponseError(HttpURLConnection conn) throws IOException {
-        String otherErrStr = "";
         String errStr = readResponse(conn);
         Log.i("MicroAuth", "Error code: " + conn.getResponseCode() + ": " + conn.getResponseMessage() + "\n" + errStr);
-
-        if (errStr.contains("NOT_FOUND") &&
-                errStr.contains("The server has not found anything matching the request URI")) {
-            // TODO localize this
-            otherErrStr = "It seems that this Microsoft Account does not own the game. Make sure that you have bought/migrated to your Microsoft account.";
-        }
-
-        throw new RuntimeException(otherErrStr + "\n\nMSA Error: " + conn.getResponseCode() + ": " + conn.getResponseMessage() + ", error stream:\n" + errStr);
+        String otherErrStr = errStr.contains("NOT_FOUND") && errStr.contains("The server has not found anything matching the request URI")
+                ? "It seems that this Microsoft Account does not own the game. Make sure that you have bought/migrated to your Microsoft account."
+                : "";
+        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, otherErrStr + "\n\nMSA Error: " + conn.getResponseCode() + ": " + conn.getResponseMessage() + ", error stream:\n" + errStr);
     }
 
     private void acquireAccessToken(boolean isRefresh, String authCode) throws IOException, JSONException {
-        URL url = new URL(AUTH_TOKEN_URL);
         Log.i("MicroAuth", "isRefresh=" + isRefresh + ", authCode= " + authCode);
         Map<String, String> data = new HashMap<>();
-
         data.put("client_id", "00000000402b5328");
         data.put(isRefresh ? "refresh_token" : "code", authCode);
         data.put("grant_type", isRefresh ? "refresh_token" : "authorization_code");
@@ -141,13 +129,13 @@ public class MicrosoftLoginUtils {
         data.put("scope", "service::user.auth.xboxlive.com::MBI_SSL");
 
         String req = ofFormData(data);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) new URL(AUTH_TOKEN_URL).openConnection();
         setRequestProperties(conn, "application/x-www-form-urlencoded", req);
         setRequestOutput(conn, req);
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() < 300) {
             JSONObject jo = new JSONObject(readResponse(conn));
             msRefreshToken = jo.getString("refresh_token");
-            Log.i("MicroAuth", "Acess Token = " + jo.getString("access_token"));
+            Log.i("MicroAuth", "Access Token = " + jo.getString("access_token"));
             acquireXBLToken(jo.getString("access_token"));
         } else {
             throwResponseError(conn);
@@ -155,8 +143,6 @@ public class MicrosoftLoginUtils {
     }
 
     private void acquireXBLToken(String accessToken) throws IOException, JSONException {
-        URL url = new URL(XBL_AUTH_URL);
-
         Map<String, Object> data = new HashMap<>();
         Map<String, Object> properties = new HashMap<>();
         properties.put("AuthMethod", "RPS");
@@ -166,7 +152,7 @@ public class MicrosoftLoginUtils {
         data.put("RelyingParty", "http://auth.xboxlive.com");
         data.put("TokenType", "JWT");
         String req = ofJSONData(data);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) new URL(XBL_AUTH_URL).openConnection();
         setRequestProperties(conn, "application/json", req);
         setRequestOutput(conn, req);
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() < 300) {
@@ -179,7 +165,6 @@ public class MicrosoftLoginUtils {
     }
 
     private void acquireXsts(String xblToken) throws IOException, JSONException {
-        URL url = new URL(XSTS_AUTH_URL);
         Map<String, Object> data = new HashMap<>();
         Map<String, Object> properties = new HashMap<>();
         properties.put("SandboxId", "RETAIL");
@@ -188,7 +173,7 @@ public class MicrosoftLoginUtils {
         data.put("RelyingParty", "rp://api.minecraftservices.com/");
         data.put("TokenType", "JWT");
         String req = ofJSONData(data);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) new URL(XSTS_AUTH_URL).openConnection();
         setRequestProperties(conn, "application/json", req);
         setRequestOutput(conn, req);
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() < 300) {
@@ -202,13 +187,10 @@ public class MicrosoftLoginUtils {
     }
 
     private void acquireMinecraftToken(String xblUhs, String xblXsts) throws IOException, JSONException {
-        URL url = new URL(MC_LOGIN_URL);
-
         Map<String, Object> data = new HashMap<>();
         data.put("identityToken", "XBL3.0 x=" + xblUhs + ";" + xblXsts);
-
         String req = ofJSONData(data);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) new URL(MC_LOGIN_URL).openConnection();
         setRequestProperties(conn, "application/json", req);
         setRequestOutput(conn, req);
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() < 300) {
@@ -216,20 +198,17 @@ public class MicrosoftLoginUtils {
             Log.i("MicroAuth", "MC token: " + jo.getString("access_token"));
             mcToken = jo.getString("access_token");
             tokenType = jo.getString("token_type");
-            checkMcProfile(jo.getString("access_token"));
+            checkMcProfile(mcToken);
         } else {
             throwResponseError(conn);
         }
     }
 
     private void checkMcProfile(String mcAccessToken) throws IOException, JSONException {
-        URL url = new URL(MC_PROFILE_URL);
-
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) new URL(MC_PROFILE_URL).openConnection();
         conn.setRequestProperty("Authorization", "Bearer " + mcAccessToken);
         conn.setUseCaches(false);
         conn.connect();
-
         if (conn.getResponseCode() >= 200 && conn.getResponseCode() < 300) {
             String s = readResponse(conn);
             Log.i("MicroAuth", "profile:" + s);
@@ -247,7 +226,7 @@ public class MicrosoftLoginUtils {
         } else {
             Log.i("MicroAuth", "It seems that this Microsoft Account does not own the game.");
             doesOwnGame = false;
-            throwResponseError(conn);
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "It seems that this Microsoft Account does not own the game.");
         }
     }
 
@@ -267,9 +246,7 @@ public class MicrosoftLoginUtils {
         }
     }
 
-    public static class MinecraftProfileResponseCape {
-
-    }
+    public static class MinecraftProfileResponseCape {}
 
     public static class MinecraftProfileResponse extends MinecraftErrorResponse implements Validation {
         @SerializedName("id")
@@ -298,6 +275,5 @@ public class MicrosoftLoginUtils {
         public String developerMessage;
     }
 
-    public static class NoMinecraftJavaEditionProfileException extends AuthenticationException {
-    }
+    public static class NoMinecraftJavaEditionProfileException extends AuthenticationException {}
 }

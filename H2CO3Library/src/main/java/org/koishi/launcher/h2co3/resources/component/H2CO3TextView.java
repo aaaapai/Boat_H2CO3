@@ -1,6 +1,7 @@
 package org.koishi.launcher.h2co3.resources.component;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
@@ -18,14 +19,23 @@ public class H2CO3TextView extends MaterialTextView {
     private BooleanProperty visibilityProperty;
     public H2CO3TextView(@NonNull Context context) {
         super(context);
+        setView();
     }
+
+
 
     public H2CO3TextView(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
+        setView();
     }
 
     public H2CO3TextView(@NonNull Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setView();
+    }
+
+    private void setView() {
+        setEllipsize(TextUtils.TruncateAt.END);
     }
 
     public final String getString() {

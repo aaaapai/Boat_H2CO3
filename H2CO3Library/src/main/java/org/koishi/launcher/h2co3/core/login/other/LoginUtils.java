@@ -1,13 +1,10 @@
 package org.koishi.launcher.h2co3.core.login.other;
 
 import com.google.gson.Gson;
-
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
-
 import java.io.IOException;
 import java.util.Objects;
-
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -28,15 +25,31 @@ public class LoginUtils {
     }
 
     public void setBaseUrl(String baseUrl) {
-        if (baseUrl.endsWith("/")) {
-            baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
-        }
-        this.baseUrl = baseUrl;
+        this.baseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
         System.out.println(this.baseUrl);
     }
 
     public void login(String userName, String password, Listener listener) throws IOException {
         Objects.requireNonNull(baseUrl, "no baseUrl");
+        AuthRequest authRequest = createAuthRequest(userName, password);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), gson.toJson(authRequest));
+        Request request = new Request.Builder()
+                .url(baseUrl + "/authserver/authenticate")
+                .post(body)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            String res = response.body().string();
+            System.out.println(res);
+            if (response.isSuccessful()) {
+                AuthResult result = gson.fromJson(res, AuthResult.class);
+                listener.onSuccess(result);
+            } else {
+                listener.onFailed(response.code() + "\n" + res);
+            }
+        }
+    }
+
+    private AuthRequest createAuthRequest(String userName, String password) {
         AuthRequest authRequest = new AuthRequest();
         authRequest.setUsername(userName);
         authRequest.setPassword(password);
@@ -46,21 +59,7 @@ public class LoginUtils {
         authRequest.setAgent(agent);
         authRequest.setRequestUser(true);
         authRequest.setClientToken("Boat_H2CO3");
-        RequestBody body = RequestBody.create(MediaType.parse("application/json"), gson.toJson(authRequest));
-        Request request = new Request.Builder()
-                .url(baseUrl + "/authserver/authenticate")
-                .post(body)
-                .build();
-        try (Response response = client.newCall(request).execute()) {
-            String res = response.body().string();
-            System.out.println(res);
-            if (response.code() == 200) {
-                AuthResult result = gson.fromJson(res, AuthResult.class);
-                listener.onSuccess(result);
-            } else {
-                listener.onFailed(response.code() + "\n" + res);
-            }
-        }
+        return authRequest;
     }
 
     public String getServeInfo(String url) {
@@ -72,9 +71,7 @@ public class LoginUtils {
             try (Response response = client.newCall(request).execute()) {
                 String res = response.body().string();
                 System.out.println(res);
-                if (response.code() == 200) {
-                    return res;
-                }
+                return response.isSuccessful() ? res : null;
             }
         } catch (IOException e) {
             H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
@@ -84,7 +81,6 @@ public class LoginUtils {
 
     public interface Listener {
         void onSuccess(AuthResult authResult);
-
         void onFailed(String error);
     }
 }

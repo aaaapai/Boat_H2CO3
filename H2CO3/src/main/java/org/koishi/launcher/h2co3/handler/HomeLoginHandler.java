@@ -47,12 +47,12 @@ public class HomeLoginHandler extends Handler {
             String errorDescription = data.getQueryParameter("error_description");
             if (error != null) {
                 if (errorDescription != null && !errorDescription.startsWith("The user has denied access to the scope requested by the h2CO3ControlClient application")) {
-                    Toast.makeText(fragment.requireActivity(), "Error: " + error + ": " + errorDescription, Toast.LENGTH_SHORT).show();
+                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, error + ": " + errorDescription);
                 }
             } else {
                 String code = data.getQueryParameter("code");
                 if (code == null) {
-                    Toast.makeText(fragment.requireActivity(), "Error: Code is null", Toast.LENGTH_SHORT).show();
+                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Code is null");
                     return;
                 }
                 ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -65,8 +65,8 @@ public class HomeLoginHandler extends Handler {
                             Texture skinTexture = textureMap.get(TextureType.SKIN);
                             Bitmap skin = getSkinBitmap(skinTexture);
                             if (skin != null) {
-                                String skinTextureString = Avatar.bitmapToString(skin);
                                 fragment.requireActivity().runOnUiThread(() -> {
+                                    String skinTextureString = Avatar.bitmapToString(skin);
                                     H2CO3Auth.addUserToJson(microsoftLoginUtils.mcName, "", "", "1", "https://www.microsoft.com", "0", microsoftLoginUtils.mcUuid, skinTextureString, microsoftLoginUtils.mcToken, microsoftLoginUtils.msRefreshToken, "00000000-0000-0000-0000-000000000000", false, false);
                                     fragment.reLoadUser();
                                     fragment.loginDialogAlert.dismiss();

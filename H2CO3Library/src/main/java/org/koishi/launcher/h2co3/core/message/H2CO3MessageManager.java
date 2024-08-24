@@ -3,16 +3,20 @@ package org.koishi.launcher.h2co3.core.message;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import org.koishi.launcher.h2co3.core.color.ThemeUtils;
 import org.koishi.launcher.h2co3.library.R;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter;
+import org.koishi.launcher.h2co3.resources.component.message.H2CO3MessageItemView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,27 +55,22 @@ public class H2CO3MessageManager {
 
     public static class NotificationAdapter extends H2CO3RecycleAdapter<NotificationItem> {
         private final List<NotificationItem> data = new ArrayList<>();
-        private final Map<NotificationItem.Type, Integer> colorMap;
 
         public NotificationAdapter(Context context, List<NotificationItem> notifications) {
             super(new ArrayList<>(notifications), context);
-            colorMap = new HashMap<>();
-            colorMap.put(NotificationItem.Type.DEBUG, R.color.app_blue_normal);
-            colorMap.put(NotificationItem.Type.ERROR, R.color.md_theme_errorContainer);
-            colorMap.put(NotificationItem.Type.INFO, R.color.app_green_normal);
-            colorMap.put(NotificationItem.Type.WARNING, R.color.md_theme_errorContainer);
         }
 
         @Override
         protected void bindData(BaseViewHolder holder, int position) {
             NotificationItem notification = data.get(position);
-            H2CO3CardView itemCardView = holder.itemView.findViewById(R.id.message_item_view);
+            H2CO3MessageItemView itemCardView = holder.itemView.findViewById(R.id.message_item_view);
+            itemCardView.setType(notification.type());
+            itemCardView.updateBackgroundColor();
             H2CO3TextView messageTextView = holder.itemView.findViewById(R.id.tv_message);
             H2CO3TextView typeTextView = holder.itemView.findViewById(R.id.tv_type);
 
             messageTextView.setText(notification.message());
             typeTextView.setText(String.valueOf(notification.type()));
-            itemCardView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), colorMap.get(notification.type())));
 
             itemCardView.setOnClickListener(v -> {
                 new MaterialAlertDialogBuilder(mContext)

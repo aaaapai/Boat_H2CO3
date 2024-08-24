@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.color.ThemeUtils;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.library.R;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
@@ -29,6 +30,8 @@ public class H2CO3Activity extends MaterialActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        H2CO3Tools.loadPaths(this);
+        ThemeUtils.applyFullscreen(getWindow(), true);
         setTheme(Build.VERSION.SDK_INT >= 31 && H2CO3Tools.getH2CO3Value("enable_monet", true, Boolean.class)
                 ? R.style.Theme_H2CO3_DynamicColors : R.style.Theme_H2CO3);
     }

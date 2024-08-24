@@ -40,6 +40,4 @@
     <color name="app_blue_normal">#FF7093DB</color>
 
     <color name="transparent">#00FFFFFF</color>
-    <color name="H2CO3_Error">?colorError</color>
-    <color name="H2CO3_onError">?colorOnError</color>
 </resources>

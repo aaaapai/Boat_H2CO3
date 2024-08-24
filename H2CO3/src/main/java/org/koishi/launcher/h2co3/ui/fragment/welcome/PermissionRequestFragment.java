@@ -23,7 +23,7 @@ import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.RuntimeUtils;
 import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 import org.koishi.launcher.h2co3.ui.H2CO3MainActivity;
-import org.koishi.launcher.h2co3.utils.bean.ui.PermissionRequestCard;
+import org.koishi.launcher.h2co3.resources.component.PermissionRequestCard;
 
 import java.io.IOException;
 import java.util.ArrayList;
