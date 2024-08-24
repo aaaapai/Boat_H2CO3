@@ -16,6 +16,11 @@ public class H2CO3MaterialDialog extends MaterialAlertDialogBuilder {
         this.builder = new MaterialAlertDialogBuilder((context));
     }
 
+    public H2CO3MaterialDialog(@NonNull Context context, int style) {
+        super(context, style);
+        this.builder = new MaterialAlertDialogBuilder((context));
+    }
+
     public void createDialog() {
         builder.create().show();
     }
