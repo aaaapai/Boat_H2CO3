@@ -81,7 +81,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
 
     private HomeListUserAdapter userAdapter;
 
-    public AlertDialog loginDialog;
+    public H2CO3CustomViewDialog loginDialog;
     public H2CO3ProgressDialog progressDialog;
     public H2CO3TextView userNameTextView;
     public H2CO3TextView userStateTextView;
@@ -127,7 +127,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
             requireActivity().runOnUiThread(() -> {
                 progressDialog.dismiss();
                 H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, error);
-                loginDialog.dismiss();
+                loginDialogAlert.dismiss();
             });
         }
     };
@@ -229,8 +229,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         if (isLoginDialogVisible) return;
 
         isLoginDialogVisible = true;
-        H2CO3CustomViewDialog loginDialog = new H2CO3CustomViewDialog(requireActivity());
-        loginDialog.setCustomView(R.layout.custom_dialog_login);
+        loginDialog = new H2CO3CustomViewDialog(requireActivity());
+        loginDialog.setCustomView(R.layout.dialog_home_login);
         loginDialog.setTitle(getString(org.koishi.launcher.h2co3.library.R.string.title_activity_login));
 
         loginDialogAlert = loginDialog.create();
@@ -380,7 +380,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 true,
                 false);
         reLoadUsers();
-        loginDialog.dismiss();
+        loginDialogAlert.dismiss();
     }
 
     private void showServerTypeDialog() {
@@ -599,7 +599,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                     false
             );
             reLoadUsers();
-            loginDialog.dismiss();
+            loginDialogAlert.dismiss();
         } else {
             String[] profileNames = authResult.getAvailableProfiles().stream()
                     .map(AuthResult.AvailableProfiles::getName)
@@ -625,7 +625,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                         false
                 );
                 reLoadUsers();
-                loginDialog.dismiss();
+                loginDialogAlert.dismiss();
             });
             profileSelectionDialog.setNegativeButton(requireActivity().getString(org.koishi.launcher.h2co3.library.R.string.button_cancel), null);
             profileSelectionDialog.show();

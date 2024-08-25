@@ -77,7 +77,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                     dialogBuilder.create().dismiss();
                     updateDirAdapter();
                 }
-                case MSG_SHOW_ERROR -> H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, getString(org.koishi.launcher.h2co3.library.R.string.ver_add_done));
+                case MSG_SHOW_ERROR -> H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.INFO, getString(org.koishi.launcher.h2co3.library.R.string.ver_add_done));
             }
         }
     };
@@ -175,7 +175,7 @@ public class DirectoryFragment extends H2CO3Fragment {
 
     private void showDirDialog() {
         dialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
-        View dialogView = requireActivity().getLayoutInflater().inflate(R.layout.custom_dialog_directory, null);
+        View dialogView = requireActivity().getLayoutInflater().inflate(R.layout.dialog_new_directory, null);
         dialogBuilder.setView(dialogView).setTitle(org.koishi.launcher.h2co3.library.R.string.add_directory);
 
         MaterialButton cancel = dialogView.findViewById(R.id.custom_dir_cancel);
@@ -335,7 +335,7 @@ public class DirectoryFragment extends H2CO3Fragment {
     }
 
     public void logError(Exception e) {
-        Log.e("DirectoryFragment", "Error: ", e);
+        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
     }
 
     private class DirectoryTextWatcher implements TextWatcher {

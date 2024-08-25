@@ -113,8 +113,9 @@ public class MCVersionListAdapter extends H2CO3RecycleAdapter<String> {
 
     private void deleteFile(File file) throws IOException {
         if (file.exists() && !file.delete()) {
-            throw new IOException("Failed to delete file: " + file.getPath());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to delete file: " + file.getPath());
         }
+
     }
 
     @Override

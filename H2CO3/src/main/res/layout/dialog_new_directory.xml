@@ -10,7 +10,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dialog_dir_name_lay"
-        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/app_10dp">
@@ -26,7 +26,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dialog_dir_path_lay"
-        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/app_10dp">
