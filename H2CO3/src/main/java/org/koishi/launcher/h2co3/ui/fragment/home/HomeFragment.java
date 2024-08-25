@@ -166,7 +166,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         fetchNotifications();
     }
 
-    private void initializeUserState() throws IOException {
+    private void initializeUserState() {
         String userJson = H2CO3Auth.getUserJson();
         if (TextUtils.isEmpty(userJson) || "{}".equals(userJson)) {
             FileTools.writeFile(usersFile, "{}");
