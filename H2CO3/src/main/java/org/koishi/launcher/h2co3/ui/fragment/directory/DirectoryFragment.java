@@ -115,14 +115,19 @@ public class DirectoryFragment extends H2CO3Fragment {
             List<String> dirList = getDirList();
 
             requireActivity().runOnUiThread(() -> {
-                dirRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-                dirAdapter = new DirectoryListAdapter(dirList, requireActivity(), dirsJsonObj, gameHelper, this);
-                dirAdapter.setRvItemOnclickListener(this::removeOrDeleteDirectory);
-                ensureDefaultDirectory();
-                dirRecyclerView.setAdapter(dirAdapter);
-                updateVerList(gameHelper.getGameDirectory() + "/versions");
-                verProgressBar.setVisibility(View.GONE);
-                dirProgressBar.setVisibility(View.GONE);
+
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    dirAdapter = new DirectoryListAdapter(dirList, requireActivity(), dirsJsonObj, gameHelper, this);
+                    dirAdapter.setRvItemOnclickListener(this::removeOrDeleteDirectory);
+                    ensureDefaultDirectory();
+                    dirRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+                    dirRecyclerView.setAdapter(dirAdapter);
+                    dirProgressBar.setVisibility(View.GONE);
+                    updateVerList(gameHelper.getGameDirectory() + "/versions");
+                    verProgressBar.setVisibility(View.GONE);
+                }, 220);
+
+
             });
         });
     }

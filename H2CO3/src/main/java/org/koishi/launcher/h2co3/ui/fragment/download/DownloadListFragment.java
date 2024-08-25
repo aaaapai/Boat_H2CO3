@@ -49,10 +49,6 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
     }
 
     private void initUI() {
-        minecraftVersionListFragment = new MinecraftVersionListFragment();
-        modListFragment = new ModListFragment();
-        modPackListFragment = new ModPackListFragment();
-        resourcesPackListFragment = new ResourcesPackListFragment();
         navigationView = view.findViewById(R.id.nav);
     }
 
@@ -82,20 +78,18 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
             return true;
         }
 
-        Menu menu = navigationView.getMenu();
-        for (int i = 0; i < menu.size(); i++) {
-            menu.getItem(i).setChecked(false);
-        }
+        clearMenuSelection();
+
         item.setChecked(true);
 
         if (itemId == R.id.navigation_minecraftVersion) {
-            switchFragment(minecraftVersionListFragment);
+            switchFragment(minecraftVersionListFragment != null ? minecraftVersionListFragment : (minecraftVersionListFragment = new MinecraftVersionListFragment()));
         } else if (itemId == R.id.navigation_modList) {
-            switchFragment(modListFragment);
+            switchFragment(modListFragment != null ? modListFragment : (modListFragment = new ModListFragment()));
         } else if (itemId == R.id.navigation_modPackList) {
-            switchFragment(modPackListFragment);
+            switchFragment(modPackListFragment != null ? modPackListFragment : (modPackListFragment = new ModPackListFragment()));
         } else if (itemId == R.id.navigation_resourcesPack) {
-            switchFragment(resourcesPackListFragment);
+            switchFragment(resourcesPackListFragment != null ? resourcesPackListFragment : (resourcesPackListFragment = new ResourcesPackListFragment()));
         }
         return true;
     }
@@ -112,4 +106,10 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
         menu.getItem(0).setChecked(true);
     }
 
+    private void clearMenuSelection() {
+        Menu menu = navigationView.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            menu.getItem(i).setChecked(false);
+        }
+    }
 }

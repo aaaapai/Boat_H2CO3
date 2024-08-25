@@ -1,6 +1,8 @@
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +47,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class EditVersionFragment extends H2CO3Fragment {
+public class EditDownloadInfoFragment extends H2CO3Fragment {
 
     private final Map<String, RemoteVersion> map = new HashMap<>();
     public H2CO3CustomViewDialog chooseInstallerVersionDialog;
@@ -69,7 +71,7 @@ public class EditVersionFragment extends H2CO3Fragment {
 
     private final Bundle args;
 
-    public EditVersionFragment(ChooseMcVersionFragment chooseMcVersionFragment, Bundle bundle) {
+    public EditDownloadInfoFragment(ChooseMcVersionFragment chooseMcVersionFragment, Bundle bundle) {
         super();
         this.chooseMcVersionFragment = chooseMcVersionFragment;
         this.args = bundle;
@@ -93,36 +95,44 @@ public class EditVersionFragment extends H2CO3Fragment {
         return view;
     }
 
+    private void initView() {
+        versionNameEditText = findViewById(view, R.id.version_name_edit);
+        backButton = findViewById(view, R.id.minecraft_back_button);
+        downloadButton = findViewById(view, R.id.minecraft_download_button);
+        installerScrollView = findViewById(view, R.id.installer_list_layout);
+    }
+
     private void loadInitialData() {
         Schedulers.io().execute(() -> {
             if (args != null) {
-                String versionName = args.getString("versionName");
-                this.gameVersion = versionName;
+                this.gameVersion = args.getString("versionName");
+                runOnUiThread(() -> versionNameEditText.setText(gameVersion));
             }
 
             group = new InstallerItem.InstallerItemGroup(getContext(), gameVersion);
 
-            Schedulers.androidUIThread().execute(() -> {
-                installerScrollView.addView(group.getView());
-                hideLoadingIndicator();
-                setupLibraryActions();
-                versionNameEditText.setText(gameVersion);
-            });
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                installerScrollView.post(() -> {
+                    installerScrollView.addView(group.getView());
+                    hideLoadingIndicator();
+                    setupLibraryActions();
+                });
+            }, 220);
         });
     }
 
     private void showLoadingIndicator() {
-        //progressBar.setVisibility(View.VISIBLE);
+        // progressBar.setVisibility(View.VISIBLE);
     }
 
     private void hideLoadingIndicator() {
-        //progressBar.setVisibility(View.GONE);
+        // progressBar.setVisibility(View.GONE);
     }
 
     private void navigateBack() {
         getParentFragmentManager().beginTransaction()
                 .setCustomAnimations(org.koishi.launcher.h2co3.library.R.anim.fragment_enter, org.koishi.launcher.h2co3.library.R.anim.fragment_exit, org.koishi.launcher.h2co3.library.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.library.R.anim.fragment_exit_pop)
-                .remove(EditVersionFragment.this)
+                .remove(EditDownloadInfoFragment.this)
                 .show(chooseMcVersionFragment)
                 .commit();
     }
@@ -215,13 +225,6 @@ public class EditVersionFragment extends H2CO3Fragment {
             paneAlert.show();
             executor.start();
         });
-    }
-
-    private void initView() {
-        versionNameEditText = findViewById(view, R.id.version_name_edit);
-        backButton = findViewById(view, R.id.minecraft_back_button);
-        downloadButton = findViewById(view, R.id.minecraft_download_button);
-        installerScrollView = findViewById(view, R.id.installer_list_layout);
     }
 
     private void showChooseInstallerVersionDialog(String libId) {
