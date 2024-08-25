@@ -17,7 +17,7 @@
         tools:layout="@layout/fragment_directory" />
     <fragment
         android:id="@+id/navigation_download"
-        android:name="org.koishi.launcher.h2co3.ui.fragment.download.DownloadListFragment"
+        android:name="org.koishi.launcher.h2co3.ui.fragment.download.DownloadFragment"
         android:title="@string/title_download"
         tools:layout="@layout/fragment_download_list" />
     <fragment

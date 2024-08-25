@@ -142,14 +142,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/server_selector">
-
-            <org.koishi.launcher.h2co3.resources.component.H2CO3Button
-                android:id="@+id/login"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:text="@string/action_sign_in" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

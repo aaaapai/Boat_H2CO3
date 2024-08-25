@@ -143,8 +143,9 @@
     <string name="add_directory">添加目录</string>
     <string name="title_remove">移除</string>
     <string name="title_action">提示</string>
-    <string name="title_reg">Reg</string>
-    <string name="title_runtime">Java Runtime</string>
+    <string name="title_reg">注册</string>
+    <string name="title_runtime">Java运行库</string>
+    <string name="title_notification">公告</string>
     <string name="ver_type_release">Release</string>
     <string name="download_release">release</string>
     <string name="download_snapshot">snapshot</string>
@@ -160,12 +161,12 @@
     <string name="title_download">下载</string>
     <string name="title_runtime_install_tips">安装应用所需要的运行库</string>
     <string name="title_minecraftVersion">Minecraft</string>
-    <string name="title_modList">Mod</string>
+    <string name="title_modList">模组</string>
     <string name="title_modPackList">ModPack</string>
-    <string name="title_resourcesPack">ResourcesPack</string>
-    <string name="install_installer_not_installed">No Installed</string>
+    <string name="title_resourcesPack">纹理包</string>
+    <string name="install_installer_not_installed">未安装</string>
     <string name="install_installer_fabric_api_warning">FabricAPI is a fabric mod</string>
-    <string name="ver_if_remove">Remove this dir?</string>
-    <string name="title_terminal">Terminal</string>
+    <string name="ver_if_remove">确定要把此目录从列表中移除吗?</string>
+    <string name="title_terminal">终端</string>
 
 </resources>

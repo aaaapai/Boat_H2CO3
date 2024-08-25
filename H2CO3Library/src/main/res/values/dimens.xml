@@ -24,6 +24,6 @@
     <dimen name="app_40dp">40dp</dimen>
     <dimen name="app_3dp">3dp</dimen>
 
-    <dimen name="guide_r">0.6</dimen>
+    <dimen name="guide_r">0.618</dimen>
     <dimen name="guide_l">0.27</dimen>
 </resources>

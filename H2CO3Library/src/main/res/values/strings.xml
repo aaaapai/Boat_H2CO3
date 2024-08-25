@@ -203,6 +203,8 @@
     <string name="title_quilt" translatable="false">Quilt</string>
     <string name="title_qsl_qfapi" translatable="false">QSL &amp; QSAPI</string>
     <string name="title_liteloader" translatable="false">LiteLoader</string>
+    <string name="title_notification" translatable="false">Notification</string>
+
     <string name="ver_if_remove">Remove this dir?</string>
 
     <string name="install_installer_fabric" translatable="false">Fabric</string>

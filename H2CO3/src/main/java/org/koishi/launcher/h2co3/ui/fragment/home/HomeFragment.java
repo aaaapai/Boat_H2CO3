@@ -93,7 +93,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     private TextInputEditText loginNameInput, loginPasswordInput;
     private ConstraintLayout serverSelectorLayout;
     private TextInputLayout loginPasswordLayout;
-    private H2CO3Button loginButton, registerButton;
+    private H2CO3Button registerButton;
     private LinearProgressIndicator loadingIndicator;
     private Spinner serverSpinner;
     private H2CO3TextView noticeTextView;
@@ -231,30 +231,35 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         loginDialog = new H2CO3CustomViewDialog(requireActivity());
         loginDialog.setCustomView(R.layout.dialog_home_login);
         loginDialog.setTitle(getString(org.koishi.launcher.h2co3.library.R.string.title_activity_login));
-
+        initializeLoginDialogViews(loginDialog);
         loginDialogAlert = loginDialog.create();
         loginDialogAlert.show();
         loginDialog.setOnDismissListener(dialog -> isLoginDialogVisible = false);
         loginDialogAlert.setOnDismissListener(dialog -> isLoginDialogVisible = false);
-
-        initializeLoginDialogViews(loginDialog);
     }
 
     private void initializeLoginDialogViews(H2CO3CustomViewDialog loginDialog) {
+        TabLayout tabLayout = loginDialog.findViewById(R.id.login_tab);
+        loginDialog.setNegativeButton(org.koishi.launcher.h2co3.library.R.string.title_activity_login, (dialog, which) -> {
+            try {
+                handleLogin(tabLayout);
+            } catch (JSONException | IOException e) {
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            }
+        });
         loginNameInput = loginDialog.findViewById(R.id.login_name);
         loginPasswordInput = loginDialog.findViewById(R.id.login_password);
         serverSelectorLayout = loginDialog.findViewById(R.id.server_selector);
         loginLayout = loginDialog.findViewById(R.id.login_name_layout);
         loginPasswordLayout = loginDialog.findViewById(R.id.login_password_layout);
-        loginButton = loginDialog.findViewById(R.id.login);
         progressDialog = new H2CO3ProgressDialog(requireActivity());
         progressDialog.setCancelable(false);
         serverSpinner = loginDialog.findViewById(R.id.server_spinner);
         registerButton = loginDialog.findViewById(R.id.register);
-        TabLayout tabLayout = loginDialog.findViewById(R.id.login_tab);
+
 
         initializeTabLayout(tabLayout);
-        setLoginListeners(tabLayout);
+        setLoginListeners();
     }
 
     private void initializeTabLayout(TabLayout tabLayout) {
@@ -314,21 +319,11 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         }
     }
 
-    private void setLoginListeners(TabLayout tabLayout) {
-        loginButton.setOnClickListener(v -> {
-            try {
-                handleLogin(tabLayout);
-            } catch (JSONException | IOException e) {
-                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
-            }
-        });
+    private void setLoginListeners() {
         registerButton.setOnClickListener(v -> showServerTypeDialog());
     }
 
     private void handleLogin(TabLayout tabLayout) throws JSONException, IOException {
-        if (loginNameInput == null || tabLayout == null) return;
-
-        String username = Objects.requireNonNull(loginNameInput.getText()).toString();
         int selectedTabPosition = tabLayout.getSelectedTabPosition();
 
         switch (selectedTabPosition) {
@@ -342,6 +337,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
             default:
                 if (isValidUsername(username)) {
                     addUserAndReload(username);
+                }else {
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Invalid username");
                 }
         }
     }
