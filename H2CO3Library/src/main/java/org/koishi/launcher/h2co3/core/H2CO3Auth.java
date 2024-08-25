@@ -84,7 +84,7 @@ public class H2CO3Auth {
                 userList.add(user);
             }
         } catch (JSONException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ public class H2CO3Auth {
         try {
             return readFileContent(usersFile);
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return "";
     }
@@ -130,7 +130,7 @@ public class H2CO3Auth {
             writeFileContent(usersFile, json);
             parseJsonToUser(jsonObject);
         } catch (JSONException | IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 

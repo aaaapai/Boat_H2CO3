@@ -75,7 +75,7 @@ public class ControlLayout extends TextureView implements TextureView.SurfaceTex
                 }
             }
         } catch (Throwable throwable) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, throwable.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, throwable.getMessage());
         }
     }
 

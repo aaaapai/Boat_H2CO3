@@ -23,7 +23,7 @@ public enum OperatingSystem {
             try {
                 nativeCharset = Charset.forName(nativeEncoding);
             } catch (UnsupportedCharsetException e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         }
 

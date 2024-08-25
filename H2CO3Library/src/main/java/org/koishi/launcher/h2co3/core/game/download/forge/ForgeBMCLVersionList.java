@@ -122,7 +122,7 @@ public final class ForgeBMCLVersionList extends VersionList<ForgeRemoteVersion> 
                                                 pair("format", file.getFormat())
                                         )));
                                     } catch (UnsupportedEncodingException e) {
-                                        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                                        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                                     }
                                 }
 

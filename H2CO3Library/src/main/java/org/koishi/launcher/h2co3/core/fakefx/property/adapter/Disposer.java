@@ -48,7 +48,7 @@ public class Disposer implements Runnable {
                 Runnable rec = records.remove(obj);
                 rec.run();
             } catch (Exception e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         }
     }

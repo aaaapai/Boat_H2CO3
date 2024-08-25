@@ -77,7 +77,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                     dialogBuilder.create().dismiss();
                     updateDirAdapter();
                 }
-                case MSG_SHOW_ERROR -> H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, getString(org.koishi.launcher.h2co3.library.R.string.ver_add_done));
+                case MSG_SHOW_ERROR -> H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, getString(org.koishi.launcher.h2co3.library.R.string.ver_add_done));
             }
         }
     };
@@ -157,7 +157,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                 dirsJsonObj.getJSONArray("dirs").put(newDir);
                 saveJsonObj(dirsJsonObj);
                 handler.sendEmptyMessage(MSG_ADD_NEW_DIRECTORY);
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.INFO, getString(org.koishi.launcher.h2co3.library.R.string.ver_add_done));
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.INFO, getString(org.koishi.launcher.h2co3.library.R.string.ver_add_done));
             } catch (JSONException e) {
                 logError(e);
             }
@@ -194,12 +194,12 @@ public class DirectoryFragment extends H2CO3Fragment {
         String name = nameEditText.getText().toString().trim();
 
         if (path.isEmpty() || name.isEmpty()) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Please input both path and name");
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Please input both path and name");
             return;
         }
 
         if (hasData(path) || isNameExists(name)) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, getString(org.koishi.launcher.h2co3.library.R.string.ver_already_exists));
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, getString(org.koishi.launcher.h2co3.library.R.string.ver_already_exists));
             return;
         }
 
@@ -216,7 +216,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                 AssetsUtils.extractZipFromAssets(requireActivity(), "pack.zip", H2CO3Dir);
                 handler.sendEmptyMessage(MSG_ADD_NEW_DIRECTORY);
             } catch (IOException e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, getString(org.koishi.launcher.h2co3.library.R.string.ver_not_right_dir) + e);
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, getString(org.koishi.launcher.h2co3.library.R.string.ver_not_right_dir) + e);
                 handler.sendEmptyMessage(MSG_DIALOG_DISMISS);
             }
         });
@@ -238,7 +238,7 @@ public class DirectoryFragment extends H2CO3Fragment {
 
         if (!f.isDirectory()) {
             setDir(h2co3Directory);
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, getString(org.koishi.launcher.h2co3.library.R.string.ver_null_dir));
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, getString(org.koishi.launcher.h2co3.library.R.string.ver_null_dir));
         }
     }
 

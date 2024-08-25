@@ -74,7 +74,7 @@ public class LoginUtils {
                 return response.isSuccessful() ? res : null;
             }
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return null;
     }

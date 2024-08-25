@@ -11,9 +11,9 @@
         style="@style/Theme.H2CO3.CardViewElevated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:h2co3_color_message_warning="?attr/colorSurfaceVariant"
+        app:h2co3_color_message_warning="?colorTertiaryFixedDim"
         app:h2co3_color_message_info="?attr/colorPrimary"
-        app:h2co3_color_message_debug="?attr/colorSecondary"
+        app:h2co3_color_message_debug="?attr/colorInactive"
         app:h2co3_color_message_error="?attr/colorError">
 
         <LinearLayout
@@ -41,6 +41,7 @@
                     style="@style/Theme.H2CO3.CardTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="?colorOnPrimary"
                     android:text="@string/app_name"
                     android:textSize="16sp" />
 
@@ -51,6 +52,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"
                     android:maxLines="4"
+                    android:textColor="?colorOnPrimary"
                     android:textSize="16sp" />
             </LinearLayout>
 
