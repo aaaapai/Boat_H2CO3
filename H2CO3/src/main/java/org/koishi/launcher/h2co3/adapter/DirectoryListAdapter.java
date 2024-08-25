@@ -94,11 +94,11 @@ public class DirectoryListAdapter extends H2CO3RecycleAdapter<String> {
         removeButton.setVisibility(isH2CO3Directory ? View.GONE : View.VISIBLE);
         deleteButton.setVisibility(isH2CO3Directory ? View.GONE : View.VISIBLE);
 
-        removeButton.setOnClickListener(view -> handleButtonClick(view, position, () -> showRemoveConfirmationDialog(position)));
-        deleteButton.setOnClickListener(view -> handleButtonClick(view, position, () -> showDeleteConfirmationDialog(directoryPath, position)));
+        removeButton.setOnClickListener(view -> handleButtonClick(view, () -> showRemoveConfirmationDialog(position)));
+        deleteButton.setOnClickListener(view -> handleButtonClick(view, () -> showDeleteConfirmationDialog(directoryPath, position)));
     }
 
-    private void handleButtonClick(View view, int position, Runnable action) {
+    private void handleButtonClick(View view, Runnable action) {
         if (isRemoveButtonClickable) {
             isRemoveButtonClickable = false;
             action.run();
