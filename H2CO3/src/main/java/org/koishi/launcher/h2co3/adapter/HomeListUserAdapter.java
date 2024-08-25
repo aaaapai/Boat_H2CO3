@@ -115,7 +115,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
             selectedPosition = newPosition;
             try {
                 updateSelectedUser(selectedPosition);
-                fragment.reLoadUser();
+                fragment.reLoadUsers();
             } catch (Exception e) {
                 H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
@@ -179,17 +179,17 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
 
     private void updateUserState(UserBean user) {
         setUserState(user);
-        fragment.homeUserName.setText(user.getUserName());
-        fragment.homeUserState.setText(getUserStateText(user));
-        fragment.homeUserIcon.setImageDrawable(getUserIcon(user));
+        fragment.userNameTextView.setText(user.getUserName());
+        fragment.userStateTextView.setText(getUserStateText(user));
+        fragment.userIconImageView.setImageDrawable(getUserIcon(user));
     }
 
     private void resetUserState() {
         UserBean emptyUser = new UserBean();
         setUserState(emptyUser);
-        fragment.homeUserName.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
-        fragment.homeUserState.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
-        fragment.homeUserIcon.setImageDrawable(ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.xicon));
+        fragment.userNameTextView.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
+        fragment.userStateTextView.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
+        fragment.userIconImageView.setImageDrawable(ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.xicon));
     }
 
     private String getUserStateText(UserBean user) {

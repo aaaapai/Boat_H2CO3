@@ -71,70 +71,53 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-/**
- * HomeFragment class handles the home screen functionalities.
- */
 public class HomeFragment extends H2CO3Fragment implements View.OnClickListener {
 
     private static final int MICROSOFT_LOGIN_REQUEST_CODE = 1001;
 
-    private final Handler handler = new Handler();
-    private final Gson GLOBAL_GSON = new GsonBuilder().setPrettyPrinting().create();
+    private final Handler uiHandler = new Handler();
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final HomeLoginHandler loginHandler = new HomeLoginHandler(this);
-    
-    private HomeListUserAdapter adapterUser;
-    
-    public AlertDialog loginDialogAlert;
+
+    private HomeListUserAdapter userAdapter;
+
+    public AlertDialog loginDialog;
     public H2CO3ProgressDialog progressDialog;
-    public H2CO3TextView homeUserName;
-    public H2CO3TextView homeUserState;
-    public AppCompatImageView homeUserIcon;
-    private RecyclerView recyclerView;
-    private H2CO3Button homeGamePlayButton;
-    private H2CO3Button homeUserListButton;
-    private H2CO3CardView homeUserListLayout;
-    private CircularRevealFrameLayout loginNameLayout;
-    private TextInputEditText loginName, loginPassword;
-    private ConstraintLayout loginApi;
+    public H2CO3TextView userNameTextView;
+    public H2CO3TextView userStateTextView;
+    public AppCompatImageView userIconImageView;
+    private RecyclerView userRecyclerView;
+    private H2CO3Button playButton;
+    private H2CO3Button userListButton;
+    private H2CO3CardView userListLayout;
+    private CircularRevealFrameLayout loginLayout;
+    private TextInputEditText loginNameInput, loginPasswordInput;
+    private ConstraintLayout serverSelectorLayout;
     private TextInputLayout loginPasswordLayout;
-    private H2CO3Button login, register;
-    private LinearProgressIndicator loadingNoticeProgress;
+    private H2CO3Button loginButton, registerButton;
+    private LinearProgressIndicator loadingIndicator;
     private Spinner serverSpinner;
-    private H2CO3TextView homeNoticeTextView;
-    
-    private ArrayList<UserBean> userList = new ArrayList<>();
-    private ArrayAdapter<String> serverSpinnerAdapter;
-    private List<String> serverList;
-    private Servers servers;
+    private H2CO3TextView noticeTextView;
+
+    private ArrayList<UserBean> users = new ArrayList<>();
+    private ArrayAdapter<String> serverAdapter;
+    private List<String> serverNames;
+    private Servers serverData;
     private String currentBaseUrl;
     private String currentRegisterUrl;
-    private String user;
-    private String pass;
-    private boolean isLoginDialogShowing = false;
+    private String username;
+    private String password;
+    private boolean isLoginDialogVisible = false;
 
-    private final LoginUtils.Listener loginUtilsListener = new LoginUtils.Listener() {
+    public AlertDialog loginDialogAlert;
+
+    private final LoginUtils.Listener loginListener = new LoginUtils.Listener() {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onSuccess(AuthResult authResult) {
             requireActivity().runOnUiThread(() -> {
                 progressDialog.dismiss();
-                if (authResult.getSelectedProfile() != null) {
-                    H2CO3Auth.addUserToJson(authResult.getSelectedProfile().getName(), user, pass, "2", currentBaseUrl, authResult.getSelectedProfile().getId(), UUID.randomUUID().toString(), "0", authResult.getAccessToken(), "0", "0", true, false);
-                    reLoadUser();
-                    loginDialogAlert.dismiss();
-                } else {
-                    String[] items = authResult.getAvailableProfiles().stream().map(AuthResult.AvailableProfiles::getName).toArray(String[]::new);
-                    MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
-                    alertDialogBuilder.setTitle("请选择角色");
-                    alertDialogBuilder.setItems(items, (dialog, which) -> {
-                        AuthResult.AvailableProfiles selectedProfile = authResult.getAvailableProfiles().get(which);
-                        H2CO3Auth.addUserToJson(selectedProfile.getName(), user, pass, "2", currentBaseUrl, selectedProfile.getId(), UUID.randomUUID().toString(), "0", authResult.getAccessToken(), "0", "0", true, false);
-                        reLoadUser();
-                        loginDialogAlert.dismiss();
-                    });
-                    alertDialogBuilder.setNegativeButton(requireActivity().getString(org.koishi.launcher.h2co3.library.R.string.button_cancel), null);
-                    alertDialogBuilder.show();
-                }
+                handleAuthResult(authResult);
             });
         }
 
@@ -144,7 +127,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
             requireActivity().runOnUiThread(() -> {
                 progressDialog.dismiss();
                 H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, error);
-                loginDialogAlert.dismiss();
+                loginDialog.dismiss();
             });
         }
     };
@@ -154,7 +137,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initializeUIComponents(view);
         try {
-            init();
+            initializeFragment();
         } catch (IOException e) {
             H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
@@ -162,24 +145,24 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     }
 
     private void initializeUIComponents(View view) {
-        homeGamePlayButton = findViewById(view, R.id.home_game_play_button);
-        homeUserName = findViewById(view, R.id.home_user_name);
-        homeUserState = findViewById(view, R.id.home_user_state);
-        homeUserIcon = findViewById(view, R.id.home_user_icon);
-        homeUserListButton = findViewById(view, R.id.home_user_open_list);
-        homeUserListLayout = findViewById(view, R.id.home_user_list_layout);
-        recyclerView = findViewById(view, R.id.recycler_view_user_list);
-        homeNoticeTextView = findViewById(view, R.id.home_notice_text);
-        loadingNoticeProgress = findViewById(view, R.id.progressIndicator);
+        playButton = findViewById(view, R.id.home_game_play_button);
+        userNameTextView = findViewById(view, R.id.home_user_name);
+        userStateTextView = findViewById(view, R.id.home_user_state);
+        userIconImageView = findViewById(view, R.id.home_user_icon);
+        userListButton = findViewById(view, R.id.home_user_open_list);
+        userListLayout = findViewById(view, R.id.home_user_list_layout);
+        userRecyclerView = findViewById(view, R.id.recycler_view_user_list);
+        noticeTextView = findViewById(view, R.id.home_notice_text);
+        loadingIndicator = findViewById(view, R.id.progressIndicator);
 
-        homeGamePlayButton.setOnClickListener(this);
-        homeUserListButton.setOnClickListener(this);
+        playButton.setOnClickListener(this);
+        userListButton.setOnClickListener(this);
     }
 
-    private void init() throws IOException {
+    private void initializeFragment() throws IOException {
         initializeUserState();
         setupRecyclerView();
-        loadUser();
+        loadUsers();
         fetchNotifications();
     }
 
@@ -194,35 +177,35 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     }
 
     private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        userRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
     }
 
     private void fetchNotifications() {
         H2CO3Application.sExecutorService.execute(() -> {
             try {
                 URL url = new URL("https://gitee.com/cainiaohanhanyai/cnhhfile/raw/master/Documents/Notification.txt");
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setConnectTimeout(5000);
-                try (InputStream in = con.getInputStream();
-                     BufferedReader bfr = new BufferedReader(new InputStreamReader(in))) {
-                    StringBuilder str = new StringBuilder();
-                    String temp;
-                    while ((temp = bfr.readLine()) != null) {
-                        str.append(temp).append("\n");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setConnectTimeout(5000);
+                try (InputStream inputStream = connection.getInputStream();
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                    StringBuilder messageBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        messageBuilder.append(line).append("\n");
                     }
-                    final String message = str.toString();
-                    handler.post(() -> {
-                        homeNoticeTextView.setVisibility(View.VISIBLE);
-                        loadingNoticeProgress.hide();
-                        homeNoticeTextView.setText(message);
+                    final String message = messageBuilder.toString();
+                    uiHandler.post(() -> {
+                        noticeTextView.setVisibility(View.VISIBLE);
+                        loadingIndicator.hide();
+                        noticeTextView.setText(message);
                     });
                 }
             } catch (IOException e) {
                 final String errorMessage = e.getMessage();
-                handler.post(() -> {
-                    homeNoticeTextView.setVisibility(View.VISIBLE);
-                    loadingNoticeProgress.hide();
-                    homeNoticeTextView.setText(errorMessage);
+                uiHandler.post(() -> {
+                    noticeTextView.setVisibility(View.VISIBLE);
+                    loadingIndicator.hide();
+                    noticeTextView.setText(errorMessage);
                 });
             }
         });
@@ -230,53 +213,53 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        if (v == homeGamePlayButton) {
+        if (v == playButton) {
             startActivity(new Intent(requireActivity(), H2CO3LauncherClientActivity.class));
             attachControllerInterface();
-        } else if (v == homeUserListButton) {
+        } else if (v == userListButton) {
             toggleUserListVisibility();
         }
     }
 
     private void toggleUserListVisibility() {
-        homeUserListLayout.setVisibility(homeUserListLayout.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+        userListLayout.setVisibility(userListLayout.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
     }
 
     public void showLoginDialog() {
-        if (isLoginDialogShowing) return;
+        if (isLoginDialogVisible) return;
 
-        isLoginDialogShowing = true;
+        isLoginDialogVisible = true;
         H2CO3CustomViewDialog loginDialog = new H2CO3CustomViewDialog(requireActivity());
         loginDialog.setCustomView(R.layout.custom_dialog_login);
         loginDialog.setTitle(getString(org.koishi.launcher.h2co3.library.R.string.title_activity_login));
 
         loginDialogAlert = loginDialog.create();
         loginDialogAlert.show();
-        loginDialog.setOnDismissListener(dialog -> isLoginDialogShowing = false);
-        loginDialogAlert.setOnDismissListener(dialog -> isLoginDialogShowing = false);
+        loginDialog.setOnDismissListener(dialog -> isLoginDialogVisible = false);
+        loginDialogAlert.setOnDismissListener(dialog -> isLoginDialogVisible = false);
 
         initializeLoginDialogViews(loginDialog);
     }
 
     private void initializeLoginDialogViews(H2CO3CustomViewDialog loginDialog) {
-        loginName = loginDialog.findViewById(R.id.login_name);
-        loginPassword = loginDialog.findViewById(R.id.login_password);
-        loginApi = loginDialog.findViewById(R.id.server_selector);
-        loginNameLayout = loginDialog.findViewById(R.id.login_name_layout);
+        loginNameInput = loginDialog.findViewById(R.id.login_name);
+        loginPasswordInput = loginDialog.findViewById(R.id.login_password);
+        serverSelectorLayout = loginDialog.findViewById(R.id.server_selector);
+        loginLayout = loginDialog.findViewById(R.id.login_name_layout);
         loginPasswordLayout = loginDialog.findViewById(R.id.login_password_layout);
-        login = loginDialog.findViewById(R.id.login);
+        loginButton = loginDialog.findViewById(R.id.login);
         progressDialog = new H2CO3ProgressDialog(requireActivity());
         progressDialog.setCancelable(false);
         serverSpinner = loginDialog.findViewById(R.id.server_spinner);
-        register = loginDialog.findViewById(R.id.register);
-        TabLayout tab = loginDialog.findViewById(R.id.login_tab);
+        registerButton = loginDialog.findViewById(R.id.register);
+        TabLayout tabLayout = loginDialog.findViewById(R.id.login_tab);
 
-        initializeTabLayout(tab);
-        setLoginListeners(tab);
+        initializeTabLayout(tabLayout);
+        setLoginListeners(tabLayout);
     }
 
-    private void initializeTabLayout(TabLayout tab) {
-        tab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+    private void initializeTabLayout(TabLayout tabLayout) {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 handleTabSelection(tab.getPosition());
@@ -288,12 +271,12 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
         });
-        refreshServer();
-        serverSpinner.setAdapter(serverSpinnerAdapter);
+        refreshServerList();
+        serverSpinner.setAdapter(serverAdapter);
         serverSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                updateCurrentBaseUrl(i);
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                updateCurrentBaseUrl(position);
             }
 
             @Override
@@ -303,28 +286,28 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
 
     private void handleTabSelection(int position) {
         switch (position) {
-            case 1: // 处理第二个标签的选择
-                loginNameLayout.setVisibility(View.GONE);
+            case 1:
+                loginLayout.setVisibility(View.GONE);
                 loginPasswordLayout.setVisibility(View.GONE);
-                loginApi.setVisibility(View.GONE);
+                serverSelectorLayout.setVisibility(View.GONE);
                 break;
-            case 2: // 处理第三个标签的选择
-                loginNameLayout.setVisibility(View.VISIBLE);
+            case 2:
+                loginLayout.setVisibility(View.VISIBLE);
                 loginPasswordLayout.setVisibility(View.VISIBLE);
-                loginApi.setVisibility(View.VISIBLE);
+                serverSelectorLayout.setVisibility(View.VISIBLE);
                 break;
-            case 0: // 处理第一个标签的选择
+            case 0:
             default:
-                loginNameLayout.setVisibility(View.VISIBLE);
+                loginLayout.setVisibility(View.VISIBLE);
                 loginPasswordLayout.setVisibility(View.GONE);
-                loginApi.setVisibility(View.GONE);
+                serverSelectorLayout.setVisibility(View.GONE);
         }
     }
 
     private void updateCurrentBaseUrl(int selectedIndex) {
-        if (servers != null) {
-            for (Servers.Server server : servers.getServer()) {
-                if (server.getServerName().equals(serverList.get(selectedIndex))) {
+        if (serverData != null) {
+            for (Servers.Server server : serverData.getServer()) {
+                if (server.getServerName().equals(serverNames.get(selectedIndex))) {
                     currentBaseUrl = server.getBaseUrl();
                     currentRegisterUrl = server.getRegister();
                 }
@@ -332,22 +315,22 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         }
     }
 
-    private void setLoginListeners(TabLayout tab) {
-        login.setOnClickListener(v -> {
+    private void setLoginListeners(TabLayout tabLayout) {
+        loginButton.setOnClickListener(v -> {
             try {
-                handleLogin(tab);
+                handleLogin(tabLayout);
             } catch (JSONException | IOException e) {
                 H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         });
-        register.setOnClickListener(v -> showServerTypeDialog());
+        registerButton.setOnClickListener(v -> showServerTypeDialog());
     }
 
-    private void handleLogin(TabLayout tab) throws JSONException, IOException {
-        if (loginName == null || tab == null) return;
+    private void handleLogin(TabLayout tabLayout) throws JSONException, IOException {
+        if (loginNameInput == null || tabLayout == null) return;
 
-        String username = Objects.requireNonNull(loginName.getText()).toString();
-        int selectedTabPosition = tab.getSelectedTabPosition();
+        String username = Objects.requireNonNull(loginNameInput.getText()).toString();
+        int selectedTabPosition = tabLayout.getSelectedTabPosition();
 
         switch (selectedTabPosition) {
             case 1:
@@ -367,12 +350,12 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     private void performLogin() {
         progressDialog.showWithProgress();
         H2CO3Application.sExecutorService.execute(() -> {
-            user = Objects.requireNonNull(loginName.getText()).toString();
-            pass = Objects.requireNonNull(loginPassword.getText()).toString();
-            if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(pass)) {
+            username = Objects.requireNonNull(loginNameInput.getText()).toString();
+            password = Objects.requireNonNull(loginPasswordInput.getText()).toString();
+            if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
                 try {
                     LoginUtils.getINSTANCE().setBaseUrl(currentBaseUrl);
-                    LoginUtils.getINSTANCE().login(user, pass, loginUtilsListener);
+                    LoginUtils.getINSTANCE().login(username, password, loginListener);
                 } catch (IOException e) {
                     requireActivity().runOnUiThread(progressDialog::dismiss);
                 }
@@ -382,10 +365,22 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         });
     }
 
-    private void addUserAndReload(String username) throws IOException {
-        H2CO3Auth.addUserToJson(username, "0", "0", "0", "0", "0", UUID.randomUUID().toString(), "0", "0", "0", "0", true, false);
-        reLoadUser();
-        loginDialogAlert.dismiss();
+    private void addUserAndReload(String username) {
+        H2CO3Auth.addUserToJson(username,
+                "0",
+                "0",
+                "0",
+                "0",
+                "0",
+                UUID.randomUUID().toString(),
+                "0",
+                "0",
+                "0",
+                "0",
+                true,
+                false);
+        reLoadUsers();
+        loginDialog.dismiss();
     }
 
     private void showServerTypeDialog() {
@@ -426,15 +421,15 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         progressDialog.dismiss();
         if (data != null) {
             try {
-                Servers.Server server = getServer(selection, data, inputText);
-                if (servers == null) {
-                    servers = new Servers();
-                    servers.setInfo("Made by CaiNull");
-                    servers.setServer(new ArrayList<>());
+                Servers.Server server = createServer(selection, data, inputText);
+                if (serverData == null) {
+                    serverData = new Servers();
+                    serverData.setInfo("Made by CaiNull");
+                    serverData.setServer(new ArrayList<>());
                 }
-                servers.getServer().add(server);
-                H2CO3Tools.write(serversFile.getAbsolutePath(), GLOBAL_GSON.toJson(servers, Servers.class));
-                refreshServer();
+                serverData.getServer().add(server);
+                H2CO3Tools.write(serversFile.getAbsolutePath(), gson.toJson(serverData, Servers.class));
+                refreshServerList();
                 currentBaseUrl = server.getBaseUrl();
                 currentRegisterUrl = server.getRegister();
             } catch (Exception e) {
@@ -444,7 +439,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     }
 
     @NonNull
-    private static Servers.Server getServer(int selection, String data, String inputText) throws JSONException {
+    private static Servers.Server createServer(int selection, String data, String inputText) throws JSONException {
         Servers.Server server = new Servers.Server();
         JSONObject jsonObject = new JSONObject(data);
         JSONObject meta = jsonObject.optJSONObject("meta");
@@ -464,8 +459,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         return !TextUtils.isEmpty(username) && username.length() >= 3 && username.length() <= 16 && username.matches("\\w+");
     }
 
-    public void refreshServer() {
-        serverList = new ArrayList<>();
+    public void refreshServerList() {
+        serverNames = new ArrayList<>();
         if (serversFile.exists() && serversFile.canRead()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(serversFile))) {
                 StringBuilder json = new StringBuilder();
@@ -473,71 +468,71 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 while ((line = reader.readLine()) != null) {
                     json.append(line);
                 }
-                servers = new Gson().fromJson(json.toString(), Servers.class);
-                if (servers != null && !servers.getServer().isEmpty()) {
-                    currentBaseUrl = servers.getServer().get(0).getBaseUrl();
-                    for (Servers.Server server : servers.getServer()) {
-                        serverList.add(server.getServerName());
+                serverData = new Gson().fromJson(json.toString(), Servers.class);
+                if (serverData != null && !serverData.getServer().isEmpty()) {
+                    currentBaseUrl = serverData.getServer().get(0).getBaseUrl();
+                    for (Servers.Server server : serverData.getServer()) {
+                        serverNames.add(server.getServerName());
                     }
                 } else {
-                    serverList.add("无认证服务器");
+                    serverNames.add("无认证服务器");
                 }
             } catch (IOException e) {
                 H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         } else {
-            serverList.add("无法读取服务器列表");
+            serverNames.add("无法读取服务器列表");
         }
 
-        if (serverSpinnerAdapter == null) {
-            serverSpinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, serverList);
-            serverSpinner.setAdapter(serverSpinnerAdapter);
+        if (serverAdapter == null) {
+            serverAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_dropdown_item, serverNames);
+            serverSpinner.setAdapter(serverAdapter);
         } else {
-            serverSpinnerAdapter.clear();
-            serverSpinnerAdapter.addAll(serverList);
-            serverSpinnerAdapter.notifyDataSetChanged();
+            serverAdapter.clear();
+            serverAdapter.addAll(serverNames);
+            serverAdapter.notifyDataSetChanged();
         }
     }
 
-    public void loadUser() {
+    public void loadUsers() {
         try {
             initializeUserList();
-            updateAdapter();
+            updateUserAdapter();
         } catch (JSONException | IOException e) {
             H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
-    public void reLoadUser() {
+    public void reLoadUsers() {
         try {
             updateUserList();
-            updateAdapter();
+            updateUserAdapter();
         } catch (JSONException | IOException e) {
             H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
     private void initializeUserList() throws JSONException, IOException {
-        userList = new ArrayList<>();
+        users = new ArrayList<>();
         updateUserList();
     }
 
-    private void updateAdapter() {
-        runOnUiThread(() -> {
-            if (adapterUser == null || userList.isEmpty()) {
-                adapterUser = new HomeListUserAdapter(this, userList);
-                recyclerView.setAdapter(adapterUser);
+    private void updateUserAdapter() {
+        requireActivity().runOnUiThread(() -> {
+            if (userAdapter == null || users.isEmpty()) {
+                userAdapter = new HomeListUserAdapter(this, users);
+                userRecyclerView.setAdapter(userAdapter);
             } else {
-                for (int i = 0; i < adapterUser.getItemCount(); i++) {
-                    adapterUser.notifyItemChanged(i);
+                for (int i = 0; i < userAdapter.getItemCount(); i++) {
+                    userAdapter.notifyItemChanged(i);
                 }
             }
         });
     }
 
     private void updateUserList() throws JSONException, IOException {
-        userList.clear();
-        userList.addAll(H2CO3Auth.getUserList(new JSONObject(H2CO3Auth.getUserJson())));
+        users.clear();
+        users.addAll(H2CO3Auth.getUserList(new JSONObject(H2CO3Auth.getUserJson())));
     }
 
     @Override
@@ -553,7 +548,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     @SuppressLint("SetTextI18n")
     private void setUserStateFromJson() {
         String apiUrl = H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_API_URL, H2CO3Tools.LOGIN_ERROR, String.class);
-        homeUserName.setText(H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_AUTH_PLAYER_NAME, "", String.class));
+        userNameTextView.setText(H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_AUTH_PLAYER_NAME, "", String.class));
         String userType = H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_USER_TYPE, "0", String.class);
         String userSkinTexture = H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_USER_SKINTEXTURE, "", String.class);
 
@@ -563,26 +558,77 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
 
         switch (userType) {
             case "1":
-                homeUserState.setText(MICROSOFT_USER_STATE);
-                H2CO3Loader.getHead(requireActivity(), userSkinTexture, homeUserIcon);
+                userStateTextView.setText(MICROSOFT_USER_STATE);
+                H2CO3Loader.getHead(requireActivity(), userSkinTexture, userIconImageView);
                 break;
             case "2":
-                homeUserState.setText(OTHER_USER_STATE + apiUrl);
-                homeUserIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.library.R.drawable.ic_home_user));
+                userStateTextView.setText(OTHER_USER_STATE + apiUrl);
+                userIconImageView.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.library.R.drawable.ic_home_user));
                 break;
             default:
-                homeUserState.setText(OFFLINE_USER_STATE);
-                homeUserIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.library.R.drawable.ic_home_user));
+                userStateTextView.setText(OFFLINE_USER_STATE);
+                userIconImageView.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.library.R.drawable.ic_home_user));
                 break;
         }
-        if (TextUtils.isEmpty(homeUserName.getText())) {
+        if (TextUtils.isEmpty(userNameTextView.getText())) {
             setDefaultUserState();
         }
     }
 
     private void setDefaultUserState() {
-        homeUserName.setText(getString(org.koishi.launcher.h2co3.library.R.string.user_add));
-        homeUserState.setText(getString(org.koishi.launcher.h2co3.library.R.string.user_add));
-        homeUserIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.library.R.drawable.xicon));
+        userNameTextView.setText(getString(org.koishi.launcher.h2co3.library.R.string.user_add));
+        userStateTextView.setText(getString(org.koishi.launcher.h2co3.library.R.string.user_add));
+        userIconImageView.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.library.R.drawable.xicon));
+    }
+
+    private void handleAuthResult(AuthResult authResult) {
+        if (authResult.getSelectedProfile() != null) {
+            H2CO3Auth.addUserToJson(
+                    authResult.getSelectedProfile().getName(),
+                    username,
+                    password,
+                    "2",
+                    currentBaseUrl,
+                    authResult.getSelectedProfile().getId(),
+                    UUID.randomUUID().toString(),
+                    "0",
+                    authResult.getAccessToken(),
+                    "0",
+                    "0",
+                    true,
+                    false
+            );
+            reLoadUsers();
+            loginDialog.dismiss();
+        } else {
+            String[] profileNames = authResult.getAvailableProfiles().stream()
+                    .map(AuthResult.AvailableProfiles::getName)
+                    .toArray(String[]::new);
+
+            MaterialAlertDialogBuilder profileSelectionDialog = new MaterialAlertDialogBuilder(requireActivity());
+            profileSelectionDialog.setTitle("请选择角色");
+            profileSelectionDialog.setItems(profileNames, (dialog, which) -> {
+                AuthResult.AvailableProfiles selectedProfile = authResult.getAvailableProfiles().get(which);
+                H2CO3Auth.addUserToJson(
+                        selectedProfile.getName(),
+                        username,
+                        password,
+                        "2",
+                        currentBaseUrl,
+                        selectedProfile.getId(),
+                        UUID.randomUUID().toString(),
+                        "0",
+                        authResult.getAccessToken(),
+                        "0",
+                        "0",
+                        true,
+                        false
+                );
+                reLoadUsers();
+                loginDialog.dismiss();
+            });
+            profileSelectionDialog.setNegativeButton(requireActivity().getString(org.koishi.launcher.h2co3.library.R.string.button_cancel), null);
+            profileSelectionDialog.show();
+        }
     }
 }
