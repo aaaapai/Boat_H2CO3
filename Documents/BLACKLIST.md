@@ -1,6 +1,6 @@
 # 黑名单
 
-H2O2的黑名单。[Switch to English](./BLACKLIST_en.md)
+H2CO3的黑名单。[Switch to English](./BLACKLIST_en.md)
 
 ## 简体中文
 
