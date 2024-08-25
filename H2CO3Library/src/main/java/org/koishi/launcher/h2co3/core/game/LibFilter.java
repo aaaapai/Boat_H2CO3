@@ -25,7 +25,6 @@ public class LibFilter {
 
     private static final Library ASM_ALL_5_2 = GSON.fromJson(ASM_ALL_5_2_STRING, Library.class);
     private static final Library JNA_5_13 = GSON.fromJson(JNA_5_13_STRING, Library.class);
-    private static final Library OSHI_6_3 = GSON.fromJson(OSHI_6_3_STRING, Library.class);
 
     public static Version filter(Version version) {
         return version.setLibraries(filterLibs(version.getLibraries()));
