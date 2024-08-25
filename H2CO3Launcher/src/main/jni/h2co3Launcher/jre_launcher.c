@@ -19,7 +19,7 @@ static const char** const_jargs = NULL;
 __attribute__((unused)) static const char** const_appclasspath = NULL;
 static const jboolean const_javaw = JNI_FALSE;
 static const jboolean const_cpwildcard = JNI_TRUE;
-static const jint const_ergo_class = 0; // DEFAULT_POLICY
+static const jint const_ergo_class = 0;
 static struct sigaction old_sa[NSIG];
 
 void (*__old_sa)(int signal, siginfo_t *info, void *reserved);
@@ -57,7 +57,7 @@ static jint launchJVM(int margc, char** margv) {
     }
 
     H2CO3_INTERNAL_LOG("Calling JLI_Launch");
-    return pJLI_Launch(margc, margv, 0, NULL, 0, NULL, FULL_VERSION, DOT_VERSION, *margv, *margv, (const_jargs != NULL) ? JNI_TRUE : JNI_FALSE, const_cpwildcard, const_javaw, const_ergo_class);
+    return pJLI_Launch(margc, margv, 0, NULL, 0, NULL, FULL_VERSION, DOT_VERSION, margv[0], margv[0], (const_jargs != NULL) ? JNI_TRUE : JNI_FALSE, const_cpwildcard, const_javaw, const_ergo_class);
 }
 
 char** convert_to_char_array(JNIEnv *env, jobjectArray jstringArray) {
@@ -97,7 +97,9 @@ void free_char_array(JNIEnv *env, jobjectArray jstringArray, char **charArray) {
 }
 
 void setup_signal_handler(int signal, struct sigaction *catcher) {
-    sigaction(signal, catcher, &old_sa[signal]);
+    if (sigaction(signal, catcher, &old_sa[signal]) != 0) {
+        perror("sigaction failed");
+    }
 }
 
 jint JNICALL Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_oracle_dalvik_VMLauncher_launchJVM(JNIEnv *env, jclass clazz, jobjectArray argsArray) {

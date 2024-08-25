@@ -41,7 +41,6 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.adapter.HomeListUserAdapter;
 import org.koishi.launcher.h2co3.application.H2CO3Application;
 import org.koishi.launcher.h2co3.core.H2CO3Auth;
-import org.koishi.launcher.h2co3.core.H2CO3Loader;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.login.bean.UserBean;
 import org.koishi.launcher.h2co3.core.login.other.AuthResult;
@@ -559,7 +558,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         switch (userType) {
             case "1":
                 userStateTextView.setText(MICROSOFT_USER_STATE);
-                H2CO3Loader.getHead(requireActivity(), userSkinTexture, userIconImageView);
+                H2CO3Auth.getHead(requireActivity(), userSkinTexture, userIconImageView);
                 break;
             case "2":
                 userStateTextView.setText(OTHER_USER_STATE + apiUrl);

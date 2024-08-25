@@ -20,7 +20,6 @@ import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.application.H2CO3Application;
 import org.koishi.launcher.h2co3.core.H2CO3Auth;
-import org.koishi.launcher.h2co3.core.H2CO3Loader;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.login.bean.UserBean;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
@@ -131,7 +130,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
             return ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_home_user);
         } else {
             return userIconCache.computeIfAbsent(user.getUserName(),
-                    k -> H2CO3Loader.getHeadDrawable(fragment.requireActivity(), user.getSkinTexture()));
+                    k -> H2CO3Auth.getHeadDrawable(fragment.requireActivity(), user.getSkinTexture()));
         }
     }
 
