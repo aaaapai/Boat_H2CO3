@@ -10,7 +10,6 @@ import static org.koishi.launcher.h2co3.control.definitions.id.key.KeyEvent.MOUS
 import static org.koishi.launcher.h2co3.control.definitions.id.key.KeyEvent.MOUSE_POINTER_INC;
 
 import android.content.Context;
-import android.os.Build;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -193,7 +192,7 @@ public class Mouse implements HwInput {
         try {
             mTimer.cancel();
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 

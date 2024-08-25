@@ -123,7 +123,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                 requireActivity().runOnUiThread(() -> h2co3LauncherIcon.setImageResource(org.koishi.launcher.h2co3.library.R.drawable.xicon));
             }
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         try {
             java8 = RuntimeUtils.isLatest(H2CO3Tools.JAVA_8_PATH, "/assets/app_runtime/java/jre8");
@@ -136,7 +136,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                 requireActivity().runOnUiThread(() -> java8Icon.setImageResource(org.koishi.launcher.h2co3.library.R.drawable.xicon));
             }
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         try {
             java11 = RuntimeUtils.isLatest(H2CO3Tools.JAVA_11_PATH, "/assets/app_runtime/java/jre11");
@@ -149,7 +149,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                 requireActivity().runOnUiThread(() -> java11Icon.setImageResource(org.koishi.launcher.h2co3.library.R.drawable.xicon));
             }
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         try {
             java17 = RuntimeUtils.isLatest(H2CO3Tools.JAVA_17_PATH, "/assets/app_runtime/java/jre17");
@@ -162,7 +162,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                 requireActivity().runOnUiThread(() -> java17Icon.setImageResource(org.koishi.launcher.h2co3.library.R.drawable.xicon));
             }
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         try {
             java21 = RuntimeUtils.isLatest(H2CO3Tools.JAVA_21_PATH, "/assets/app_runtime/java/jre21");
@@ -175,7 +175,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                 requireActivity().runOnUiThread(() -> java21Icon.setImageResource(org.koishi.launcher.h2co3.library.R.drawable.xicon));
             }
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
 
     }
@@ -201,7 +201,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                         h2co3LauncherIcon.setImageResource(org.koishi.launcher.h2co3.library.R.drawable.ic_done);
                     });
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
                 handler.post(this::check);
             }).start();
@@ -221,7 +221,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                         java8Icon.setImageResource(org.koishi.launcher.h2co3.library.R.drawable.ic_done);
                     });
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
                 handler.post(this::check);
             }).start();
@@ -246,7 +246,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                         java11Icon.setImageResource(org.koishi.launcher.h2co3.library.R.drawable.ic_done);
                     });
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
                 handler.post(this::check);
             }).start();
@@ -271,7 +271,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                         java17Icon.setImageResource(org.koishi.launcher.h2co3.library.R.drawable.ic_done);
                     });
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
                 handler.post(this::check);
             }).start();
@@ -296,7 +296,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                         java21Icon.setImageResource(org.koishi.launcher.h2co3.library.R.drawable.ic_done);
                     });
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
                 handler.post(this::check);
             }).start();

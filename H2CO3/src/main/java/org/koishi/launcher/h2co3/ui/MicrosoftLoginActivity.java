@@ -73,7 +73,7 @@ public class MicrosoftLoginActivity extends H2CO3Activity {
                 try {
                     clearWebViewCache(MicrosoftLoginActivity.this);
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
                 finish();
                 return true;

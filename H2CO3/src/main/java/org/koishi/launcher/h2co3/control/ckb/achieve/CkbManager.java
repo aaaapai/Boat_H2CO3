@@ -64,7 +64,7 @@ public class CkbManager {
         try (BufferedWriter out = Files.newBufferedWriter(file.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
             out.write(jsonString);
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -188,7 +188,7 @@ public class CkbManager {
             loadKeyboard(kr);
             return true;
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             handleLoadError(file);
             return false;
         }

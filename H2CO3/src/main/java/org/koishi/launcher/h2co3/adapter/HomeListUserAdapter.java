@@ -4,7 +4,6 @@ import static org.koishi.launcher.h2co3.core.H2CO3Auth.setUserState;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,7 +117,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
                 updateSelectedUser(selectedPosition);
                 fragment.reLoadUser();
             } catch (Exception e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         }
     }
@@ -147,7 +146,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
             }
             H2CO3Auth.setUserJson(usersJson.toString());
         } catch (JSONException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -169,7 +168,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
 
                 fragment.reLoadUser();
             } catch (JSONException e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         });
     }

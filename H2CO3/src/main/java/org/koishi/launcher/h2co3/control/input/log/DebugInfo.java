@@ -146,7 +146,7 @@ public class DebugInfo implements Input, View.OnClickListener {
                     isWrite = false;
                 }
             } catch (IOException e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         }
         if (firstWrite) {

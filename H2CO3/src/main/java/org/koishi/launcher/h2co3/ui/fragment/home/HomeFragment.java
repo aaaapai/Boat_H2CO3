@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -144,7 +143,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         public void onFailed(String error) {
             requireActivity().runOnUiThread(() -> {
                 progressDialog.dismiss();
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, error);
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, error);
                 loginDialogAlert.dismiss();
             });
         }
@@ -157,7 +156,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         try {
             init();
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return view;
     }
@@ -338,7 +337,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
             try {
                 handleLogin(tab);
             } catch (JSONException | IOException e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         });
         register.setOnClickListener(v -> showServerTypeDialog());
@@ -439,7 +438,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 currentBaseUrl = server.getBaseUrl();
                 currentRegisterUrl = server.getRegister();
             } catch (Exception e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         }
     }
@@ -484,7 +483,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                     serverList.add("无认证服务器");
                 }
             } catch (IOException e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         } else {
             serverList.add("无法读取服务器列表");
@@ -509,7 +508,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 recyclerView.setAdapter(adapterUser);
             });
         } catch (JSONException | IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -523,7 +522,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 }
             });
         } catch (JSONException | IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 

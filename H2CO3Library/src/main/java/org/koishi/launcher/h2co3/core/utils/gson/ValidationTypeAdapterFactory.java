@@ -46,7 +46,7 @@ public final class ValidationTypeAdapterFactory implements TypeAdapterFactory {
                         ((Validation) t).validate();
                     } catch (TolerableValidationException e) {
                         delegate.write(writer, null);
-                        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                         return;
                     }
                 }
@@ -61,7 +61,7 @@ public final class ValidationTypeAdapterFactory implements TypeAdapterFactory {
                     try {
                         ((Validation) t).validate();
                     } catch (TolerableValidationException e) {
-                        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                         return null;
                     }
                 }

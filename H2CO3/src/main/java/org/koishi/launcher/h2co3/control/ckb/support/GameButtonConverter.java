@@ -47,7 +47,7 @@ public class GameButtonConverter {
             CkbManager.outputFile(keyboardRecorder, newFileName);
             return true;
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         }
     }
@@ -69,7 +69,7 @@ public class GameButtonConverter {
             Reader reader = new InputStreamReader(inputStream);
             return gson.fromJson(reader, GameButtonOld[].class);
         } catch (FileNotFoundException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return null;
         }
     }

@@ -116,7 +116,7 @@ public class MicrosoftLoginUtils {
         String otherErrStr = errStr.contains("NOT_FOUND") && errStr.contains("The server has not found anything matching the request URI")
                 ? "It seems that this Microsoft Account does not own the game. Make sure that you have bought/migrated to your Microsoft account."
                 : "";
-        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, otherErrStr + "\n\nMSA Error: " + conn.getResponseCode() + ": " + conn.getResponseMessage() + ", error stream:\n" + errStr);
+        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, otherErrStr + "\n\nMSA Error: " + conn.getResponseCode() + ": " + conn.getResponseMessage() + ", error stream:\n" + errStr);
     }
 
     private void acquireAccessToken(boolean isRefresh, String authCode) throws IOException, JSONException {
@@ -226,7 +226,7 @@ public class MicrosoftLoginUtils {
         } else {
             Log.i("MicroAuth", "It seems that this Microsoft Account does not own the game.");
             doesOwnGame = false;
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "It seems that this Microsoft Account does not own the game.");
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "It seems that this Microsoft Account does not own the game.");
         }
     }
 

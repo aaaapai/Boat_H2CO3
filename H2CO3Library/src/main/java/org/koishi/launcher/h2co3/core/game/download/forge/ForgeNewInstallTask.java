@@ -178,7 +178,7 @@ public class ForgeNewInstallTask extends Task<Version> {
                 if (!Objects.equals(code, entry.getValue())) {
                     Files.delete(artifact);
                     LOG.info("Checksum mismatch, deleted: " + artifact);
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.WARNING, "Deleted file: " + artifact.toString());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, "Deleted file: " + artifact.toString());
                     throw new ChecksumMismatchException("SHA-1", entry.getValue(), code);
                 }
             }

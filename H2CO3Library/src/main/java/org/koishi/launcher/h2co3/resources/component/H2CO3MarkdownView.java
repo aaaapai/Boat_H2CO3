@@ -124,7 +124,7 @@ public class H2CO3MarkdownView extends FastScrollNestedScrollView {
             }
             return stringBuilder.toString();
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return null;
         }
     }

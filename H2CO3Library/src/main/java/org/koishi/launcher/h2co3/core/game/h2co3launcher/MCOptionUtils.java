@@ -100,7 +100,7 @@ public class MCOptionUtils {
         try {
             H2CO3Tools.write(getOptionsFilePath(gameDir), result.toString());
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to save options: " + e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to save options: " + e.getMessage());
         }
     }
 

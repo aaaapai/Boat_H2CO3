@@ -54,7 +54,7 @@ public class Avatar {
             byte[] bitmapArray = Base64.decode(string, Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
         } catch (IllegalArgumentException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return null;
         }
     }

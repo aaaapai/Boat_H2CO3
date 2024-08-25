@@ -5,7 +5,6 @@ import static org.koishi.launcher.h2co3.core.H2CO3Tools.MINECRAFT_DIR;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
@@ -29,8 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class DirectoryListAdapter extends H2CO3RecycleAdapter<String> {
     private final DirectoryFragment directoryFragment;
@@ -70,7 +67,7 @@ public class DirectoryListAdapter extends H2CO3RecycleAdapter<String> {
             configureCardView(cardView, directoryPath);
             configureButtons(position, removeButton, deleteButton, directoryPath);
         } catch (JSONException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Error loading directory data.");
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Error loading directory data.");
         }
     }
 
@@ -135,7 +132,7 @@ public class DirectoryListAdapter extends H2CO3RecycleAdapter<String> {
                                 FileTools.deleteDirectory(directoryFile);
                                 ((H2CO3Activity) mContext).runOnUiThread(() -> mRvItemOnclickListener.RvItemOnclick(position));
                             } catch (IOException e) {
-                                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Error deleting directory.");
+                                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Error deleting directory.");
                             }
                         });
                     }

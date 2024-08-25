@@ -1,13 +1,9 @@
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -43,7 +39,6 @@ import org.koishi.launcher.h2co3.utils.download.InstallerItem;
 import org.koishi.launcher.h2co3.utils.download.TaskCancellationAction;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -205,11 +200,12 @@ public class EditVersionFragment extends H2CO3Fragment {
                 public void onStop(boolean success, TaskExecutor executor) {
                     Schedulers.androidUIThread().execute(() -> {
                         if (success) {
-                            showCompletionDialog(getContext());
+                            paneAlert.dismiss();
+                            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.INFO, "Download success");
                         } else {
                             if (executor.getException() != null) {
                                 paneAlert.dismiss();
-                                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, String.valueOf(executor.getException()));
+                                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, String.valueOf(executor.getException()));
                             }
                         }
                     });
@@ -226,13 +222,6 @@ public class EditVersionFragment extends H2CO3Fragment {
         backButton = findViewById(view, R.id.minecraft_back_button);
         downloadButton = findViewById(view, R.id.minecraft_download_button);
         installerScrollView = findViewById(view, R.id.installer_list_layout);
-    }
-
-    private void showCompletionDialog(Context context) {
-        new H2CO3CustomViewDialog(context)
-                .setMessage("完成")
-                .create()
-                .show();
     }
 
     private void showChooseInstallerVersionDialog(String libId) {
@@ -266,7 +255,7 @@ public class EditVersionFragment extends H2CO3Fragment {
 
                 Schedulers.androidUIThread().execute(() -> {
                     if (items.isEmpty()) {
-                        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Null");
+                        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Null");
                         chooseInstallerVersionDialogAlert.dismiss();
                         installerVersionListView.setVisibility(View.GONE);
                     } else {

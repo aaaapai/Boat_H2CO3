@@ -22,7 +22,6 @@ import android.provider.DocumentsContract;
 import android.provider.OpenableColumns;
 import android.system.Os;
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -31,7 +30,6 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.Lang;
-import org.koishi.launcher.h2co3.core.utils.Logging;
 import org.koishi.launcher.h2co3.core.utils.StringUtils;
 import org.koishi.launcher.h2co3.core.utils.function.ExceptionalConsumer;
 
@@ -39,7 +37,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -64,7 +61,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.logging.Level;
 
 public final class FileTools {
 
@@ -98,7 +94,7 @@ public final class FileTools {
         try {
             return canCreateDirectory(Paths.get(path));
         } catch (InvalidPathException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         }
     }
@@ -121,7 +117,7 @@ public final class FileTools {
                 Files.delete(lastPath); // safely delete empty directory
                 return true;
             } catch (IOException e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 return false;
             }
         }
@@ -293,7 +289,7 @@ public final class FileTools {
         if (!directory.delete()) {
             String message = "Unable to delete directory " + directory + ".";
 
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, message);
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, message);
         }
     }
 
@@ -302,7 +298,7 @@ public final class FileTools {
             deleteDirectory(directory);
             return true;
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         }
     }
@@ -349,7 +345,7 @@ public final class FileTools {
             throws IOException {
         if (!directory.exists()) {
             if (!makeDirectory(directory)) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to create directory: " + directory);
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to create directory: " + directory);
                 return;
             }
             return;
@@ -357,13 +353,13 @@ public final class FileTools {
 
         if (!directory.isDirectory()) {
             String message = directory + " is not a directory";
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, message);
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, message);
             return;
         }
 
         File[] files = directory.listFiles();
         if (files == null) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to list contents of " + directory);
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to list contents of " + directory);
             return;
         }
         IOException exception = null;
@@ -375,7 +371,7 @@ public final class FileTools {
             }
 
         if (null != exception) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, exception.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, exception.getMessage());
         }
     }
 
@@ -384,7 +380,7 @@ public final class FileTools {
             cleanDirectory(directory);
             return true;
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         }
     }
@@ -397,10 +393,10 @@ public final class FileTools {
             boolean filePresent = file.exists();
             if (!file.delete()) {
                 if (!filePresent) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "File does not exist: " + file);
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "File does not exist: " + file);
                     return;
                 }
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Unable to delete file: " + file);
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Unable to delete file: " + file);
             }
         }
     }
@@ -426,24 +422,24 @@ public final class FileTools {
         Objects.requireNonNull(srcFile, "Source must not be null");
         Objects.requireNonNull(destFile, "Destination must not be null");
         if (!srcFile.exists()) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' does not exist");
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' does not exist");
             return;
         }
         if (srcFile.isDirectory()) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' exists but is a directory");
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' exists but is a directory");
             return;
         }
         if (srcFile.getCanonicalPath().equals(destFile.getCanonicalPath())) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' and destination '" + destFile + "' are the same");
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' and destination '" + destFile + "' are the same");
             return;
         }
         File parentFile = destFile.getParentFile();
         if (parentFile != null && !FileTools.makeDirectory(parentFile)) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Destination '" + parentFile + "' directory cannot be created");
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Destination '" + parentFile + "' directory cannot be created");
             return;
         }
         if (destFile.exists() && !destFile.canWrite()) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Destination '" + destFile + "' exists but is read-only");
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Destination '" + destFile + "' exists but is read-only");
             return;
         }
         Files.copy(srcFile.toPath(), destFile.toPath(), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
@@ -454,17 +450,17 @@ public final class FileTools {
         Objects.requireNonNull(srcFile, "Source must not be null");
         Objects.requireNonNull(destFile, "Destination must not be null");
         if (!Files.exists(srcFile)) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' does not exist");
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' does not exist");
             return;
         }
         if (Files.isDirectory(srcFile)) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' exists but is a directory");
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' exists but is a directory");
             return;
         }
         Path parentFile = destFile.getParent();
         Files.createDirectories(parentFile);
         if (Files.exists(destFile) && !Files.isWritable(destFile)) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Destination '" + destFile + "' exists but is read-only");
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Destination '" + destFile + "' exists but is read-only");
             return;
         }
         Files.copy(srcFile, destFile, StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
@@ -505,7 +501,7 @@ public final class FileTools {
             file.toPath();
             return true;
         } catch (InvalidPathException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         }
     }
@@ -515,7 +511,7 @@ public final class FileTools {
         try {
             return Optional.of(Paths.get(first, more));
         } catch (InvalidPathException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return Optional.empty();
         }
     }
@@ -535,7 +531,7 @@ public final class FileTools {
                 Files.setAttribute(tmpFile, "dos:hidden", true);
             }
         } catch (Throwable e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
 
         Files.move(tmpFile, file, StandardCopyOption.REPLACE_EXISTING);
@@ -553,7 +549,7 @@ public final class FileTools {
                 Files.setAttribute(tmpFile, "dos:hidden", true);
             }
         } catch (Throwable e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return;
         }
 
@@ -587,7 +583,7 @@ public final class FileTools {
                 }
             }
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -608,7 +604,7 @@ public final class FileTools {
                 }
             }
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -643,7 +639,7 @@ public final class FileTools {
                 }
             }
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return null;
     }
@@ -712,7 +708,7 @@ public final class FileTools {
                 outto.write(bt, 0, len);
             }
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -745,7 +741,7 @@ public final class FileTools {
                 fosto.write(bt, 0, c);
             }
         } catch (Exception ex) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, ex.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, ex.getMessage());
         }
 
     }
@@ -849,7 +845,7 @@ public final class FileTools {
         try {
             file.createNewFile();
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -899,7 +895,7 @@ public final class FileTools {
             fw.write(content);
             return true;
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         }
     }
@@ -922,7 +918,7 @@ public final class FileTools {
         try {
             file.createNewFile();
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return null;
         }
         return file;
@@ -938,13 +934,13 @@ public final class FileTools {
             fis.close();
             return result;
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         } finally {
             if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
             }
         }
@@ -972,13 +968,13 @@ public final class FileTools {
             fis.close();
             return new String(result, "UTF-8");
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         } finally {
             if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
             }
         }
@@ -1001,13 +997,13 @@ public final class FileTools {
             fos.close();
             return true;
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         } finally {
             if (fos != null) {
                 try {
                     fos.close();
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
             }
         }
@@ -1021,7 +1017,7 @@ public final class FileTools {
             retval = FileTools.writeFile(file, str.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             retval = false;
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return retval;
     }
@@ -1052,21 +1048,21 @@ public final class FileTools {
             is.close();
             return true;
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         } finally {
             if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
             }
             if (fos != null) {
                 try {
                     fos.close();
                 } catch (IOException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
             }
 
@@ -1110,7 +1106,7 @@ public final class FileTools {
             fis.close();
 
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         } finally {
             try {
                 if (fis != null) {
@@ -1126,7 +1122,7 @@ public final class FileTools {
                     tais.close();
                 }
             } catch (IOException e) {
-                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         }
 
@@ -1172,7 +1168,7 @@ public final class FileTools {
                 try {
                     Thread.sleep(25);
                 } catch (InterruptedException e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
             }
             File destPath = new File(dest, tarEntry.getName());
@@ -1181,7 +1177,7 @@ public final class FileTools {
                 try {
                     Os.symlink(tarEntry.getLinkName().replace("..", dest.getAbsolutePath()), new File(dest, tarEntry.getName()).getAbsolutePath());
                 } catch (Throwable e) {
-                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
             } else if (tarEntry.isDirectory()) {
                 destPath.mkdirs();
@@ -1210,7 +1206,7 @@ public final class FileTools {
             channel.close();
             raf.close();
         } catch (Exception e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 

@@ -206,7 +206,7 @@ public class OnscreenTouchpad implements OnscreenInput, KeyMap, MouseMap {
                                     try {
                                         Thread.sleep(20);
                                     } catch (InterruptedException e) {
-                                        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                                        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                                     }
                                     sendMouseEvent(MOUSEMAP_BUTTON_LEFT, false);
                                 } else {

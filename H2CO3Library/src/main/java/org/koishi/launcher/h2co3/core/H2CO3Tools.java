@@ -256,7 +256,7 @@ public class H2CO3Tools {
             defaultConfigJson.put(key, value);
             Files.write(configPath, defaultConfigJson.toString().getBytes());
         } catch (JSONException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
@@ -289,7 +289,7 @@ public class H2CO3Tools {
         };
     }
 
-    public static void showError(H2CO3MessageManager.NotificationItem.Type type, String message) {
+    public static void showMessage(H2CO3MessageManager.NotificationItem.Type type, String message) {
         H2CO3Tools.h2co3MessageManager.addNotification(type, message);
     }
 }

@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -96,7 +95,7 @@ public class HomeLoginHandler extends Handler {
     }
 
     private void showError(String message) {
-        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, message);
+        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, message);
     }
 
     private Bitmap getSkinBitmap(Texture texture) {

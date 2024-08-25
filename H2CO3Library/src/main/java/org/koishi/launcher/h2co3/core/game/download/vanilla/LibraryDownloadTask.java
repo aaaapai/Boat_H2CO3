@@ -97,7 +97,7 @@ public class LibraryDownloadTask extends Task<Void> {
             }
             return valid;
         } catch (IOException e) {
-            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return false;
     }
