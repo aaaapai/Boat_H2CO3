@@ -14,11 +14,10 @@ import com.google.android.material.navigation.NavigationView;
 import org.jetbrains.annotations.NotNull;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
-import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 import org.koishi.launcher.h2co3.resources.component.H2CO3ToolBar;
 import org.koishi.launcher.h2co3.ui.fragment.directory.DirectoryFragment;
-import org.koishi.launcher.h2co3.ui.fragment.download.DownloadListFragment;
+import org.koishi.launcher.h2co3.ui.fragment.download.DownloadFragment;
 import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 import org.koishi.launcher.h2co3.ui.fragment.manage.ManageFragment;
 import org.koishi.launcher.h2co3.ui.fragment.terminal.TerminalFragment;
@@ -32,7 +31,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
     private HomeFragment homeFragment;
     private DirectoryFragment directoryFragment;
     private ManageFragment manageFragment;
-    private DownloadListFragment downloadFragment;
+    private DownloadFragment downloadFragment;
     private TerminalFragment terminalFragment;
 
     @Override
@@ -72,7 +71,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         homeFragment = new HomeFragment();
         directoryFragment = new DirectoryFragment();
         manageFragment = new ManageFragment();
-        downloadFragment = new DownloadListFragment();
+        downloadFragment = new DownloadFragment();
         terminalFragment = new TerminalFragment();
     }
 
@@ -88,7 +87,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         return manageFragment;
     }
 
-    private DownloadListFragment getDownloadFragment() {
+    private DownloadFragment getDownloadFragment() {
         return downloadFragment;
     }
 

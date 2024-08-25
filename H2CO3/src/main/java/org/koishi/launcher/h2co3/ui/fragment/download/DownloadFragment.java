@@ -15,7 +15,7 @@ import com.google.android.material.navigation.NavigationView;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 
-public class DownloadListFragment extends H2CO3Fragment implements NavigationView.OnNavigationItemSelectedListener {
+public class DownloadFragment extends H2CO3Fragment implements NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationView navigationView;
     private H2CO3Fragment currentFragment;
