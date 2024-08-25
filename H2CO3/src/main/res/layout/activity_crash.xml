@@ -80,6 +80,7 @@
             layout="@layout/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
         <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
             style="@style/Theme.H2CO3.CardViewNormal"
             android:layout_width="match_parent"
