@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +102,7 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
         if (isUpdating || newData == null || newData.isEmpty()) return;
         isUpdating = true;
         this.data.clear();
-        this.data.addAll(newData);
+        this.data.addAll(new ArrayList<>(newData));
         notifyItemRangeChanged(0, newData.size());
         isUpdating = false;
     }

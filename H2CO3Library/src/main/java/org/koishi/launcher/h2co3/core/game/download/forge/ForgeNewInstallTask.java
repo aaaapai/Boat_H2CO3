@@ -176,9 +176,8 @@ public class ForgeNewInstallTask extends Task<Version> {
                 }
 
                 if (!Objects.equals(code, entry.getValue())) {
-                    Files.delete(artifact);
                     LOG.info("Checksum mismatch, deleted: " + artifact);
-                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, "Deleted file: " + artifact.toString());
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, artifact.toString());
                     throw new ChecksumMismatchException("SHA-1", entry.getValue(), code);
                 }
             }
@@ -235,7 +234,7 @@ public class ForgeNewInstallTask extends Task<Version> {
     private final String selfVersion;
 
     private Path tempDir;
-    private AtomicInteger processorDoneCount = new AtomicInteger(0);
+    private final AtomicInteger processorDoneCount = new AtomicInteger(0);
 
     public ForgeNewInstallTask(DefaultDependencyManager dependencyManager, Version version, String selfVersion, Path installer) {
         this.dependencyManager = dependencyManager;

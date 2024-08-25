@@ -238,7 +238,7 @@ public class DirectoryFragment extends H2CO3Fragment {
         dirAdapter = new DirectoryListAdapter(getDirList(), requireActivity(), dirsJsonObj, gameHelper, this);
         dirAdapter.updateData(getDirList());
 
-        verAdapter = new MCVersionListAdapter(requireActivity(), getVerList(gameHelper.getGameCurrentVersion()), this, gameHelper, gameHelper.getGameCurrentVersion());
+        verAdapter = new MCVersionListAdapter(requireActivity(), new ArrayList<>(getVerList(gameHelper.getGameCurrentVersion())), this, gameHelper, gameHelper.getGameCurrentVersion());
         verAdapter.updateData(getVerList(currentDir));
 
         if (!f.isDirectory()) {
