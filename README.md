@@ -1,18 +1,18 @@
 [点击切换为中文](./Documents/README_cn.md)
-<h1 align="left" >Boat_H2CO3</h1>
+# Boat_H2CO3
 
 A Minecraft launcher based on the Boat App as the core.
-[![Android CI](https://github.com/Boat-H2CO3/Boat_H2CO3/actions/workflows/android.yml/badge.svg)](https://github.com/Boat-H2CO3/Boat_H2CO3/actions/workflows/android.yml)
-![Downloads](https://img.shields.io/github/downloads/Boat-H2CO3/Boat_H2CO3/total?color=green&style=for-the-badge)
-[Download](https://nightly.link/Boat-H2CO3/Boat_H2CO3/workflows/android/H2CO3_main/H2CO3-debug.zip)
 
-<h1 align="left">Repository Description</h1>
+[![Android CI](https://github.com/bilicainiaohh/Boat_H2CO3NewUI/actions/workflows/android.yml/badge.svg)](https://github.com/bilicainiaohh/Boat_H2CO3NewUI/actions/workflows/android.yml)
+[Beta Download](https://nightly.link/Boat-H2CO3/Boat_H2CO3/workflows/android/H2CO3_main/H2CO3-debug.zip)
 
-**The original project has been discontinued, and this project is a derivative of it.**
+## Repository Description
 
-#### This project and its derivatives are based on [BoatAPP](https://github.com/AOF-Dev/Boat), please follow the [GPL-3](https://www.gnu.org/licenses/gpl-3.0.html) license for all related modifications.
+**The original project has been discontinued, and this project is a derivative project.**
 
-<h1 align="left">Third-Party Libraries Used</h1>
+This project and the derivative project are based on [BoatAPP](https://github.com/AOF-Dev/Boat). All related modifications should comply with the [GPL-3](https://www.gnu.org/licenses/gpl-3.0.html) license for open source.
+
+## Third-party Libraries Used
 
 - [HMCL](https://github.com/huanghongxun/HMCL)
 - [HMCL-PE](https://github.com/huanghongxun/HMCL-PE)
