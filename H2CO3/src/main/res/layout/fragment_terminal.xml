@@ -8,7 +8,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -29,7 +28,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <org.koishi.launcher.h2co3.resources.component.LineTextView
+    <org.koishi.launcher.h2co3.resources.component.LogWindow
         android:id="@+id/shell_log_window"
         android:layout_width="match_parent"
         android:layout_height="0dp"

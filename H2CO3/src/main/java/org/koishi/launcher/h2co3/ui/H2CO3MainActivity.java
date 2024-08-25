@@ -21,6 +21,7 @@ import org.koishi.launcher.h2co3.ui.fragment.directory.DirectoryFragment;
 import org.koishi.launcher.h2co3.ui.fragment.download.DownloadListFragment;
 import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 import org.koishi.launcher.h2co3.ui.fragment.manage.ManageFragment;
+import org.koishi.launcher.h2co3.ui.fragment.terminal.TerminalFragment;
 
 public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -32,6 +33,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
     private DirectoryFragment directoryFragment;
     private ManageFragment manageFragment;
     private DownloadListFragment downloadFragment;
+    private TerminalFragment terminalFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         directoryFragment = new DirectoryFragment();
         manageFragment = new ManageFragment();
         downloadFragment = new DownloadListFragment();
+        terminalFragment = new TerminalFragment();
     }
 
     private HomeFragment getHomeFragment() {
@@ -87,6 +90,10 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
 
     private DownloadListFragment getDownloadFragment() {
         return downloadFragment;
+    }
+
+    private TerminalFragment getTerminalFragment() {
+        return terminalFragment;
     }
 
     private void initFragment(H2CO3Fragment fragment) {
@@ -154,6 +161,8 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
             switchFragment(getManageFragment(), org.koishi.launcher.h2co3.library.R.string.title_manage);
         } else if (menuItem.getItemId() == R.id.navigation_download) {
             switchFragment(getDownloadFragment(), org.koishi.launcher.h2co3.library.R.string.title_download);
+        }else if (menuItem.getItemId() == R.id.navigation_terminal) {
+            switchFragment(getTerminalFragment(), org.koishi.launcher.h2co3.library.R.string.title_terminal);
         }
         return true;
     }

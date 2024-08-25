@@ -1,6 +1,7 @@
 package org.koishi.launcher.h2co3.resources.component;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
@@ -8,8 +9,11 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.textview.MaterialTextView;
 
+import org.koishi.launcher.h2co3.core.color.ThemeUtils;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.BooleanProperty;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.BooleanPropertyBase;
+import org.koishi.launcher.h2co3.core.fakefx.beans.property.IntegerProperty;
+import org.koishi.launcher.h2co3.core.fakefx.beans.property.IntegerPropertyBase;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.StringProperty;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.StringPropertyBase;
 import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
@@ -17,12 +21,11 @@ import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 public class H2CO3TextView extends MaterialTextView {
     private StringProperty string;
     private BooleanProperty visibilityProperty;
+
     public H2CO3TextView(@NonNull Context context) {
         super(context);
         setView();
     }
-
-
 
     public H2CO3TextView(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);

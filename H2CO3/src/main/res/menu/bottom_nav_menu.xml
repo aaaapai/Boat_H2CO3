@@ -22,5 +22,10 @@
             android:id="@+id/navigation_manage"
             android:icon="@drawable/ic_menu_manager"
             android:title="@string/title_manage" />
+
+        <item
+            android:id="@+id/navigation_terminal"
+            android:icon="@drawable/ic_terminal"
+            android:title="@string/title_terminal" />
     </group>
 </menu>
