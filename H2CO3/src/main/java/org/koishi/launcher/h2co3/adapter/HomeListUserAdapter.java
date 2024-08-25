@@ -151,7 +151,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
     }
 
     private void removeUser(int position) {
-        if (position < 0 || position >= data.size()) return; // Prevent IndexOutOfBoundsException
+        if (position < 0 || position >= data.size()) return;
         H2CO3Application.sExecutorService.execute(() -> {
             try {
                 UserBean removedUser = data.remove(position);
@@ -166,7 +166,11 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
                 usersJson.remove(removedUser.getUserName());
                 H2CO3Auth.setUserJson(usersJson.toString());
 
-                fragment.reLoadUser();
+                fragment.runOnUiThread(() -> {
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, getItemCount() - position);
+                });
+
             } catch (JSONException e) {
                 H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
@@ -191,9 +195,12 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
     private String getUserStateText(UserBean user) {
         String userType = user.getUserType();
         return switch (userType) {
-            case "1" -> context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_microsoft);
-            case "2" -> context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_other) + user.getApiUrl();
-            default -> context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_offline);
+            case "1" ->
+                    context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_microsoft);
+            case "2" ->
+                    context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_other) + user.getApiUrl();
+            default ->
+                    context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_offline);
         };
     }
 

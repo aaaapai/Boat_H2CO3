@@ -501,12 +501,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
 
     public void loadUser() {
         try {
-            userList = new ArrayList<>();
-            updateUserList();
-            runOnUiThread(() -> {
-                adapterUser = new HomeListUserAdapter(this, userList);
-                recyclerView.setAdapter(adapterUser);
-            });
+            initializeUserList();
+            updateAdapter();
         } catch (JSONException | IOException e) {
             H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
@@ -515,15 +511,28 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     public void reLoadUser() {
         try {
             updateUserList();
-            runOnUiThread(() -> {
-                if (adapterUser != null) {
-                    adapterUser = new HomeListUserAdapter(this, userList);
-                    recyclerView.setAdapter(adapterUser);
-                }
-            });
+            updateAdapter();
         } catch (JSONException | IOException e) {
             H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
+    }
+
+    private void initializeUserList() throws JSONException, IOException {
+        userList = new ArrayList<>();
+        updateUserList();
+    }
+
+    private void updateAdapter() {
+        runOnUiThread(() -> {
+            if (adapterUser == null || userList.isEmpty()) {
+                adapterUser = new HomeListUserAdapter(this, userList);
+                recyclerView.setAdapter(adapterUser);
+            } else {
+                for (int i = 0; i < adapterUser.getItemCount(); i++) {
+                    adapterUser.notifyItemChanged(i);
+                }
+            }
+        });
     }
 
     private void updateUserList() throws JSONException, IOException {
