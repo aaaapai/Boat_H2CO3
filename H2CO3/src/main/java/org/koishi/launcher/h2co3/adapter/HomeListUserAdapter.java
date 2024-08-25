@@ -21,14 +21,18 @@ import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.application.H2CO3Application;
 import org.koishi.launcher.h2co3.core.H2CO3Auth;
+import org.koishi.launcher.h2co3.core.H2CO3Loader;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.login.bean.UserBean;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MaterialDialog;
 import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
 
@@ -36,6 +40,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
     private final HomeFragment fragment;
     private int selectedPosition;
     private boolean isRemoveUserDialogShowing = false;
+    private final Map<String, Drawable> userIconCache = new HashMap<>();
 
     public HomeListUserAdapter(HomeFragment fragment, ArrayList<UserBean> list) {
         super(list, fragment.requireActivity());
@@ -97,7 +102,12 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
         holder.stateTextView.setText(getUserStateText(user));
         holder.userIcon.setImageDrawable(user.getUserIcon() != null ? user.getUserIcon() : getUserIcon(user));
 
-        holder.removeImageButton.setOnClickListener(v -> showRemoveUserDialog(holder.getBindingAdapterPosition()));
+        holder.removeImageButton.setOnClickListener(v -> {
+            if (!isRemoveUserDialogShowing) {
+                showRemoveUserDialog(holder.getBindingAdapterPosition());
+                isRemoveUserDialogShowing = true;
+            }
+        });
     }
 
     private void handleUserSelection(ViewHolder holder, int position) {
@@ -108,7 +118,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
                 updateSelectedUser(selectedPosition);
                 fragment.reLoadUser();
             } catch (Exception e) {
-                Log.e("HomeListUserAdapter", "Error updating selected user", e);
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         }
     }
@@ -118,8 +128,12 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
     }
 
     private Drawable getUserIcon(UserBean user) {
-        Drawable defaultIcon = ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_home_user);
-        return user.getIsOffline() || user.getUserIcon() == null ? defaultIcon : user.getUserIcon();
+        if (user.getIsOffline()) {
+            return ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_home_user);
+        } else {
+            return userIconCache.computeIfAbsent(user.getUserName(),
+                    k -> H2CO3Loader.getHeadDrawable(fragment.requireActivity(), user.getSkinTexture()));
+        }
     }
 
     private void updateSelectedUser(int selectedPosition) {
@@ -133,11 +147,12 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
             }
             H2CO3Auth.setUserJson(usersJson.toString());
         } catch (JSONException e) {
-            Log.e("HomeListUserAdapter", "Error updating user JSON", e);
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
     private void removeUser(int position) {
+        if (position < 0 || position >= data.size()) return; // Prevent IndexOutOfBoundsException
         H2CO3Application.sExecutorService.execute(() -> {
             try {
                 UserBean removedUser = data.remove(position);
@@ -154,7 +169,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
 
                 fragment.reLoadUser();
             } catch (JSONException e) {
-                Log.e("HomeListUserAdapter", "Error removing user", e);
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
         });
     }

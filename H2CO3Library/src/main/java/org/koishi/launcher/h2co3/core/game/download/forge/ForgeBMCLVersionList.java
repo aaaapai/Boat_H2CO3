@@ -28,8 +28,11 @@ import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.download.VersionList;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.HttpRequest;
+import org.koishi.launcher.h2co3.core.utils.Lang;
 import org.koishi.launcher.h2co3.core.utils.NetworkUtils;
 import org.koishi.launcher.h2co3.core.utils.StringUtils;
 import org.koishi.launcher.h2co3.core.utils.gson.tools.Validation;
@@ -69,10 +72,27 @@ public final class ForgeBMCLVersionList extends VersionList<ForgeRemoteVersion> 
         throw new UnsupportedOperationException("ForgeBMCLVersionList does not support loading the entire Forge remote version list.");
     }
 
+    private static String toLookupVersion(String gameVersion) {
+        return "1.7.10-pre4".equals(gameVersion) ? "1.7.10_pre4" : gameVersion;
+    }
+
+    private static String fromLookupVersion(String lookupVersion) {
+        return "1.7.10_pre4".equals(lookupVersion) ? "1.7.10-pre4" : lookupVersion;
+    }
+
+    private static String toLookupBranch(String gameVersion, String branch) {
+        if ("1.7.10-pre4".equals(gameVersion)) {
+            return "prerelease";
+        }
+        return Lang.requireNonNullElse(branch, "");
+    }
+
     @Override
     public CompletableFuture<?> refreshAsync(String gameVersion) {
+        String lookupVersion = toLookupVersion(gameVersion);
+
         return CompletableFuture.completedFuture(null)
-                .thenApplyAsync(wrap(unused -> HttpRequest.GET(apiRoot + "/forge/minecraft/" + gameVersion).<List<ForgeVersion>>getJson(new TypeToken<List<ForgeVersion>>() {
+                .thenApplyAsync(wrap(unused -> HttpRequest.GET(apiRoot + "/forge/minecraft/" + lookupVersion).<List<ForgeVersion>>getJson(new TypeToken<List<ForgeVersion>>() {
                 }.getType())))
                 .thenAcceptAsync(forgeVersions -> {
                     lock.writeLock().lock();
@@ -86,19 +106,24 @@ public final class ForgeBMCLVersionList extends VersionList<ForgeRemoteVersion> 
                             List<String> urls = new ArrayList<>();
                             for (ForgeVersion.File file : version.getFiles())
                                 if ("installer".equals(file.getCategory()) && "jar".equals(file.getFormat())) {
-                                    String classifier = gameVersion + "-" + version.getVersion()
-                                            + (StringUtils.isNotBlank(version.getBranch()) ? "-" + version.getBranch() : "");
+                                    String branch = toLookupBranch(gameVersion, version.getBranch());
+
+                                    String classifier = lookupVersion + "-" + version.getVersion() + (branch.isEmpty() ? "" : '-' + branch);
                                     String fileName1 = "forge-" + classifier + "-" + file.getCategory() + "." + file.getFormat();
-                                    String fileName2 = "forge-" + classifier + "-" + gameVersion + "-" + file.getCategory() + "." + file.getFormat();
+                                    String fileName2 = "forge-" + classifier + "-" + lookupVersion + "-" + file.getCategory() + "." + file.getFormat();
                                     urls.add("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + classifier + "/" + fileName1);
-                                    urls.add("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + classifier + "-" + gameVersion + "/" + fileName2);
-                                    urls.add(NetworkUtils.withQuery("https://bmclapi2.bangbang93.com/forge/download", mapOf(
-                                            pair("mcversion", version.getGameVersion()),
-                                            pair("version", version.getVersion()),
-                                            pair("branch", version.getBranch()),
-                                            pair("category", file.getCategory()),
-                                            pair("format", file.getFormat())
-                                    )));
+                                    urls.add("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + classifier + "-" + lookupVersion + "/" + fileName2);
+                                    try {
+                                        urls.add(NetworkUtils.withQuery("https://bmclapi2.bangbang93.com/forge/download", mapOf(
+                                                pair("mcversion", version.getGameVersion()),
+                                                pair("version", version.getVersion()),
+                                                pair("branch", branch),
+                                                pair("category", file.getCategory()),
+                                                pair("format", file.getFormat())
+                                        )));
+                                    } catch (UnsupportedEncodingException e) {
+                                        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+                                    }
                                 }
 
                             if (urls.isEmpty())
@@ -114,10 +139,8 @@ public final class ForgeBMCLVersionList extends VersionList<ForgeRemoteVersion> 
                             }
 
                             versions.put(gameVersion, new ForgeRemoteVersion(
-                                    version.getGameVersion(), version.getVersion(), releaseDate, urls));
+                                    fromLookupVersion(version.getGameVersion()), version.getVersion(), releaseDate, urls));
                         }
-                    } catch (UnsupportedEncodingException e) {
-                        throw new RuntimeException(e);
                     } finally {
                         lock.writeLock().unlock();
                     }

@@ -311,8 +311,12 @@ public class CacheRepository {
                 ETagIndex indexOnDisk = JsonUtils.fromMaybeMalformedJson(new String(IOUtils.readFullyWithoutClosing(Channels.newInputStream(channel)), "UTF-8"), ETagIndex.class);
                 Map<String, ETagItem> newIndex = joinETagIndexes(indexOnDisk == null ? null : indexOnDisk.eTag, index.values());
                 channel.truncate(0);
-                ETagIndex writeTo = new ETagIndex(newIndex.values());
-                channel.write(ByteBuffer.wrap(JsonUtils.GSON.toJson(writeTo).getBytes("UTF-8")));
+                ByteBuffer writeTo = ByteBuffer.wrap(JsonUtils.GSON.toJson(new ETagIndex(newIndex.values())).getBytes("UTF-8"));
+                while (writeTo.hasRemaining()) {
+                    if (channel.write(writeTo) == 0) {
+                        throw new IOException("No value is written");
+                    }
+                }
                 this.index = newIndex;
             } finally {
                 lock.release();

@@ -29,4 +29,11 @@
         <attr name="char_capslock" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="H2CO3MessageItemView">
+        <attr name="h2co3_color_message_warning" format="color"/>
+        <attr name="h2co3_color_message_debug" format="color"/>
+        <attr name="h2co3_color_message_error" format="color"/>
+        <attr name="h2co3_color_message_info" format="color"/>
+    </declare-styleable>
+
 </resources>

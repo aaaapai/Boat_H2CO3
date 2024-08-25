@@ -1,10 +1,13 @@
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -32,7 +35,7 @@ import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 import org.koishi.launcher.h2co3.core.utils.task.TaskExecutor;
 import org.koishi.launcher.h2co3.core.utils.task.TaskListener;
-import org.koishi.launcher.h2co3.dialog.TaskDialog;
+import org.koishi.launcher.h2co3.dialog.H2CO3DownloadTaskDialog;
 import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3CustomViewDialog;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MessageDialog;
@@ -63,7 +66,7 @@ public class EditVersionFragment extends H2CO3Fragment {
     private RecyclerView installerVersionListView;
     private VersionList<?> currentVersionList;
     private DownloadProviders downloadProviders;
-    private TaskDialog pane;
+    private H2CO3DownloadTaskDialog pane;
     private AlertDialog paneAlert;
     private final ChooseMcVersionFragment chooseMcVersionFragment;
 
@@ -100,9 +103,7 @@ public class EditVersionFragment extends H2CO3Fragment {
             if (args != null) {
                 String versionName = args.getString("versionName");
                 this.gameVersion = versionName;
-
             }
-
 
             group = new InstallerItem.InstallerItemGroup(getContext(), gameVersion);
 
@@ -191,11 +192,12 @@ public class EditVersionFragment extends H2CO3Fragment {
 
         Task<?> task = builder.buildAsync();
 
-        pane = new TaskDialog(requireContext());
+        pane = new H2CO3DownloadTaskDialog(requireContext(), org.koishi.launcher.h2co3.library.R.style.ThemeOverlay_App_MaterialAlertDialog_FullScreen);
         paneAlert = pane.create();
         pane.setAlertDialog(paneAlert);
         pane.setCancel(new TaskCancellationAction(() -> paneAlert.dismiss()));
-        pane.setTitle("Installing...");
+        paneAlert.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        paneAlert.show();
 
         Schedulers.androidUIThread().execute(() -> {
             TaskExecutor executor = task.executor(new TaskListener() {
@@ -263,16 +265,14 @@ public class EditVersionFragment extends H2CO3Fragment {
                 List<RemoteVersion> items = loadVersions(libraryId);
 
                 Schedulers.androidUIThread().execute(() -> {
-                    if (currentVersionList.getVersions(gameVersion).isEmpty()) {
+                    if (items.isEmpty()) {
                         H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Null");
                         chooseInstallerVersionDialogAlert.dismiss();
                         installerVersionListView.setVisibility(View.GONE);
                     } else {
-                        if (!items.isEmpty()) {
-                            RemoteVersionListAdapter adapter = new RemoteVersionListAdapter(getContext(), new ArrayList<>(items), listener);
-                            installerVersionListView.setLayoutManager(new LinearLayoutManager(getContext()));
-                            installerVersionListView.setAdapter(adapter);
-                        }
+                        RemoteVersionListAdapter adapter = new RemoteVersionListAdapter(getContext(), items, listener);
+                        installerVersionListView.setLayoutManager(new LinearLayoutManager(getContext()));
+                        installerVersionListView.setAdapter(adapter);
                         installerVersionListView.setVisibility(View.VISIBLE);
                     }
                 });

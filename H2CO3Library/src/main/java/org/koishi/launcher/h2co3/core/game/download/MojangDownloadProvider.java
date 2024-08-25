@@ -20,6 +20,8 @@ package org.koishi.launcher.h2co3.core.game.download;
 import org.koishi.launcher.h2co3.core.game.download.fabric.FabricAPIVersionList;
 import org.koishi.launcher.h2co3.core.game.download.fabric.FabricVersionList;
 import org.koishi.launcher.h2co3.core.game.download.forge.ForgeBMCLVersionList;
+import org.koishi.launcher.h2co3.core.game.download.forge.ForgeVersionList;
+import org.koishi.launcher.h2co3.core.game.download.optifine.OptiFine302VersionList;
 import org.koishi.launcher.h2co3.core.game.download.vanilla.GameVersionList;
 import org.koishi.launcher.h2co3.core.game.download.liteloader.LiteLoaderVersionList;
 import org.koishi.launcher.h2co3.core.game.download.neoforge.NeoForgeOfficialVersionList;
@@ -34,10 +36,10 @@ public class MojangDownloadProvider implements DownloadProvider {
     private final GameVersionList game;
     private final FabricVersionList fabric;
     private final FabricAPIVersionList fabricApi;
-    private final ForgeBMCLVersionList forge;
+    private final ForgeVersionList forge;
     private final NeoForgeOfficialVersionList neoforge;
     private final LiteLoaderVersionList liteLoader;
-    private final OptiFineBMCLVersionList optifine;
+    private final OptiFine302VersionList optifine;
     private final QuiltVersionList quilt;
     private final QuiltAPIVersionList quiltApi;
 
@@ -47,10 +49,10 @@ public class MojangDownloadProvider implements DownloadProvider {
         this.game = new GameVersionList(this);
         this.fabric = new FabricVersionList(this);
         this.fabricApi = new FabricAPIVersionList(this);
-        this.forge = new ForgeBMCLVersionList(apiRoot);
+        this.forge = new ForgeVersionList(this);
         this.neoforge = new NeoForgeOfficialVersionList(this);
         this.liteLoader = new LiteLoaderVersionList(this);
-        this.optifine = new OptiFineBMCLVersionList(apiRoot);
+        this.optifine = new OptiFine302VersionList("https://zkitefly.github.io/optifine-download-list/index.json");
         this.quilt = new QuiltVersionList(this);
         this.quiltApi = new QuiltAPIVersionList(this);
     }
@@ -67,18 +69,28 @@ public class MojangDownloadProvider implements DownloadProvider {
 
     @Override
     public VersionList<?> getVersionListById(String id) {
-        return switch (id) {
-            case "game" -> game;
-            case "fabric" -> fabric;
-            case "fabric-api" -> fabricApi;
-            case "forge" -> forge;
-            case "neoforge" -> neoforge;
-            case "liteloader" -> liteLoader;
-            case "optifine" -> optifine;
-            case "quilt" -> quilt;
-            case "quilt-api" -> quiltApi;
-            default -> throw new IllegalArgumentException("Unrecognized version list id: " + id);
-        };
+        switch (id) {
+            case "game":
+                return game;
+            case "fabric":
+                return fabric;
+            case "fabric-api":
+                return fabricApi;
+            case "forge":
+                return forge;
+            case "neoforge":
+                return neoforge;
+            case "liteloader":
+                return liteLoader;
+            case "optifine":
+                return optifine;
+            case "quilt":
+                return quilt;
+            case "quilt-api":
+                return quiltApi;
+            default:
+                throw new IllegalArgumentException("Unrecognized version list id: " + id);
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import static org.koishi.launcher.h2co3.core.utils.Lang.tryCast;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ import org.koishi.launcher.h2co3.core.utils.task.TaskListener;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Button;
 import org.koishi.launcher.h2co3.resources.component.H2CO3LinearProgress;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
+import org.koishi.launcher.h2co3.resources.component.H2CO3ToolBar;
 import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3CustomViewDialog;
 import org.koishi.launcher.h2co3.utils.download.TaskCancellationAction;
@@ -64,47 +66,53 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickListener {
-    private final H2CO3TextView speedView;
+public class H2CO3DownloadTaskDialog extends H2CO3CustomViewDialog implements View.OnClickListener {
 
     private TaskExecutor executor;
     private TaskCancellationAction onCancel;
     private final RecyclerView leftTaskListView, rightTaskListView;
-    private final H2CO3Button cancelButton;
     public AlertDialog alertDialog;
+    private H2CO3ToolBar speedView;
+
+    private final Consumer<FileDownloadTask.SpeedEvent> speedEventHandler;
 
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
-    public TaskDialog(@NonNull Context context) {
-        super(context);
+    public H2CO3DownloadTaskDialog(@NonNull Context context, int style) {
+        super(context, style);
         setCustomView(R.layout.dialog_task);
         setCancelable(false);
 
         rightTaskListView = findViewById(R.id.list_right);
         leftTaskListView = findViewById(R.id.list_left);
-        speedView = findViewById(R.id.speed);
-        cancelButton = findViewById(R.id.cancel);
+        speedView = findViewById(R.id.tb_speed);
 
-        cancelButton.setOnClickListener(this);
-
-        Consumer<FileDownloadTask.SpeedEvent> speedEventHandler = getSpeedEventConsumer();
-        FileDownloadTask.speedEvent.channel(FileDownloadTask.SpeedEvent.class).registerWeak(speedEventHandler);
-    }
-
-    private @NonNull Consumer<FileDownloadTask.SpeedEvent> getSpeedEventConsumer() {
-        DecimalFormat df = new DecimalFormat("#.##");
-        @SuppressLint("SetTextI18n") Consumer<FileDownloadTask.SpeedEvent> speedEventHandler = speedEvent -> {
-            double speed = speedEvent.getSpeed();
-            String[] units = new String[]{"B/s", "KB/s", "MB/s"};
-            int unitIndex = 0;
-            while (speed > 1024 && unitIndex < units.length - 1) {
-                speed /= 1024;
-                unitIndex++;
+        setNegativeButton(org.koishi.launcher.h2co3.library.R.string.button_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Optional.ofNullable(executor).ifPresent(TaskExecutor::cancel);
+                Optional.ofNullable(onCancel).ifPresent(action -> action.getCancellationAction().accept(H2CO3DownloadTaskDialog.this));
+                alertDialog.dismiss();
             }
-            String finalUnit = units[unitIndex];
+        });
+
+        speedEventHandler = speedEvent -> {
+            String unit = "B/s";
+            double speed = speedEvent.getSpeed();
+            if (speed > 1024) {
+                speed /= 1024;
+                unit = "KB/s";
+            }
+            if (speed > 1024) {
+                speed /= 1024;
+                unit = "MB/s";
+            }
             double finalSpeed = speed;
-            Schedulers.androidUIThread().execute(() -> speedView.setText(df.format(finalSpeed) + " " + finalUnit));
+            String finalUnit = unit;
+            Schedulers.androidUIThread().execute(() -> {
+                speedView.setTitle(String.format("%.1f %s", finalSpeed, finalUnit));
+            });
         };
-        return speedEventHandler;
+        FileDownloadTask.speedEvent.channel(FileDownloadTask.SpeedEvent.class).registerWeak(speedEventHandler);
     }
 
     public void setAlertDialog(AlertDialog dialog) {
@@ -139,17 +147,10 @@ public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickLis
 
     public void setCancel(TaskCancellationAction onCancel) {
         this.onCancel = onCancel;
-
-        cancelButton.setEnabled(onCancel != null);
     }
 
     @Override
     public void onClick(View view) {
-        if (view == cancelButton) {
-            Optional.ofNullable(executor).ifPresent(TaskExecutor::cancel);
-            Optional.ofNullable(onCancel).ifPresent(action -> action.getCancellationAction().accept(this));
-            alertDialog.dismiss();
-        }
     }
 
     public class LeftTaskListPane extends H2CO3RecycleAdapter<View> {

@@ -1,13 +1,6 @@
 package org.koishi.launcher.h2co3.utils.download;
 
-import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.FABRIC;
-import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.FABRIC_API;
-import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.FORGE;
-import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.LITELOADER;
-import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.NEO_FORGE;
-import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.OPTIFINE;
-import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.QUILT;
-import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.QUILT_API;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.*;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,6 +10,7 @@ import android.view.View;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.card.MaterialCardView;
 
@@ -36,10 +30,7 @@ import org.koishi.launcher.h2co3.core.utils.ConvertUtils;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Button;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class InstallerItem {
 
@@ -85,29 +76,21 @@ public class InstallerItem {
     @SuppressLint("UseCompatLoadingForDrawables")
     private Drawable getDrawable(Context context, LibraryAnalyzer.LibraryType id) {
         return switch (id) {
-            case FORGE ->
-                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_forge);
-            case NEO_FORGE ->
-                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_neoforge);
-            case LITELOADER ->
-                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_liteloader);
-            case OPTIFINE ->
-                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_optifine);
-            case FABRIC, FABRIC_API ->
-                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_fabric);
-            case QUILT, QUILT_API ->
-                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_quilt);
-            default ->
-                    context.getDrawable(org.koishi.launcher.h2co3.library.R.drawable.ic_mc_mods);
+            case FORGE -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_forge);
+            case NEO_FORGE -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_neoforge);
+            case LITELOADER -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_liteloader);
+            case OPTIFINE -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_optifine);
+            case FABRIC, FABRIC_API -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_fabric);
+            case QUILT, QUILT_API -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_quilt);
+            default -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_mods);
         };
     }
 
     public View createView() {
-        InstallerItemSkin skin = new InstallerItemSkin(context, this);
-        return skin.getView();
+        return new InstallerItemSkin(context, this).getView();
     }
 
-    public final static class InstallerItemGroup {
+    public static class InstallerItemGroup {
         public final InstallerItem fabric;
         public final InstallerItem fabricApi;
         public final InstallerItem forge;
@@ -117,9 +100,9 @@ public class InstallerItem {
         public final InstallerItem quilt;
         public final InstallerItem quiltApi;
         private final Context context;
-        private final InstallerItem[] libraries;
+        private final List<InstallerItem> libraries;
 
-        private final HashMap<InstallerItem, Set<InstallerItem>> incompatibleMap = new HashMap<>();
+        private final Map<InstallerItem, Set<InstallerItem>> incompatibleMap = new HashMap<>();
 
         public InstallerItemGroup(Context context, String gameVersion) {
             this.context = context;
@@ -142,38 +125,32 @@ public class InstallerItem {
             InvalidationListener listener = o -> {
                 for (Map.Entry<InstallerItem, Set<InstallerItem>> entry : incompatibleMap.entrySet()) {
                     InstallerItem item = entry.getKey();
-
-                    String incompatibleId = null;
-                    for (InstallerItem other : entry.getValue()) {
-                        if (other.libraryVersion.get() != null) {
-                            incompatibleId = other.id;
-                            break;
-                        }
-                    }
-
+                    String incompatibleId = entry.getValue().stream()
+                            .filter(other -> other.libraryVersion.get() != null)
+                            .map(other -> other.id)
+                            .findFirst()
+                            .orElse(null);
                     item.incompatibleLibraryName.set(incompatibleId);
                 }
             };
-            for (InstallerItem item : incompatibleMap.keySet()) {
-                item.libraryVersion.addListener(listener);
-            }
+            incompatibleMap.keySet().forEach(item -> item.libraryVersion.addListener(listener));
 
-            fabricApi.dependencyName.bind(Bindings.createStringBinding(() -> {
-                if (fabric.libraryVersion.get() == null) return FABRIC.getPatchId();
-                else return null;
-            }, fabric.libraryVersion));
+            fabricApi.dependencyName.bind(Bindings.createStringBinding(() ->
+                    fabric.libraryVersion.get() == null ? FABRIC.getPatchId() : null, fabric.libraryVersion));
 
-            quiltApi.dependencyName.bind(Bindings.createStringBinding(() -> {
-                if (quilt.libraryVersion.get() == null) return QUILT.getPatchId();
-                else return null;
-            }, quilt.libraryVersion));
+            quiltApi.dependencyName.bind(Bindings.createStringBinding(() ->
+                    quilt.libraryVersion.get() == null ? QUILT.getPatchId() : null, quilt.libraryVersion));
 
+            libraries = determineLibraries(gameVersion);
+        }
+
+        private List<InstallerItem> determineLibraries(String gameVersion) {
             if (gameVersion == null) {
-                this.libraries = new InstallerItem[]{forge, neoForge, liteLoader, optiFine, fabric, fabricApi, quilt, quiltApi};
+                return List.of(forge, neoForge, liteLoader, optiFine, fabric, fabricApi, quilt, quiltApi);
             } else if (VersionNumber.compare(gameVersion, "1.13") < 0) {
-                this.libraries = new InstallerItem[]{forge, liteLoader, optiFine};
+                return List.of(forge, liteLoader, optiFine);
             } else {
-                this.libraries = new InstallerItem[]{forge, neoForge, optiFine, fabric, fabricApi, quilt, quiltApi};
+                return List.of(forge, neoForge, optiFine, fabric, fabricApi, quilt, quiltApi);
             }
         }
 
@@ -192,16 +169,11 @@ public class InstallerItem {
         private void mutualIncompatible(InstallerItem... items) {
             for (InstallerItem item : items) {
                 Set<InstallerItem> set = getIncompatibles(item);
-
-                for (InstallerItem item2 : items) {
-                    if (item2 != item) {
-                        set.add(item2);
-                    }
-                }
+                Arrays.stream(items).filter(item2 -> item2 != item).forEach(set::add);
             }
         }
 
-        public InstallerItem[] getLibraries() {
+        public List<InstallerItem> getLibraries() {
             return libraries;
         }
 
@@ -211,10 +183,10 @@ public class InstallerItem {
             boolean first = true;
             for (InstallerItem installerItem : getLibraries()) {
                 View view = installerItem.createView();
-                if (first) {
-                    first = false;
-                } else {
+                if (!first) {
                     view.setPadding(0, ConvertUtils.dip2px(context, 10), 0, 0);
+                } else {
+                    first = false;
                 }
                 parent.addView(view);
             }
@@ -225,7 +197,6 @@ public class InstallerItem {
     public static class InstallerItemSkin implements View.OnClickListener {
 
         private final InstallerItem installerItem;
-
         private final LinearLayoutCompat parent;
         private final MaterialCardView item;
         private final H2CO3Button remove;
@@ -251,7 +222,8 @@ public class InstallerItem {
                 if (installerItem.incompatibleWithGame.get()) {
                     return AndroidUtils.getLocalizedText(context, "install_installer_change_version", version);
                 } else if (incompatibleWith != null) {
-                    return AndroidUtils.getLocalizedText(context, "install_installer_incompatible", AndroidUtils.getLocalizedText(context, "install_installer_" + incompatibleWith));
+                    return AndroidUtils.getLocalizedText(context, "install_installer_incompatible",
+                            AndroidUtils.getLocalizedText(context, "install_installer_" + incompatibleWith));
                 } else if (version == null) {
                     return context.getString(org.koishi.launcher.h2co3.library.R.string.install_installer_not_installed);
                 } else {
@@ -262,10 +234,8 @@ public class InstallerItem {
             select.visibilityProperty().bind(Bindings.createBooleanBinding(
                     () -> installerItem.installable.get() && installerItem.incompatibleLibraryName.get() == null,
                     installerItem.installable, installerItem.incompatibleLibraryName));
-            select.stringProperty().bind(Bindings.createStringBinding(() -> installerItem.upgradable.get()
-                            ? "更新"
-                            : "选择版本",
-                    installerItem.upgradable));
+            select.stringProperty().bind(Bindings.createStringBinding(() ->
+                    installerItem.upgradable.get() ? "更新" : "选择版本", installerItem.upgradable));
             remove.setOnClickListener(this);
             select.setOnClickListener(this);
         }
@@ -276,10 +246,8 @@ public class InstallerItem {
 
         @Override
         public void onClick(View view) {
-            if (view == select) {
-                if (select.getVisibilityValue()) {
-                    installerItem.action.get().run();
-                }
+            if (view == select && select.getVisibilityValue()) {
+                installerItem.action.get().run();
             }
             if (view == remove) {
                 installerItem.removeAction.get().run();

@@ -17,8 +17,6 @@
  */
 package org.koishi.launcher.h2co3.core.utils.gson;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
@@ -26,6 +24,8 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.gson.tools.TolerableValidationException;
 import org.koishi.launcher.h2co3.core.utils.gson.tools.Validation;
 
@@ -46,6 +46,7 @@ public final class ValidationTypeAdapterFactory implements TypeAdapterFactory {
                         ((Validation) t).validate();
                     } catch (TolerableValidationException e) {
                         delegate.write(writer, null);
+                        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                         return;
                     }
                 }
@@ -56,11 +57,11 @@ public final class ValidationTypeAdapterFactory implements TypeAdapterFactory {
             @Override
             public T read(JsonReader reader) throws IOException {
                 T t = delegate.read(reader);
-                Log.d("H2CO3", t.toString());
                 if (t instanceof Validation) {
                     try {
                         ((Validation) t).validate();
                     } catch (TolerableValidationException e) {
+                        H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                         return null;
                     }
                 }

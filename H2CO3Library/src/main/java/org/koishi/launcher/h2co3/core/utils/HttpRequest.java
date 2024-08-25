@@ -146,9 +146,8 @@ public abstract class HttpRequest {
             super(url, "POST");
         }
 
-        public HttpPostRequest contentType(String contentType) {
+        public void contentType(String contentType) {
             headers.put("Content-Type", contentType);
-            return this;
         }
 
         public HttpPostRequest json(Object payload) throws JsonParseException, UnsupportedEncodingException {

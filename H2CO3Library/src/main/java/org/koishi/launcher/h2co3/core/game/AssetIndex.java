@@ -49,6 +49,10 @@ public final class AssetIndex {
         return virtual || mapToResources;
     }
 
+    public boolean needMapToResources() {
+        return mapToResources;
+    }
+
     public Map<String, AssetObject> getObjects() {
         return Collections.unmodifiableMap(objects);
     }

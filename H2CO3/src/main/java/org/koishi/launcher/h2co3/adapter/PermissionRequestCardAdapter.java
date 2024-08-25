@@ -8,11 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter;
-import org.koishi.launcher.h2co3.utils.bean.ui.PermissionRequestCard;
+import org.koishi.launcher.h2co3.resources.component.PermissionRequestCard;
 
 import java.util.List;
 

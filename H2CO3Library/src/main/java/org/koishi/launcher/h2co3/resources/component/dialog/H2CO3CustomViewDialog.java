@@ -9,12 +9,17 @@ package org.koishi.launcher.h2co3.resources.component.dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 public class H2CO3CustomViewDialog extends H2CO3MaterialDialog {
     private View customView;
 
     public H2CO3CustomViewDialog(Context context) {
         super(context);
+    }
+
+    public H2CO3CustomViewDialog(Context context, int style) {
+        super(context, style);
     }
 
     public View getCustomView() {
@@ -24,6 +29,13 @@ public class H2CO3CustomViewDialog extends H2CO3MaterialDialog {
     public void setCustomView(int layoutResId) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         customView = inflater.inflate(layoutResId, null);
+
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        customView.setLayoutParams(layoutParams);
+
         setView(customView);
     }
 

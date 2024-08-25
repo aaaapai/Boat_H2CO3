@@ -98,6 +98,7 @@ public final class FileTools {
         try {
             return canCreateDirectory(Paths.get(path));
         } catch (InvalidPathException e) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         }
     }
@@ -120,6 +121,7 @@ public final class FileTools {
                 Files.delete(lastPath); // safely delete empty directory
                 return true;
             } catch (IOException e) {
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 return false;
             }
         }
@@ -291,7 +293,7 @@ public final class FileTools {
         if (!directory.delete()) {
             String message = "Unable to delete directory " + directory + ".";
 
-            throw new IOException(message);
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, message);
         }
     }
 
@@ -300,6 +302,7 @@ public final class FileTools {
             deleteDirectory(directory);
             return true;
         } catch (IOException e) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         }
     }
@@ -345,20 +348,24 @@ public final class FileTools {
     public static void cleanDirectory(File directory)
             throws IOException {
         if (!directory.exists()) {
-            if (!makeDirectory(directory))
-                throw new IOException("Failed to create directory: " + directory);
+            if (!makeDirectory(directory)) {
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to create directory: " + directory);
+                return;
+            }
             return;
         }
 
         if (!directory.isDirectory()) {
             String message = directory + " is not a directory";
-            throw new IllegalArgumentException(message);
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, message);
+            return;
         }
 
         File[] files = directory.listFiles();
-        if (files == null)
-            throw new IOException("Failed to list contents of " + directory);
-
+        if (files == null) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to list contents of " + directory);
+            return;
+        }
         IOException exception = null;
         for (File file : files)
             try {
@@ -367,8 +374,9 @@ public final class FileTools {
                 exception = ioe;
             }
 
-        if (null != exception)
-            throw exception;
+        if (null != exception) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, exception.getMessage());
+        }
     }
 
     public static boolean cleanDirectoryQuietly(File directory) {
@@ -376,6 +384,7 @@ public final class FileTools {
             cleanDirectory(directory);
             return true;
         } catch (IOException e) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         }
     }
@@ -387,9 +396,11 @@ public final class FileTools {
         } else {
             boolean filePresent = file.exists();
             if (!file.delete()) {
-                if (!filePresent)
-                    throw new FileNotFoundException("File does not exist: " + file);
-                throw new IOException("Unable to delete file: " + file);
+                if (!filePresent) {
+                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "File does not exist: " + file);
+                    return;
+                }
+                H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Unable to delete file: " + file);
             }
         }
     }
@@ -414,18 +425,27 @@ public final class FileTools {
             throws IOException {
         Objects.requireNonNull(srcFile, "Source must not be null");
         Objects.requireNonNull(destFile, "Destination must not be null");
-        if (!srcFile.exists())
-            throw new FileNotFoundException("Source '" + srcFile + "' does not exist");
-        if (srcFile.isDirectory())
-            throw new IOException("Source '" + srcFile + "' exists but is a directory");
-        if (srcFile.getCanonicalPath().equals(destFile.getCanonicalPath()))
-            throw new IOException("Source '" + srcFile + "' and destination '" + destFile + "' are the same");
+        if (!srcFile.exists()) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' does not exist");
+            return;
+        }
+        if (srcFile.isDirectory()) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' exists but is a directory");
+            return;
+        }
+        if (srcFile.getCanonicalPath().equals(destFile.getCanonicalPath())) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' and destination '" + destFile + "' are the same");
+            return;
+        }
         File parentFile = destFile.getParentFile();
-        if (parentFile != null && !FileTools.makeDirectory(parentFile))
-            throw new IOException("Destination '" + parentFile + "' directory cannot be created");
-        if (destFile.exists() && !destFile.canWrite())
-            throw new IOException("Destination '" + destFile + "' exists but is read-only");
-
+        if (parentFile != null && !FileTools.makeDirectory(parentFile)) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Destination '" + parentFile + "' directory cannot be created");
+            return;
+        }
+        if (destFile.exists() && !destFile.canWrite()) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Destination '" + destFile + "' exists but is read-only");
+            return;
+        }
         Files.copy(srcFile.toPath(), destFile.toPath(), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
     }
 
@@ -433,15 +453,20 @@ public final class FileTools {
             throws IOException {
         Objects.requireNonNull(srcFile, "Source must not be null");
         Objects.requireNonNull(destFile, "Destination must not be null");
-        if (!Files.exists(srcFile))
-            throw new FileNotFoundException("Source '" + srcFile + "' does not exist");
-        if (Files.isDirectory(srcFile))
-            throw new IOException("Source '" + srcFile + "' exists but is a directory");
+        if (!Files.exists(srcFile)) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' does not exist");
+            return;
+        }
+        if (Files.isDirectory(srcFile)) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Source '" + srcFile + "' exists but is a directory");
+            return;
+        }
         Path parentFile = destFile.getParent();
         Files.createDirectories(parentFile);
-        if (Files.exists(destFile) && !Files.isWritable(destFile))
-            throw new IOException("Destination '" + destFile + "' exists but is read-only");
-
+        if (Files.exists(destFile) && !Files.isWritable(destFile)) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, "Destination '" + destFile + "' exists but is read-only");
+            return;
+        }
         Files.copy(srcFile, destFile, StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
     }
 
@@ -479,7 +504,8 @@ public final class FileTools {
         try {
             file.toPath();
             return true;
-        } catch (InvalidPathException ignored) {
+        } catch (InvalidPathException e) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return false;
         }
     }
@@ -489,6 +515,7 @@ public final class FileTools {
         try {
             return Optional.of(Paths.get(first, more));
         } catch (InvalidPathException e) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             return Optional.empty();
         }
     }
@@ -507,7 +534,8 @@ public final class FileTools {
             if (Files.exists(file) && Files.getAttribute(file, "dos:hidden") == Boolean.TRUE) {
                 Files.setAttribute(tmpFile, "dos:hidden", true);
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
 
         Files.move(tmpFile, file, StandardCopyOption.REPLACE_EXISTING);
@@ -524,7 +552,9 @@ public final class FileTools {
             if (Files.exists(file) && Files.getAttribute(file, "dos:hidden") == Boolean.TRUE) {
                 Files.setAttribute(tmpFile, "dos:hidden", true);
             }
-        } catch (Throwable ignored) {
+        } catch (Throwable e) {
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
+            return;
         }
 
         Files.move(tmpFile, file, StandardCopyOption.REPLACE_EXISTING);
@@ -908,7 +938,6 @@ public final class FileTools {
             fis.close();
             return result;
         } catch (Exception e) {
-
             H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         } finally {
             if (fis != null) {
@@ -991,7 +1020,8 @@ public final class FileTools {
         try {
             retval = FileTools.writeFile(file, str.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            retval = false;
+            H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return retval;
     }
@@ -1023,11 +1053,8 @@ public final class FileTools {
             return true;
         } catch (IOException e) {
             H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
-
-
             return false;
         } finally {
-
             if (is != null) {
                 try {
                     is.close();
@@ -1144,8 +1171,8 @@ public final class FileTools {
             if (tarEntry.getSize() <= 20480) {
                 try {
                     Thread.sleep(25);
-                } catch (InterruptedException ignored) {
-
+                } catch (InterruptedException e) {
+                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
             }
             File destPath = new File(dest, tarEntry.getName());
@@ -1154,7 +1181,7 @@ public final class FileTools {
                 try {
                     Os.symlink(tarEntry.getLinkName().replace("..", dest.getAbsolutePath()), new File(dest, tarEntry.getName()).getAbsolutePath());
                 } catch (Throwable e) {
-                    Logging.LOG.log(Level.WARNING, e.getMessage());
+                    H2CO3Tools.showError(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
             } else if (tarEntry.isDirectory()) {
                 destPath.mkdirs();

@@ -1,4 +1,4 @@
-package org.koishi.launcher.h2co3.utils.bean.ui;
+package org.koishi.launcher.h2co3.resources.component;
 
 public class PermissionRequestCard {
     private int iconRes;
