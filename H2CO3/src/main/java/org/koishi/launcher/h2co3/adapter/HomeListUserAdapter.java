@@ -26,6 +26,7 @@ import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MaterialDialog;
+import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MessageDialog;
 import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 
 import java.util.ArrayList;
@@ -105,6 +106,11 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
                 showRemoveUserDialog(holder.getBindingAdapterPosition());
                 isRemoveUserDialogShowing = true;
             }
+        });
+
+        holder.selectorCardView.setOnLongClickListener(v -> {
+            showUserInfoDialog(user);
+            return true;
         });
     }
 
@@ -229,5 +235,13 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
             removeImageButton = itemView.findViewById(R.id.item_listview_user_remove);
             addCardView = itemView.findViewById(R.id.login_user_add);
         }
+    }
+
+    private void showUserInfoDialog(UserBean userBean) {
+        new H2CO3MessageDialog(context)
+                .setTitle("INFO")
+                .setMessage(userBean.getUserName() + "\n" + userBean.getApiUrl() + "\n" + userBean.getToken())
+                .setPositiveButton("确定", null)
+                .show();
     }
 }

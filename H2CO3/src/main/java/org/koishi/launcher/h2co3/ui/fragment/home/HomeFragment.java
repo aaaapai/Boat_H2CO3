@@ -335,6 +335,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 break;
             case 0:
             default:
+                username = Objects.requireNonNull(loginNameInput.getText()).toString();
                 if (isValidUsername(username)) {
                     addUserAndReload(username);
                 }else {
