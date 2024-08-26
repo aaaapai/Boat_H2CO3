@@ -1,5 +1,6 @@
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -232,10 +233,13 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
 
         chooseInstallerVersionDialog = new H2CO3CustomViewDialog(requireActivity());
         chooseInstallerVersionDialog.setCustomView(R.layout.dialog_installer_version);
-        chooseInstallerVersionDialog.setTitle(getString(org.koishi.launcher.h2co3.library.R.string.title_activity_login));
+        chooseInstallerVersionDialog.setCancelable(false);
+        chooseInstallerVersionDialog.setTitle(org.koishi.launcher.h2co3.library.R.string.dialog_title_choose_installer_version);
+        chooseInstallerVersionDialog.setNegativeButton(org.koishi.launcher.h2co3.library.R.string.button_cancel, (dialog, which) -> chooseInstallerVersionDialogAlert.dismiss());
         installerVersionListView = chooseInstallerVersionDialog.findViewById(R.id.list_left);
 
         chooseInstallerVersionDialogAlert = chooseInstallerVersionDialog.create();
+        chooseInstallerVersionDialogAlert.setCancelable(false);
         chooseInstallerVersionDialogAlert.show();
         chooseInstallerVersionDialog.setOnDismissListener(dialog -> isChooseInstallerVersionDialogShowing = false);
         chooseInstallerVersionDialogAlert.setOnDismissListener(dialog -> isChooseInstallerVersionDialogShowing = false);
@@ -258,7 +262,7 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
 
                 Schedulers.androidUIThread().execute(() -> {
                     if (items.isEmpty()) {
-                        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Null");
+                        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "No version found for " + libraryId + "!");
                         chooseInstallerVersionDialogAlert.dismiss();
                         installerVersionListView.setVisibility(View.GONE);
                     } else {

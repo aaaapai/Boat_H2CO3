@@ -228,5 +228,6 @@
     <string name="assets_index_malformed">Index files of downloaded assets were corrupted.</string>
     <string name="title_terminal">Terminal</string>
     <string name="curse_api_key">null</string>
+    <string name="dialog_title_choose_installer_version">Choose installer version</string>
 
 </resources>
