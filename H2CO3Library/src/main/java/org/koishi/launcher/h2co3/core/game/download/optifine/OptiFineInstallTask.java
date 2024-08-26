@@ -17,7 +17,6 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.optifine;
 
-
 import static org.koishi.launcher.h2co3.core.utils.Lang.getOrDefault;
 
 import android.app.ActivityManager;
@@ -75,9 +74,10 @@ public final class OptiFineInstallTask extends Task<Version> {
     private final Path installer;
     private final List<Task<?>> dependents = new ArrayList<>(0);
     private final List<Task<?>> dependencies = new ArrayList<>(1);
+    private Path dest;
+
     private final Library optiFineLibrary;
     private final Library optiFineInstallerLibrary;
-    private Path dest;
 
     public OptiFineInstallTask(DefaultDependencyManager dependencyManager, Version version, OptiFineRemoteVersion remoteVersion) {
         this(dependencyManager, version, remoteVersion, null);
@@ -98,45 +98,8 @@ public final class OptiFineInstallTask extends Task<Version> {
                 new Artifact("optifine", "OptiFine", mavenVersion, "installer"), null,
                 new LibrariesDownloadInfo(new LibraryDownloadInfo(
                         "optifine/OptiFine/" + mavenVersion + "/OptiFine-" + mavenVersion + "-installer.jar",
-                        remote.getUrls().get(0)))
+                        remote.getUrls().get(0).toString()))
         );
-    }
-
-    /**
-     * Install OptiFine library from existing local file.
-     *
-     * @param dependencyManager game repository
-     * @param version           version.json
-     * @param installer         the OptiFine installer
-     * @return the task to install library
-     * @throws IOException              if unable to read compressed content of installer file, or installer file is corrupted, or the installer is not the one we want.
-     * @throws VersionMismatchException if required game version of installer does not match the actual one.
-     */
-    public static Task<Version> install(DefaultDependencyManager dependencyManager, Version version, Path installer) throws IOException, VersionMismatchException {
-        Optional<String> gameVersion = dependencyManager.getGameRepository().getGameVersion(version);
-        if (!gameVersion.isPresent()) throw new IOException();
-        try (FileSystem fs = CompressingUtils.createReadOnlyZipFileSystem(installer)) {
-            Path configClass = fs.getPath("Config.class");
-            if (!Files.exists(configClass)) configClass = fs.getPath("net/optifine/Config.class");
-            if (!Files.exists(configClass))
-                configClass = fs.getPath("notch/net/optifine/Config.class");
-            if (!Files.exists(configClass)) throw new IOException("Unrecognized installer");
-            ConstantPool pool = ConstantPoolScanner.parse(Files.readAllBytes(configClass), ConstantType.UTF8);
-            List<String> constants = new ArrayList<>();
-            pool.list(Utf8Constant.class).forEach(utf8 -> constants.add(utf8.get()));
-            String mcVersion = getOrDefault(constants, constants.indexOf("MC_VERSION") + 1, null);
-            String ofEdition = getOrDefault(constants, constants.indexOf("OF_EDITION") + 1, null);
-            String ofRelease = getOrDefault(constants, constants.indexOf("OF_RELEASE") + 1, null);
-
-            if (mcVersion == null || ofEdition == null || ofRelease == null)
-                throw new IOException("Unrecognized OptiFine installer");
-
-            if (!mcVersion.equals(gameVersion.get()))
-                throw new VersionMismatchException(mcVersion, gameVersion.get());
-
-            return new OptiFineInstallTask(dependencyManager, version,
-                    new OptiFineRemoteVersion(mcVersion, ofEdition + "_" + ofRelease, Collections.singletonList(""), false), installer);
-        }
     }
 
     @Override
@@ -296,6 +259,42 @@ public final class OptiFineInstallTask extends Task<Version> {
             } else {
                 throw new IOException("OptiFine patcher failed, command: " + new CommandBuilder().addAll(Arrays.asList(command)));
             }
+        }
+    }
+
+    /**
+     * Install OptiFine library from existing local file.
+     *
+     * @param dependencyManager game repository
+     * @param version           version.json
+     * @param installer         the OptiFine installer
+     * @return the task to install library
+     * @throws IOException              if unable to read compressed content of installer file, or installer file is corrupted, or the installer is not the one we want.
+     * @throws VersionMismatchException if required game version of installer does not match the actual one.
+     */
+    public static Task<Version> install(DefaultDependencyManager dependencyManager, Version version, Path installer) throws IOException, VersionMismatchException {
+        Optional<String> gameVersion = dependencyManager.getGameRepository().getGameVersion(version);
+        if (!gameVersion.isPresent()) throw new IOException();
+        try (FileSystem fs = CompressingUtils.createReadOnlyZipFileSystem(installer)) {
+            Path configClass = fs.getPath("Config.class");
+            if (!Files.exists(configClass)) configClass = fs.getPath("net/optifine/Config.class");
+            if (!Files.exists(configClass)) configClass = fs.getPath("notch/net/optifine/Config.class");
+            if (!Files.exists(configClass)) throw new IOException("Unrecognized installer");
+            ConstantPool pool = ConstantPoolScanner.parse(Files.readAllBytes(configClass), ConstantType.UTF8);
+            List<String> constants = new ArrayList<>();
+            pool.list(Utf8Constant.class).forEach(utf8 -> constants.add(utf8.get()));
+            String mcVersion = getOrDefault(constants, constants.indexOf("MC_VERSION") + 1, null);
+            String ofEdition = getOrDefault(constants, constants.indexOf("OF_EDITION") + 1, null);
+            String ofRelease = getOrDefault(constants, constants.indexOf("OF_RELEASE") + 1, null);
+
+            if (mcVersion == null || ofEdition == null || ofRelease == null)
+                throw new IOException("Unrecognized OptiFine installer");
+
+            if (!mcVersion.equals(gameVersion.get()))
+                throw new VersionMismatchException(mcVersion, gameVersion.get());
+
+            return new OptiFineInstallTask(dependencyManager, version,
+                    new OptiFineRemoteVersion(mcVersion, ofEdition + "_" + ofRelease, Collections.singletonList(""), false), installer);
         }
     }
 }

@@ -76,5 +76,5 @@ public final class LiteLoaderVersion {
     public Collection<Library> getLibraries() {
         return Collections.unmodifiableCollection(libraries);
     }
-
+    
 }

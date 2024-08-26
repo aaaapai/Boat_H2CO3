@@ -36,16 +36,6 @@ public final class GameRemoteVersion extends RemoteVersion {
         this.type = type;
     }
 
-    private static Type getReleaseType(ReleaseType type) {
-        if (type == null) return Type.UNCATEGORIZED;
-        return switch (type) {
-            case RELEASE -> Type.RELEASE;
-            case SNAPSHOT -> Type.SNAPSHOT;
-            case UNKNOWN -> Type.UNCATEGORIZED;
-            default -> Type.OLD;
-        };
-    }
-
     public ReleaseType getType() {
         return type;
     }
@@ -61,5 +51,19 @@ public final class GameRemoteVersion extends RemoteVersion {
             return 0;
 
         return o.getReleaseDate().compareTo(getReleaseDate());
+    }
+
+    private static RemoteVersion.Type getReleaseType(ReleaseType type) {
+        if (type == null) return Type.UNCATEGORIZED;
+        switch (type) {
+            case RELEASE:
+                return Type.RELEASE;
+            case SNAPSHOT:
+                return Type.SNAPSHOT;
+            case UNKNOWN:
+                return Type.UNCATEGORIZED;
+            default:
+                return Type.OLD;
+        }
     }
 }

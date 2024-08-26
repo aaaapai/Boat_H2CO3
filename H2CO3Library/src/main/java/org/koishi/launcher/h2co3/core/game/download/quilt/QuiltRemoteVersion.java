@@ -17,6 +17,7 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.quilt;
 
+
 import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
 import org.koishi.launcher.h2co3.core.game.download.RemoteVersion;

@@ -20,9 +20,10 @@ package org.koishi.launcher.h2co3.core.game.download.vanilla;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 
+
+import org.apache.commons.lang3.StringUtils;
 import org.koishi.launcher.h2co3.core.game.download.ReleaseType;
 import org.koishi.launcher.h2co3.core.utils.Constants;
-import org.koishi.launcher.h2co3.core.utils.StringUtils;
 import org.koishi.launcher.h2co3.core.utils.gson.tools.Validation;
 
 import java.time.Instant;
@@ -79,7 +80,7 @@ public final class GameRemoteVersionInfo implements Validation {
     public String getUrl() {
         return url;
     }
-
+    
     @Override
     public void validate() throws JsonParseException {
         if (StringUtils.isBlank(gameVersion))

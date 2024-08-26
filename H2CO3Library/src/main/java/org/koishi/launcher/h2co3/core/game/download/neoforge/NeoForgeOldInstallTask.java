@@ -17,7 +17,6 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.neoforge;
 
-import static org.koishi.launcher.h2co3.core.utils.Logging.LOG;
 import static org.koishi.launcher.h2co3.core.utils.gson.JsonUtils.fromNonNullJson;
 
 import android.app.ActivityManager;
@@ -37,6 +36,7 @@ import org.koishi.launcher.h2co3.core.game.download.Version;
 import org.koishi.launcher.h2co3.core.game.download.forge.ForgeNewInstallProfile;
 import org.koishi.launcher.h2co3.core.game.download.vanilla.GameLibrariesTask;
 import org.koishi.launcher.h2co3.core.game.download.vanilla.VersionJsonDownloadTask;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.shell.ProcessService;
 import org.koishi.launcher.h2co3.core.utils.Artifact;
 import org.koishi.launcher.h2co3.core.utils.CommandBuilder;
@@ -114,7 +114,7 @@ public class NeoForgeOldInstallTask extends Task<Version> {
 
                     if (!Objects.equals(code, value)) {
                         Files.delete(artifact);
-                        LOG.info("Found existing file is not valid: " + artifact);
+                        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.INFO,  "Found existing file is not valid: " + artifact);
 
                         miss = true;
                     }
@@ -185,7 +185,7 @@ public class NeoForgeOldInstallTask extends Task<Version> {
     }
 
     private void runJVMProcess(ForgeNewInstallProfile.Processor processor, List<String> command, int java) throws Exception {
-        LOG.info("Executing external processor " + processor.getJar().toString() + ", command line: " + new CommandBuilder().addAll(command).toString());
+        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.INFO, "Executing external processor " + processor.getJar().toString() + ", command line: " + new CommandBuilder().addAll(command).toString());
         int exitCode;
         boolean listen = true;
         while (listen) {
@@ -382,7 +382,7 @@ public class NeoForgeOldInstallTask extends Task<Version> {
         if (version == null || output == null)
             return null;
 
-        LOG.info("Patching DOWNLOAD_MOJMAPS task");
+        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.INFO, "Patching DOWNLOAD_MOJMAPS task");
         return new VersionJsonDownloadTask(version, dependencyManager)
                 .thenComposeAsync(json -> {
                     DownloadInfo mappings = fromNonNullJson(json, Version.class)

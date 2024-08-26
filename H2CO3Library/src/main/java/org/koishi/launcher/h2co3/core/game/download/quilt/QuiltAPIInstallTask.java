@@ -17,7 +17,6 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.quilt;
 
-
 import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.game.download.Version;
 import org.koishi.launcher.h2co3.core.utils.task.FileDownloadTask;
@@ -58,9 +57,9 @@ public final class QuiltAPIInstallTask extends Task<Version> {
     @Override
     public void execute() throws IOException {
         dependencies.add(new FileDownloadTask(
-                new URL(remote.getVersion().file().getUrl()),
-                dependencyManager.getGameRepository().getRunDirectory(version.getId()).toPath().resolve("mods").resolve("quilt-api-" + remote.getVersion().version() + ".jar").toFile(),
-                remote.getVersion().file().getIntegrityCheck())
+                new URL(remote.getVersion().getFile().getUrl()),
+                dependencyManager.getGameRepository().getRunDirectory(version.getId()).toPath().resolve("mods").resolve("quilt-api-" + remote.getVersion().getVersion() + ".jar").toFile(),
+                remote.getVersion().getFile().getIntegrityCheck())
         );
     }
 }

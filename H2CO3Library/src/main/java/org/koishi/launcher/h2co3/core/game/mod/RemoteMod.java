@@ -16,6 +16,18 @@ import java.util.stream.Stream;
 
 public class RemoteMod {
     private static RemoteMod EMPTY = null;
+
+    public static void registerEmptyRemoteMod(RemoteMod empty) {
+        EMPTY = empty;
+    }
+
+    public static RemoteMod getEmptyRemoteMod() {
+        if (EMPTY == null) {
+            throw new NullPointerException();
+        }
+        return EMPTY;
+    }
+
     private final String slug;
     private final String author;
     private final String title;
@@ -34,17 +46,6 @@ public class RemoteMod {
         this.pageUrl = pageUrl;
         this.iconUrl = iconUrl;
         this.data = data;
-    }
-
-    public static void registerEmptyRemoteMod(RemoteMod empty) {
-        EMPTY = empty;
-    }
-
-    public static RemoteMod getEmptyRemoteMod() {
-        if (EMPTY == null) {
-            throw new NullPointerException();
-        }
-        return EMPTY;
     }
 
     public String getSlug() {
@@ -93,31 +94,6 @@ public class RemoteMod {
         EMBEDDED,
         INCOMPATIBLE,
         BROKEN
-    }
-
-    public enum Type {
-        CURSEFORGE(CurseForgeRemoteModRepository.MODS),
-        MODRINTH(ModrinthRemoteModRepository.MODS);
-
-        private final RemoteModRepository remoteModRepository;
-
-        Type(RemoteModRepository remoteModRepository) {
-            this.remoteModRepository = remoteModRepository;
-        }
-
-        public RemoteModRepository getRemoteModRepository() {
-            return this.remoteModRepository;
-        }
-    }
-
-    public interface IMod {
-        List<RemoteMod> loadDependencies(RemoteModRepository modRepository) throws IOException;
-
-        Stream<VersionMod> loadVersions(RemoteModRepository modRepository) throws IOException;
-    }
-
-    public interface IVersion {
-        Type getType();
     }
 
     public static final class Dependency {
@@ -196,10 +172,101 @@ public class RemoteMod {
         }
     }
 
-    public record VersionMod(IVersion self, String modid, String name, String version,
-                             String changelog, Instant datePublished, VersionType versionType,
-                             File file, List<Dependency> dependencies, List<String> gameVersions,
-                             List<ModLoaderType> loaders) {
+    public enum Type {
+        CURSEFORGE(CurseForgeRemoteModRepository.MODS),
+        MODRINTH(ModrinthRemoteModRepository.MODS);
+
+        private final RemoteModRepository remoteModRepository;
+
+        public RemoteModRepository getRemoteModRepository() {
+            return this.remoteModRepository;
+        }
+
+        Type(RemoteModRepository remoteModRepository) {
+            this.remoteModRepository = remoteModRepository;
+        }
+    }
+
+    public interface IMod {
+        List<RemoteMod> loadDependencies(RemoteModRepository modRepository) throws IOException;
+
+        Stream<Version> loadVersions(RemoteModRepository modRepository) throws IOException;
+    }
+
+    public interface IVersion {
+        Type getType();
+    }
+
+    public static class Version {
+        private final IVersion self;
+        private final String modid;
+        private final String name;
+        private final String version;
+        private final String changelog;
+        private final Instant datePublished;
+        private final VersionType versionType;
+        private final File file;
+        public final List<Dependency> dependencies;
+        private final List<String> gameVersions;
+        private final List<ModLoaderType> loaders;
+
+        public Version(IVersion self, String modid, String name, String version, String changelog, Instant datePublished, VersionType versionType, File file, List<Dependency> dependencies, List<String> gameVersions, List<ModLoaderType> loaders) {
+            this.self = self;
+            this.modid = modid;
+            this.name = name;
+            this.version = version;
+            this.changelog = changelog;
+            this.datePublished = datePublished;
+            this.versionType = versionType;
+            this.file = file;
+            this.dependencies = dependencies;
+            this.gameVersions = gameVersions;
+            this.loaders = loaders;
+        }
+
+        public IVersion getSelf() {
+            return self;
+        }
+
+        public String getModid() {
+            return modid;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public String getChangelog() {
+            return changelog;
+        }
+
+        public Instant getDatePublished() {
+            return datePublished;
+        }
+
+        public VersionType getVersionType() {
+            return versionType;
+        }
+
+        public File getFile() {
+            return file;
+        }
+
+        public List<Dependency> getDependencies() {
+            return dependencies;
+        }
+
+        public List<String> getGameVersions() {
+            return gameVersions;
+        }
+
+        public List<ModLoaderType> getLoaders() {
+            return loaders;
+        }
     }
 
     public static class File {

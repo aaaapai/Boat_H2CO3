@@ -30,7 +30,6 @@ import java.util.List;
 public class LiteLoaderRemoteVersion extends RemoteVersion {
     private final String tweakClass;
     private final Collection<Library> libraries;
-
     /**
      * Constructor.
      *

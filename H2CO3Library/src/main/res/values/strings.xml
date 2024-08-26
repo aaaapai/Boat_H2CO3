@@ -227,5 +227,6 @@
     <string name="assets_download_all">Validating assets integrity</string>
     <string name="assets_index_malformed">Index files of downloaded assets were corrupted.</string>
     <string name="title_terminal">Terminal</string>
+    <string name="curse_api_key">null</string>
 
 </resources>

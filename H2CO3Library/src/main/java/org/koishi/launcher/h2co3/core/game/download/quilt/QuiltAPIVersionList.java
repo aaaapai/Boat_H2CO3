@@ -17,6 +17,7 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.quilt;
 
+
 import static org.koishi.launcher.h2co3.core.utils.Lang.wrap;
 
 import org.koishi.launcher.h2co3.core.game.download.DownloadProvider;
@@ -44,10 +45,10 @@ public class QuiltAPIVersionList extends VersionList<QuiltAPIRemoteVersion> {
     @Override
     public CompletableFuture<?> refreshAsync() {
         return CompletableFuture.runAsync(wrap(() -> {
-            for (RemoteMod.VersionMod modVersionMod : Lang.toIterable(ModrinthRemoteModRepository.MODS.getRemoteVersionsById("qsl"))) {
-                for (String gameVersion : modVersionMod.gameVersions()) {
-                    versions.put(gameVersion, new QuiltAPIRemoteVersion(gameVersion, modVersionMod.version(), modVersionMod.name(), modVersionMod.datePublished(), modVersionMod,
-                            Collections.singletonList(modVersionMod.file().getUrl())));
+            for (RemoteMod.Version modVersion : Lang.toIterable(ModrinthRemoteModRepository.MODS.getRemoteVersionsById("qsl"))) {
+                for (String gameVersion : modVersion.getGameVersions()) {
+                    versions.put(gameVersion, new QuiltAPIRemoteVersion(gameVersion, modVersion.getVersion(), modVersion.getName(), modVersion.getDatePublished(), modVersion,
+                            Collections.singletonList(modVersion.getFile().getUrl())));
                 }
             }
         }));

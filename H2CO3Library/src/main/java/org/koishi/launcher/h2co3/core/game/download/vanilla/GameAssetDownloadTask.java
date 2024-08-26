@@ -19,12 +19,15 @@ package org.koishi.launcher.h2co3.core.game.download.vanilla;
 
 import com.google.gson.JsonParseException;
 
-import org.koishi.launcher.h2co3.core.game.download.AbstractDependencyManager;
-import org.koishi.launcher.h2co3.core.game.download.CacheRepository;
-import org.koishi.launcher.h2co3.core.game.download.Version;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.AssetIndex;
 import org.koishi.launcher.h2co3.core.game.AssetIndexInfo;
 import org.koishi.launcher.h2co3.core.game.AssetObject;
+import org.koishi.launcher.h2co3.core.game.GameRepository;
+import org.koishi.launcher.h2co3.core.game.download.AbstractDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.CacheRepository;
+import org.koishi.launcher.h2co3.core.game.download.Version;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.Logging;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.core.utils.gson.JsonUtils;
@@ -41,9 +44,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 public final class GameAssetDownloadTask extends Task<Void> {
-
-    public static final boolean DOWNLOAD_INDEX_FORCIBLY = true;
-    public static final boolean DOWNLOAD_INDEX_IF_NECESSARY = false;
+    
     private final AbstractDependencyManager dependencyManager;
     private final Version version;
     private final AssetIndexInfo assetIndexInfo;
@@ -52,6 +53,12 @@ public final class GameAssetDownloadTask extends Task<Void> {
     private final List<Task<?>> dependents = new ArrayList<>(1);
     private final List<Task<?>> dependencies = new ArrayList<>();
 
+    /**
+     * Constructor.
+     *
+     * @param dependencyManager the dependency manager that can provides {@link GameRepository}
+     * @param version the game version
+     */
     public GameAssetDownloadTask(AbstractDependencyManager dependencyManager, Version version, boolean forceDownloadingIndex, boolean integrityCheck) {
         this.dependencyManager = dependencyManager;
         this.version = version.resolve(dependencyManager.getGameRepository());
@@ -59,7 +66,7 @@ public final class GameAssetDownloadTask extends Task<Void> {
         this.assetIndexFile = dependencyManager.getGameRepository().getIndexFile(version.getId(), assetIndexInfo.getId());
         this.integrityCheck = integrityCheck;
 
-        setStage("h2co3.install.assets");
+        setStage("fcl.install.assets");
         dependents.add(new GameAssetIndexDownloadTask(dependencyManager, this.version, forceDownloadingIndex));
     }
 
@@ -93,7 +100,7 @@ public final class GameAssetDownloadTask extends Task<Void> {
                 if (!download && integrityCheck && !assetObject.validateChecksum(file, true))
                     download = true;
             } catch (IOException e) {
-                Logging.LOG.log(Level.WARNING, "Unable to calc hash value of file " + file, e);
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
             if (download) {
                 List<URL> urls = dependencyManager.getDownloadProvider().getAssetObjectCandidates(assetObject.getLocation());
@@ -104,7 +111,7 @@ public final class GameAssetDownloadTask extends Task<Void> {
                         .resolve("assets").resolve("objects").resolve(assetObject.getLocation()));
                 task.setCacheRepository(dependencyManager.getCacheRepository());
                 task.setCaching(true);
-                dependencies.add(task.withCounter("h2co3.install.assets"));
+                dependencies.add(task.withCounter("fcl.install.assets"));
             } else {
                 dependencyManager.getCacheRepository().tryCacheFile(file, CacheRepository.SHA1, assetObject.getHash());
             }
@@ -117,4 +124,7 @@ public final class GameAssetDownloadTask extends Task<Void> {
             notifyPropertiesChanged();
         }
     }
+
+    public static final boolean DOWNLOAD_INDEX_FORCIBLY = true;
+    public static final boolean DOWNLOAD_INDEX_IF_NECESSARY = false;
 }

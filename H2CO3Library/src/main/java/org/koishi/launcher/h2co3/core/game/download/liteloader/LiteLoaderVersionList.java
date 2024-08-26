@@ -34,22 +34,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public final class LiteLoaderVersionList extends VersionList<LiteLoaderRemoteVersion> {
 
-    public static final String LITELOADER_LIST = "http://dl.liteloader.com/versions/versions.json";
     private final DownloadProvider downloadProvider;
 
     public LiteLoaderVersionList(DownloadProvider downloadProvider) {
         this.downloadProvider = downloadProvider;
-    }
-
-    private static String getLatestSnapshotVersion(String repo) throws Exception {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(repo + "maven-metadata.xml");
-        Element r = doc.getDocumentElement();
-        Element snapshot = (Element) r.getElementsByTagName("snapshot").item(0);
-        Node timestamp = snapshot.getElementsByTagName("timestamp").item(0);
-        Node buildNumber = snapshot.getElementsByTagName("buildNumber").item(0);
-        return timestamp.getTextContent() + "-" + buildNumber.getTextContent();
     }
 
     @Override
@@ -105,5 +93,18 @@ public final class LiteLoaderVersionList extends VersionList<LiteLoaderRemoteVer
                         lock.writeLock().unlock();
                     }
                 });
+    }
+
+    public static final String LITELOADER_LIST = "http://dl.liteloader.com/versions/versions.json";
+
+    private static String getLatestSnapshotVersion(String repo) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(repo + "maven-metadata.xml");
+        Element r = doc.getDocumentElement();
+        Element snapshot = (Element) r.getElementsByTagName("snapshot").item(0);
+        Node timestamp = snapshot.getElementsByTagName("timestamp").item(0);
+        Node buildNumber = snapshot.getElementsByTagName("buildNumber").item(0);
+        return timestamp.getTextContent() + "-" + buildNumber.getTextContent();
     }
 }

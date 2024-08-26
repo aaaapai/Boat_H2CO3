@@ -17,7 +17,6 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.vanilla;
 
-
 import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.MINECRAFT;
 
 import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;

@@ -209,7 +209,7 @@ public class CurseAddon implements RemoteMod.IMod {
     }
 
     @Override
-    public Stream<RemoteMod.VersionMod> loadVersions(RemoteModRepository modRepository) throws IOException {
+    public Stream<RemoteMod.Version> loadVersions(RemoteModRepository modRepository) throws IOException {
         return modRepository.getRemoteVersionsById(Integer.toString(id));
     }
 
@@ -549,7 +549,7 @@ public class CurseAddon implements RemoteMod.IMod {
             return RemoteMod.Type.CURSEFORGE;
         }
 
-        public RemoteMod.VersionMod toVersion() {
+        public RemoteMod.Version toVersion() {
             RemoteMod.VersionType versionType;
             switch (getReleaseType()) {
                 case 1:
@@ -566,7 +566,7 @@ public class CurseAddon implements RemoteMod.IMod {
                     break;
             }
 
-            return new RemoteMod.VersionMod(
+            return new RemoteMod.Version(
                     this,
                     Integer.toString(modId),
                     getDisplayName(),

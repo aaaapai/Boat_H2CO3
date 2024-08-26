@@ -17,12 +17,13 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.vanilla;
 
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.game.GameRepository;
+import org.koishi.launcher.h2co3.core.game.LibFilter;
 import org.koishi.launcher.h2co3.core.game.download.AbstractDependencyManager;
 import org.koishi.launcher.h2co3.core.game.download.Library;
 import org.koishi.launcher.h2co3.core.game.download.Version;
-import org.koishi.launcher.h2co3.core.game.GameRepository;
-import org.koishi.launcher.h2co3.core.game.LibFilter;
-import org.koishi.launcher.h2co3.core.utils.Logging;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.core.utils.task.FileDownloadTask;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
@@ -46,10 +47,22 @@ public final class GameLibrariesTask extends Task<Void> {
     private final List<Library> libraries;
     private final List<Task<?>> dependencies = new ArrayList<>();
 
+    /**
+     * Constructor.
+     *
+     * @param dependencyManager the dependency manager that can provides {@link GameRepository}
+     * @param version           the game version
+     */
     public GameLibrariesTask(AbstractDependencyManager dependencyManager, Version version, boolean integrityCheck) {
         this(dependencyManager, version, integrityCheck, version.resolve(dependencyManager.getGameRepository()).getLibraries());
     }
 
+    /**
+     * Constructor.
+     *
+     * @param dependencyManager the dependency manager that can provides {@link GameRepository}
+     * @param version           the game version
+     */
     public GameLibrariesTask(AbstractDependencyManager dependencyManager, Version version, boolean integrityCheck, List<Library> libraries) {
         this.dependencyManager = dependencyManager;
         this.version = LibFilter.filter(version);
@@ -57,6 +70,11 @@ public final class GameLibrariesTask extends Task<Void> {
         this.libraries = LibFilter.filterLibs(libraries);
 
         setSignificance(TaskSignificance.MODERATE);
+    }
+
+    @Override
+    public List<Task<?>> getDependencies() {
+        return dependencies;
     }
 
     public static boolean shouldDownloadLibrary(GameRepository gameRepository, Version version, Library library, boolean integrityCheck) {
@@ -80,15 +98,10 @@ public final class GameLibrariesTask extends Task<Void> {
                 }
             }
         } catch (IOException e) {
-            Logging.LOG.log(Level.WARNING, "Unable to calc hash value of file " + jar, e);
+           H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, "Unable to calc hash value of file " + jar + e);
         }
 
         return false;
-    }
-
-    @Override
-    public List<Task<?>> getDependencies() {
-        return dependencies;
     }
 
     @Override

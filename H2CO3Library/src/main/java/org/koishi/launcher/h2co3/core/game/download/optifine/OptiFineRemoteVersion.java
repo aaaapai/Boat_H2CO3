@@ -17,7 +17,6 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.optifine;
 
-
 import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
 import org.koishi.launcher.h2co3.core.game.download.RemoteVersion;
@@ -30,6 +29,11 @@ public class OptiFineRemoteVersion extends RemoteVersion {
 
     public OptiFineRemoteVersion(String gameVersion, String selfVersion, List<String> urls, boolean snapshot) {
         super(LibraryAnalyzer.LibraryType.OPTIFINE.getPatchId(), gameVersion, selfVersion, null, snapshot ? Type.SNAPSHOT : Type.RELEASE, urls);
+    }
+
+    @Override
+    public String getFullVersion() {
+        return getGameVersion() + "_" + getSelfVersion();
     }
 
     @Override

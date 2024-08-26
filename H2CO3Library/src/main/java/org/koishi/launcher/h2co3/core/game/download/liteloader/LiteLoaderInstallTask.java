@@ -17,7 +17,6 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.liteloader;
 
-
 import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.game.download.LibrariesDownloadInfo;
 import org.koishi.launcher.h2co3.core.game.download.Library;
