@@ -232,12 +232,9 @@ public class CkbManager {
     }
 
     public void loadKeyboard(KeyboardRecorder kr) {
-        if (kr == null) {
-            return;
-        }
+        if (kr == null) return;
 
         GameButtonRecorder[] gbr = kr.getRecorderDatas();
-
         if (kr.getVersionCode() == KeyboardRecorder.VERSION_UNKNOWN) {
             for (GameButtonRecorder tgbr : gbr) {
                 tgbr.keyPos[0] = DisplayUtils.getDpFromPx(mContext, tgbr.keyPos[0]);
