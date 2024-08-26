@@ -17,7 +17,6 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.forge;
 
-import static org.koishi.launcher.h2co3.core.utils.Logging.LOG;
 import static org.koishi.launcher.h2co3.core.utils.gson.JsonUtils.fromNonNullJson;
 
 import android.app.ActivityManager;
@@ -113,8 +112,9 @@ public class ForgeNewInstallTask extends Task<Version> {
                     }
 
                     if (!Objects.equals(code, value)) {
-                        Files.delete(artifact); // 删除不匹配的文件
-                        LOG.info("Found existing file is not valid, deleted: " + artifact);
+                        Files.delete(artifact);
+                        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.INFO, "Found existing file is not valid: " + artifact);
+
                         miss = true;
                     }
                 } else {
@@ -177,8 +177,6 @@ public class ForgeNewInstallTask extends Task<Version> {
 
                 if (!Objects.equals(code, entry.getValue())) {
                     Files.delete(artifact);
-                    LOG.info("Checksum mismatch, deleted: " + artifact);
-                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, "Deleted file: " + artifact.toString());
                     throw new ChecksumMismatchException("SHA-1", entry.getValue(), code);
                 }
             }
@@ -186,7 +184,7 @@ public class ForgeNewInstallTask extends Task<Version> {
     }
 
     private void runJVMProcess(ForgeNewInstallProfile.Processor processor, List<String> command, int java) throws Exception {
-        LOG.info("Executing external processor " + processor.getJar().toString() + ", command line: " + new CommandBuilder().addAll(command).toString());
+        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.INFO, "Executing external processor " + processor.getJar().toString() + ", command line: " + new CommandBuilder().addAll(command).toString());
         int exitCode;
         boolean listen = true;
         while (listen) {
@@ -383,7 +381,7 @@ public class ForgeNewInstallTask extends Task<Version> {
         if (version == null || output == null)
             return null;
 
-        LOG.info("Patching DOWNLOAD_MOJMAPS task");
+        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.INFO, "Patching DOWNLOAD_MOJMAPS task");
         return new VersionJsonDownloadTask(version, dependencyManager)
                 .thenComposeAsync(json -> {
                     DownloadInfo mappings = fromNonNullJson(json, Version.class)

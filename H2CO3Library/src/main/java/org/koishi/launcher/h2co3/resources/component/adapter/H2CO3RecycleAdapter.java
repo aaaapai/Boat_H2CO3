@@ -9,8 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.koishi.launcher.h2co3.core.utils.task.Task;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,14 +45,6 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
         if (dataPosition >= 0 && dataPosition < data.size()) {
             bindData(holder, dataPosition);
 
-            //holder.itemView.setAlpha(0f);
-            //holder.itemView.animate().alpha(1f).setDuration(100).start();
-
-            holder.setItemClickListener(v -> {
-                if (mRvItemOnclickListener != null) {
-                    mRvItemOnclickListener.RvItemOnclick(dataPosition);
-                }
-            });
         }
     }
 
@@ -101,7 +92,7 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
         if (isUpdating || newData == null || newData.isEmpty()) return;
         isUpdating = true;
         this.data.clear();
-        this.data.addAll(newData);
+        this.data.addAll(new ArrayList<>(newData));
         notifyItemRangeChanged(0, newData.size());
         isUpdating = false;
     }
@@ -170,11 +161,10 @@ public abstract class H2CO3RecycleAdapter<T> extends RecyclerView.Adapter<H2CO3R
             });
         }
 
-        public void setItemText(int viewId, String text) {
-            TextView textView = (TextView) getView(viewId);
-            if (textView != null) {
-                textView.setText(text);
-            }
+        public void setItemClickable(boolean clickable) {
+            itemView.setClickable(clickable);
+            itemView.setFocusable(clickable);
+            itemView.setEnabled(clickable);
         }
     }
 }

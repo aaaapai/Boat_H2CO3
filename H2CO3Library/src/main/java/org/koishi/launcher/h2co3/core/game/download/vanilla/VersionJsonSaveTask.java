@@ -37,7 +37,7 @@ public final class VersionJsonSaveTask extends Task<Version> {
      * Constructor.
      *
      * @param repository the game repository
-     * @param version    the game version
+     * @param version the game version
      */
     public VersionJsonSaveTask(DefaultGameRepository repository, Version version) {
         this.repository = repository;

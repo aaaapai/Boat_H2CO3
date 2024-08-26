@@ -17,10 +17,11 @@
  */
 package org.koishi.launcher.h2co3.core.game.mod;
 
-import org.koishi.launcher.h2co3.core.game.download.ModLoaderType;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.BooleanProperty;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.SimpleBooleanProperty;
-import org.koishi.launcher.h2co3.core.utils.Logging;
+import org.koishi.launcher.h2co3.core.game.download.ModLoaderType;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 
 public final class LocalModFile implements Comparable<LocalModFile> {
 
+    private Path file;
     private final ModManager modManager;
     private final LocalMod mod;
     private final String name;
@@ -46,7 +48,6 @@ public final class LocalModFile implements Comparable<LocalModFile> {
     private final String fileName;
     private final String logoPath;
     private final BooleanProperty activeProperty;
-    private Path file;
 
     public LocalModFile(ModManager modManager, LocalMod mod, Path file, String name, Description description) {
         this(modManager, mod, file, name, description, "", "", "", "", "");
@@ -77,7 +78,7 @@ public final class LocalModFile implements Comparable<LocalModFile> {
                     else
                         LocalModFile.this.file = modManager.disableMod(path);
                 } catch (IOException e) {
-                    Logging.LOG.log(Level.SEVERE, "Unable to invert state of mod file " + path, e);
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Unable to invert state of mod file " + path + e);
                 }
             }
         };
@@ -176,16 +177,16 @@ public final class LocalModFile implements Comparable<LocalModFile> {
     }
 
     public ModUpdate checkUpdates(String gameVersion, RemoteModRepository repository) throws IOException {
-        Optional<RemoteMod.VersionMod> currentVersion = repository.getRemoteVersionByLocalFile(this, file);
+        Optional<RemoteMod.Version> currentVersion = repository.getRemoteVersionByLocalFile(this, file);
         if (!currentVersion.isPresent()) return null;
-        List<RemoteMod.VersionMod> remoteVersionMods = repository.getRemoteVersionsById(currentVersion.get().modid())
-                .filter(version -> version.gameVersions().contains(gameVersion))
-                .filter(version -> version.loaders().contains(getModLoaderType()))
-                .filter(version -> version.datePublished().compareTo(currentVersion.get().datePublished()) > 0)
-                .sorted(Comparator.comparing(RemoteMod.VersionMod::datePublished).reversed())
+        List<RemoteMod.Version> remoteVersions = repository.getRemoteVersionsById(currentVersion.get().getModid())
+                .filter(version -> version.getGameVersions().contains(gameVersion))
+                .filter(version -> version.getLoaders().contains(getModLoaderType()))
+                .filter(version -> version.getDatePublished().compareTo(currentVersion.get().getDatePublished()) > 0)
+                .sorted(Comparator.comparing(RemoteMod.Version::getDatePublished).reversed())
                 .collect(Collectors.toList());
-        if (remoteVersionMods.isEmpty()) return null;
-        return new ModUpdate(this, currentVersion.get(), remoteVersionMods);
+        if (remoteVersions.isEmpty()) return null;
+        return new ModUpdate(this, currentVersion.get(), remoteVersions);
     }
 
     @Override
@@ -205,12 +206,12 @@ public final class LocalModFile implements Comparable<LocalModFile> {
 
     public static class ModUpdate {
         private final LocalModFile localModFile;
-        private final RemoteMod.VersionMod currentVersionMod;
-        private final List<RemoteMod.VersionMod> candidates;
+        private final RemoteMod.Version currentVersion;
+        private final List<RemoteMod.Version> candidates;
 
-        public ModUpdate(LocalModFile localModFile, RemoteMod.VersionMod currentVersionMod, List<RemoteMod.VersionMod> candidates) {
+        public ModUpdate(LocalModFile localModFile, RemoteMod.Version currentVersion, List<RemoteMod.Version> candidates) {
             this.localModFile = localModFile;
-            this.currentVersionMod = currentVersionMod;
+            this.currentVersion = currentVersion;
             this.candidates = candidates;
         }
 
@@ -218,11 +219,11 @@ public final class LocalModFile implements Comparable<LocalModFile> {
             return localModFile;
         }
 
-        public RemoteMod.VersionMod getCurrentVersion() {
-            return currentVersionMod;
+        public RemoteMod.Version getCurrentVersion() {
+            return currentVersion;
         }
 
-        public List<RemoteMod.VersionMod> getCandidates() {
+        public List<RemoteMod.Version> getCandidates() {
             return candidates;
         }
     }

@@ -17,6 +17,7 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.quilt;
 
+
 import static org.koishi.launcher.h2co3.core.utils.io.UnsupportedInstallationException.FABRIC_NOT_COMPATIBLE_WITH_FORGE;
 
 import com.google.gson.JsonElement;
@@ -57,18 +58,6 @@ public final class QuiltInstallTask extends Task<Version> {
 
         launchMetaTask = new GetTask(dependencyManager.getDownloadProvider().injectURLsWithCandidates(remoteVersion.getUrls()));
         launchMetaTask.setCacheRepository(dependencyManager.getCacheRepository());
-    }
-
-    private static String getMavenRepositoryByGroup(String maven) {
-        Artifact artifact = Artifact.fromDescriptor(maven);
-        switch (artifact.getGroup()) {
-            case "net.fabricmc":
-                return "https://maven.fabricmc.net/";
-            case "org.quiltmc":
-                return "https://maven.quiltmc.org/repository/release/";
-            default:
-                return "https://maven.fabricmc.net/";
-        }
     }
 
     @Override
@@ -136,6 +125,18 @@ public final class QuiltInstallTask extends Task<Version> {
         libraries.add(new Library(Artifact.fromDescriptor(quiltInfo.loader.maven), getMavenRepositoryByGroup(quiltInfo.loader.maven), null));
 
         return new Version(LibraryAnalyzer.LibraryType.QUILT.getPatchId(), loaderVersion, 30000, arguments, mainClass, libraries);
+    }
+
+    private static String getMavenRepositoryByGroup(String maven) {
+        Artifact artifact = Artifact.fromDescriptor(maven);
+        switch (artifact.getGroup()) {
+            case "net.fabricmc":
+                return "https://maven.fabricmc.net/";
+            case "org.quiltmc":
+                return "https://maven.quiltmc.org/repository/release/";
+            default:
+                return "https://maven.fabricmc.net/";
+        }
     }
 
     public static class QuiltInfo {

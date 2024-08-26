@@ -17,17 +17,17 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.vanilla;
 
-
-import static org.koishi.launcher.h2co3.core.utils.Logging.LOG;
-
 import com.google.gson.JsonParseException;
 
-import org.koishi.launcher.h2co3.core.game.download.AbstractDependencyManager;
-import org.koishi.launcher.h2co3.core.game.download.Version;
+import org.apache.commons.lang3.StringUtils;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.AssetIndex;
 import org.koishi.launcher.h2co3.core.game.AssetIndexInfo;
+import org.koishi.launcher.h2co3.core.game.GameRepository;
+import org.koishi.launcher.h2co3.core.game.download.AbstractDependencyManager;
+import org.koishi.launcher.h2co3.core.game.download.Version;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.DigestUtils;
-import org.koishi.launcher.h2co3.core.utils.StringUtils;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.core.utils.gson.JsonUtils;
 import org.koishi.launcher.h2co3.core.utils.task.FileDownloadTask;
@@ -38,7 +38,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * This task is to download asset index file provided in minecraft.json.
@@ -50,6 +49,12 @@ public final class GameAssetIndexDownloadTask extends Task<Void> {
     private final boolean forceDownloading;
     private final List<Task<?>> dependencies = new ArrayList<>(1);
 
+    /**
+     * Constructor.
+     *
+     * @param dependencyManager the dependency manager that can provides {@link GameRepository}
+     * @param version the <b>resolved</b> version
+     */
     public GameAssetIndexDownloadTask(AbstractDependencyManager dependencyManager, Version version, boolean forceDownloading) {
         this.dependencyManager = dependencyManager;
         this.version = version;
@@ -76,8 +81,7 @@ public final class GameAssetIndexDownloadTask extends Task<Void> {
                     if (actualSum.equalsIgnoreCase(assetIndexInfo.getSha1()))
                         return;
                 } catch (IOException e) {
-                    LOG.log(Level.WARNING, "Failed to calculate sha1sum of file " + assetIndexInfo, e);
-                    // continue downloading
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 }
             } else {
                 try {

@@ -1,9 +1,3 @@
-/*
- * //
- * // Created by cainiaohh on 2024-03-31.
- * //
- */
-
 package org.koishi.launcher.h2co3.core.shell;
 
 import java.io.BufferedReader;
@@ -22,40 +16,47 @@ public class ShellUtil extends Thread {
         ProcessBuilder pb = new ProcessBuilder("sh");
         pb.directory(new File(home));
         pb.redirectErrorStream(true);
-        pb.environment().clear();
         try {
             process = pb.start();
             output = new BufferedReader(new InputStreamReader(process.getInputStream()));
             append("export HOME=" + home + "&&cd\n");
         } catch (IOException e) {
-            callback.output(e + "\n");
+            callback.output(e.getMessage());
         }
     }
 
     public void append(String command) {
-        try {
-            process.getOutputStream().write((command + "\n").getBytes());
-            process.getOutputStream().flush();
-        } catch (IOException e) {
-            callback.output(e + "\n");
+        if (process != null) {
+            try {
+                process.getOutputStream().write((command + "\n").getBytes());
+                process.getOutputStream().flush();
+            } catch (IOException e) {
+                callback.output(e.getMessage());
+            }
         }
     }
 
     @Override
     public void run() {
-        try {
+        try (BufferedReader reader = output) {
             String line;
-            while ((line = output.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 callback.output(line);
             }
-            output.close();
-            process.getInputStream().close();
-            process.getErrorStream().close();
-            process.getOutputStream().close();
         } catch (IOException e) {
-            callback.output(e + "\n");
+            callback.output(e.getMessage());
+        } finally {
+            if (process != null) {
+                process.destroy();
+                try {
+                    process.getInputStream().close();
+                    process.getErrorStream().close();
+                    process.getOutputStream().close();
+                } catch (IOException e) {
+                    callback.output(e.getMessage());
+                }
+            }
         }
-        process.destroy();
     }
 
     public interface Callback {

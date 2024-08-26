@@ -79,8 +79,20 @@ public class HomeLoginHandler extends Handler {
                     if (skin != null) {
                         fragment.requireActivity().runOnUiThread(() -> {
                             String skinTextureString = Avatar.bitmapToString(skin);
-                            H2CO3Auth.addUserToJson(microsoftLoginUtils.mcName, "", "", "1", "https://www.microsoft.com", "0", microsoftLoginUtils.mcUuid, skinTextureString, microsoftLoginUtils.mcToken, microsoftLoginUtils.msRefreshToken, "00000000-0000-0000-0000-000000000000", false, false);
-                            fragment.reLoadUser();
+                            H2CO3Auth.addUserToJson(microsoftLoginUtils.mcName,
+                                    "",
+                                    "",
+                                    "1",
+                                    "https://www.microsoft.com",
+                                    "0",
+                                    microsoftLoginUtils.mcUuid,
+                                    skinTextureString,
+                                    microsoftLoginUtils.mcToken,
+                                    microsoftLoginUtils.msRefreshToken,
+                                    "00000000-0000-0000-0000-000000000000",
+                                    false,
+                                    false);
+                            fragment.reLoadUsers();
                             fragment.loginDialogAlert.dismiss();
                             fragment.progressDialog.dismiss();
                         });

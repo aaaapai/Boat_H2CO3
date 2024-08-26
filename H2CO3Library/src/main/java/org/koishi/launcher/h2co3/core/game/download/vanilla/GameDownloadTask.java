@@ -66,5 +66,5 @@ public final class GameDownloadTask extends Task<Void> {
 
         dependencies.add(task);
     }
-
+    
 }

@@ -17,10 +17,8 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.forge;
 
-
 import static org.koishi.launcher.h2co3.core.utils.Lang.mapOf;
 import static org.koishi.launcher.h2co3.core.utils.Lang.wrap;
-import static org.koishi.launcher.h2co3.core.utils.Logging.LOG;
 import static org.koishi.launcher.h2co3.core.utils.Pair.pair;
 
 import com.google.gson.JsonParseException;
@@ -113,17 +111,13 @@ public final class ForgeBMCLVersionList extends VersionList<ForgeRemoteVersion> 
                                     String fileName2 = "forge-" + classifier + "-" + lookupVersion + "-" + file.getCategory() + "." + file.getFormat();
                                     urls.add("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + classifier + "/" + fileName1);
                                     urls.add("https://files.minecraftforge.net/maven/net/minecraftforge/forge/" + classifier + "-" + lookupVersion + "/" + fileName2);
-                                    try {
-                                        urls.add(NetworkUtils.withQuery("https://bmclapi2.bangbang93.com/forge/download", mapOf(
-                                                pair("mcversion", version.getGameVersion()),
-                                                pair("version", version.getVersion()),
-                                                pair("branch", branch),
-                                                pair("category", file.getCategory()),
-                                                pair("format", file.getFormat())
-                                        )));
-                                    } catch (UnsupportedEncodingException e) {
-                                        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
-                                    }
+                                    urls.add(NetworkUtils.withQuery("https://bmclapi2.bangbang93.com/forge/download", mapOf(
+                                            pair("mcversion", version.getGameVersion()),
+                                            pair("version", version.getVersion()),
+                                            pair("branch", branch),
+                                            pair("category", file.getCategory()),
+                                            pair("format", file.getFormat())
+                                    )));
                                 }
 
                             if (urls.isEmpty())
@@ -134,13 +128,15 @@ public final class ForgeBMCLVersionList extends VersionList<ForgeRemoteVersion> 
                                 try {
                                     releaseDate = Instant.parse(version.getModified());
                                 } catch (DateTimeParseException e) {
-                                    LOG.log(Level.WARNING, "Failed to parse instant " + version.getModified(), e);
+                                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                                 }
                             }
 
                             versions.put(gameVersion, new ForgeRemoteVersion(
                                     fromLookupVersion(version.getGameVersion()), version.getVersion(), releaseDate, urls));
                         }
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
                     } finally {
                         lock.writeLock().unlock();
                     }

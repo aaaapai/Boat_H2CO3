@@ -12,7 +12,7 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -33,7 +33,7 @@
             android:text="F1"
             custom:button_name="F1" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -41,7 +41,7 @@
             android:text="F2"
             custom:button_name="F2" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -49,7 +49,7 @@
             android:text="F3"
             custom:button_name="F3" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -62,7 +62,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -70,7 +70,7 @@
             android:text="F5"
             custom:button_name="F5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -78,7 +78,7 @@
             android:text="F6"
             custom:button_name="F6" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -86,7 +86,7 @@
             android:text="F7"
             custom:button_name="F7" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -99,7 +99,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -107,7 +107,7 @@
             android:text="F9"
             custom:button_name="F9" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -115,7 +115,7 @@
             android:text="F10"
             custom:button_name="F10" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -123,7 +123,7 @@
             android:text="F11"
             custom:button_name="F11" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -136,7 +136,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -144,7 +144,7 @@
             android:text="Prt"
             custom:button_name="PRINT" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -152,7 +152,7 @@
             android:text="Scr"
             custom:button_name="SCROLL" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -210,7 +210,7 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -221,7 +221,7 @@
             custom:char_none="`"
             custom:char_shift="~" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -232,7 +232,7 @@
             custom:char_none="1"
             custom:char_shift="&#033;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -243,7 +243,7 @@
             custom:char_none="2"
             custom:char_shift="&#064;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -254,7 +254,7 @@
             custom:char_none="3"
             custom:char_shift="&#035;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -265,7 +265,7 @@
             custom:char_none="4"
             custom:char_shift="&#036;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -276,7 +276,7 @@
             custom:char_none="5"
             custom:char_shift="&#037;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -287,7 +287,7 @@
             custom:char_none="6"
             custom:char_shift="&#094;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -298,7 +298,7 @@
             custom:char_none="7"
             custom:char_shift="&#110;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -309,7 +309,7 @@
             custom:char_none="8"
             custom:char_shift="&#042;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -320,7 +320,7 @@
             custom:char_none="9"
             custom:char_shift="&#040;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -331,7 +331,7 @@
             custom:char_none="0"
             custom:char_shift="&#041;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -342,7 +342,7 @@
             custom:char_none="-"
             custom:char_shift="_" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -353,7 +353,7 @@
             custom:char_none="="
             custom:char_shift="+" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -364,7 +364,7 @@
             custom:char_none="\"
             custom:char_shift="|" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -377,7 +377,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -385,7 +385,7 @@
             android:text="Ins"
             custom:button_name="INSERT" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -393,7 +393,7 @@
             android:text="Hom"
             custom:button_name="HOME" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -406,7 +406,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -414,7 +414,7 @@
             android:text="Num"
             custom:button_name="NUMLOCK" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -425,7 +425,7 @@
             custom:char_none="/"
             custom:char_shift="/" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -436,7 +436,7 @@
             custom:char_none="*"
             custom:char_shift="*" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -456,7 +456,7 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -464,7 +464,7 @@
             android:text="TAB"
             custom:button_name="TAB" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -475,7 +475,7 @@
             custom:char_none="q"
             custom:char_shift="Q" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -486,7 +486,7 @@
             custom:char_none="w"
             custom:char_shift="W" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -497,7 +497,7 @@
             custom:char_none="e"
             custom:char_shift="E" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -508,7 +508,7 @@
             custom:char_none="r"
             custom:char_shift="R" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -519,7 +519,7 @@
             custom:char_none="t"
             custom:char_shift="T" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -530,7 +530,7 @@
             custom:char_none="y"
             custom:char_shift="Y" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -541,7 +541,7 @@
             custom:char_none="u"
             custom:char_shift="U" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -552,7 +552,7 @@
             custom:char_none="i"
             custom:char_shift="I" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -563,7 +563,7 @@
             custom:char_none="o"
             custom:char_shift="O" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -574,7 +574,7 @@
             custom:char_none="p"
             custom:char_shift="P" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -585,7 +585,7 @@
             custom:char_none="["
             custom:char_shift="{" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -596,7 +596,7 @@
             custom:char_none="]"
             custom:char_shift="}" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -609,7 +609,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -617,7 +617,7 @@
             android:text="Del"
             custom:button_name="DELETE" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -625,7 +625,7 @@
             android:text="End"
             custom:button_name="END" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -638,7 +638,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -649,7 +649,7 @@
             custom:char_none="7"
             custom:char_shift="7" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -660,7 +660,7 @@
             custom:char_none="8"
             custom:char_shift="8" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -671,7 +671,7 @@
             custom:char_none="9"
             custom:char_shift="9" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -690,7 +690,7 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             android:id="@+id/virtual_keyboard_button_caps"
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
@@ -699,7 +699,7 @@
             android:text="Caps L"
             custom:button_name="CAPITAL" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -710,7 +710,7 @@
             custom:char_none="a"
             custom:char_shift="A" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -721,7 +721,7 @@
             custom:char_none="s"
             custom:char_shift="S" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -732,7 +732,7 @@
             custom:char_none="d"
             custom:char_shift="D" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -743,7 +743,7 @@
             custom:char_none="f"
             custom:char_shift="F" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -754,7 +754,7 @@
             custom:char_none="g"
             custom:char_shift="G" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -765,7 +765,7 @@
             custom:char_none="h"
             custom:char_shift="H" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -776,7 +776,7 @@
             custom:char_none="j"
             custom:char_shift="J" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -787,7 +787,7 @@
             custom:char_none="k"
             custom:char_shift="K" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -798,7 +798,7 @@
             custom:char_none="l"
             custom:char_shift="L" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -809,7 +809,7 @@
             custom:char_none=";"
             custom:char_shift=":" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -820,7 +820,7 @@
             custom:char_none="'"
             custom:char_shift="&quot;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -836,7 +836,7 @@
             android:layout_height="match_parent"
             android:layout_weight="4" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -847,7 +847,7 @@
             custom:char_none="4"
             custom:char_shift="4" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -858,7 +858,7 @@
             custom:char_none="5"
             custom:char_shift="5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -869,7 +869,7 @@
             custom:char_none="6"
             custom:char_shift="6" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -885,7 +885,7 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             android:id="@+id/virtual_keyboard_button_lshift"
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
@@ -894,7 +894,7 @@
             android:text="Shift"
             custom:button_name="LSHIFT" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -905,7 +905,7 @@
             custom:char_none="z"
             custom:char_shift="Z" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -916,7 +916,7 @@
             custom:char_none="x"
             custom:char_shift="X" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -927,7 +927,7 @@
             custom:char_none="c"
             custom:char_shift="C" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -938,7 +938,7 @@
             custom:char_none="v"
             custom:char_shift="V" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -949,7 +949,7 @@
             custom:char_none="b"
             custom:char_shift="B" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -960,7 +960,7 @@
             custom:char_none="n"
             custom:char_shift="N" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -971,7 +971,7 @@
             custom:char_none="m"
             custom:char_shift="M" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -982,7 +982,7 @@
             custom:char_none=","
             custom:char_shift="&lt;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -993,7 +993,7 @@
             custom:char_none="."
             custom:char_shift="&gt;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1004,7 +1004,7 @@
             custom:char_none="/"
             custom:char_shift="&#063;" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             android:id="@+id/virtual_keyboard_button_Rshift"
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
@@ -1018,7 +1018,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1.5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1031,7 +1031,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1.5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1042,7 +1042,7 @@
             custom:char_none="1"
             custom:char_shift="1" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1053,7 +1053,7 @@
             custom:char_none="2"
             custom:char_shift="2" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1064,7 +1064,7 @@
             custom:char_none="3"
             custom:char_shift="3" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1080,7 +1080,7 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1088,7 +1088,7 @@
             android:text="Ctrl"
             custom:button_name="LCTRL" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1096,7 +1096,7 @@
             android:text="Win"
             custom:button_name="LWIN" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1104,7 +1104,7 @@
             android:text="Alt"
             custom:button_name="LALT" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1115,7 +1115,7 @@
             custom:char_none=" "
             custom:char_shift=" " />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1123,7 +1123,7 @@
             android:text="Alt"
             custom:button_name="RALT" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1131,7 +1131,7 @@
             android:text="Win"
             custom:button_name="RWIN" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1139,7 +1139,7 @@
             android:text="RightK"
             custom:button_name="RIGHTK" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1152,7 +1152,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1160,7 +1160,7 @@
             android:text="←"
             custom:button_name="LEFT" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1168,7 +1168,7 @@
             android:text="↓"
             custom:button_name="DOWN" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1181,7 +1181,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1192,7 +1192,7 @@
             custom:char_none="0"
             custom:char_shift="0" />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -1203,7 +1203,7 @@
             custom:char_none="."
             custom:char_shift="." />
 
-        <org.koishi.launcher.h2co3.control.input.screen.button.QwertButton
+        <org.koishi.launcher.h2co3.controller.input.screen.button.QwertButton
             style="@style/OnscreenKeyboard_normal"
             android:layout_width="0dp"
             android:layout_height="match_parent"

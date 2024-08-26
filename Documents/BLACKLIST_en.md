@@ -1,6 +1,6 @@
 # BlackList
 
-The BlackList Of H2O2. [Switch to Chinese](./BLACKLIST.md)
+The BlackList Of H2CO3. [Switch to Chinese](./BLACKLIST.md)
 
 ## English(en-us.utf8)
 

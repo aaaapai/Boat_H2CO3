@@ -40,13 +40,13 @@ public interface RemoteModRepository {
     SearchResult search(String gameVersion, @Nullable Category category, int pageOffset, int pageSize, String searchFilter, SortType sortType, SortOrder sortOrder)
             throws IOException;
 
-    Optional<RemoteMod.VersionMod> getRemoteVersionByLocalFile(LocalModFile localModFile, Path file) throws IOException;
+    Optional<RemoteMod.Version> getRemoteVersionByLocalFile(LocalModFile localModFile, Path file) throws IOException;
 
     RemoteMod getModById(String id) throws IOException;
 
     RemoteMod.File getModFile(String modId, String fileId) throws IOException;
 
-    Stream<RemoteMod.VersionMod> getRemoteVersionsById(String id) throws IOException;
+    Stream<RemoteMod.Version> getRemoteVersionsById(String id) throws IOException;
 
     Stream<Category> getCategories() throws IOException;
 

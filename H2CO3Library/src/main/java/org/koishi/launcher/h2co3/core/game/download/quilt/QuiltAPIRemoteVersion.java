@@ -4,8 +4,8 @@
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either versionMod 3 of the License, or
- * (at your option) any later versionMod.
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -29,20 +29,20 @@ import java.util.List;
 
 public class QuiltAPIRemoteVersion extends RemoteVersion {
     private final String fullVersion;
-    private final RemoteMod.VersionMod versionMod;
+    private final RemoteMod.Version version;
 
     /**
      * Constructor.
      *
-     * @param gameVersion the Minecraft versionMod that this remote versionMod suits.
-     * @param selfVersion the versionMod string of the remote versionMod.
+     * @param gameVersion the Minecraft version that this remote version suits.
+     * @param selfVersion the version string of the remote version.
      * @param urls        the installer or universal jar original URL.
      */
-    QuiltAPIRemoteVersion(String gameVersion, String selfVersion, String fullVersion, Instant datePublished, RemoteMod.VersionMod versionMod, List<String> urls) {
+    QuiltAPIRemoteVersion(String gameVersion, String selfVersion, String fullVersion, Instant datePublished, RemoteMod.Version version, List<String> urls) {
         super(LibraryAnalyzer.LibraryType.QUILT_API.getPatchId(), gameVersion, selfVersion, datePublished, urls);
 
         this.fullVersion = fullVersion;
-        this.versionMod = versionMod;
+        this.version = version;
     }
 
     @Override
@@ -50,8 +50,8 @@ public class QuiltAPIRemoteVersion extends RemoteVersion {
         return fullVersion;
     }
 
-    public RemoteMod.VersionMod getVersion() {
-        return versionMod;
+    public RemoteMod.Version getVersion() {
+        return version;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package org.koishi.launcher.h2co3.core.game.download.neoforge;
 
-
-
 import static org.koishi.launcher.h2co3.core.utils.StringUtils.removePrefix;
 import static org.koishi.launcher.h2co3.core.utils.StringUtils.removeSuffix;
 

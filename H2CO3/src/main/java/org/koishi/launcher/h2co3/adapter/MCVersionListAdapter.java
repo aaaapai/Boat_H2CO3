@@ -56,7 +56,8 @@ public class MCVersionListAdapter extends H2CO3RecycleAdapter<String> {
             boolean isDirectory = versionDir.isDirectory();
             versionItemView.setVisibility(isDirectory ? View.VISIBLE : View.GONE);
             versionItemView.setStrokeWidth(verF.equals(gameHelper.getGameCurrentVersion()) ? 13 : 3);
-            versionItemView.setClickable(verF.equals(gameHelper.getGameCurrentVersion()));
+            versionItemView.setClickable(!verF.equals(gameHelper.getGameCurrentVersion()));
+            versionItemView.setFocusable(!verF.equals(gameHelper.getGameCurrentVersion()));
 
             versionItemView.setOnClickListener(v -> {
                 if (isVersionItemClickable) {
@@ -113,8 +114,9 @@ public class MCVersionListAdapter extends H2CO3RecycleAdapter<String> {
 
     private void deleteFile(File file) throws IOException {
         if (file.exists() && !file.delete()) {
-            throw new IOException("Failed to delete file: " + file.getPath());
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to delete file: " + file.getPath());
         }
+
     }
 
     @Override

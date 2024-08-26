@@ -45,7 +45,7 @@ public final class OptiFine302VersionList extends VersionList<OptiFineRemoteVers
 
     @Override
     public CompletableFuture<?> refreshAsync() {
-        return HttpRequest.GET(versionListURL).<OptiFine302VersionList.VersionList>getJsonAsync(new TypeToken<OptiFine302VersionList.VersionList>() {
+        return HttpRequest.GET(versionListURL).<VersionList>getJsonAsync(new TypeToken<OptiFine302VersionList.VersionList>() {
         }.getType()).thenAcceptAsync(root -> {
             lock.writeLock().lock();
 

@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <org.koishi.launcher.h2co3.control.ckb.support.QwertButton
+            <org.koishi.launcher.h2co3.controller.ckb.support.QwertButton
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
@@ -71,7 +71,7 @@
                 android:text="@string/title_mouse_lb"
                 custom:button_name="MOUSE_BUTTON_LEFT" />
 
-            <org.koishi.launcher.h2co3.control.ckb.support.QwertButton
+            <org.koishi.launcher.h2co3.controller.ckb.support.QwertButton
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
@@ -80,7 +80,7 @@
                 android:text="@string/title_mouse_cb"
                 custom:button_name="MOUSE_BUTTON_MIDDLE" />
 
-            <org.koishi.launcher.h2co3.control.ckb.support.QwertButton
+            <org.koishi.launcher.h2co3.controller.ckb.support.QwertButton
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
@@ -89,7 +89,7 @@
                 android:text="@string/title_mouse_rb"
                 custom:button_name="MOUSE_BUTTON_RIGHT" />
 
-            <org.koishi.launcher.h2co3.control.ckb.support.QwertButton
+            <org.koishi.launcher.h2co3.controller.ckb.support.QwertButton
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
@@ -98,7 +98,7 @@
                 android:text="@string/title_wheel_up"
                 custom:button_name="MOUSE_WHEEL_UP" />
 
-            <org.koishi.launcher.h2co3.control.ckb.support.QwertButton
+            <org.koishi.launcher.h2co3.controller.ckb.support.QwertButton
                 android:layout_width="wrap_content"
                 android:layout_height="25dp"
                 android:layout_gravity="center"

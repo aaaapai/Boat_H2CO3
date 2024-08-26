@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -27,6 +29,9 @@ public class MicrosoftLoginActivity extends H2CO3Activity {
 
     private WebView webView;
     private ProgressBar progressBar;
+    private Handler handler = new Handler();
+    private Runnable retryRunnable;
+    private static final int RETRY_DELAY = 2000;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -96,7 +101,21 @@ public class MicrosoftLoginActivity extends H2CO3Activity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
             progressBar.setVisibility(View.GONE);
+            handler.removeCallbacks(retryRunnable);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            super.onReceivedError(view, request, error);
+            progressBar.setVisibility(View.GONE);
+
+            retryRunnable = () -> {
+                progressBar.setVisibility(View.VISIBLE);
+                view.loadUrl(view.getUrl());
+            };
+            handler.postDelayed(retryRunnable, RETRY_DELAY);
         }
     }
 }

@@ -20,11 +20,11 @@ import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import org.koishi.launcher.h2co3.R;
-import org.koishi.launcher.h2co3.control.ckb.support.CallCustomizeKeyboard;
-import org.koishi.launcher.h2co3.control.client.H2CO3ControlClient;
-import org.koishi.launcher.h2co3.control.controller.Controller;
-import org.koishi.launcher.h2co3.control.controller.H2CO3VirtualController;
-import org.koishi.launcher.h2co3.control.definitions.id.key.KeyEvent;
+import org.koishi.launcher.h2co3.controller.ckb.support.CallCustomizeKeyboard;
+import org.koishi.launcher.h2co3.controller.client.H2CO3ControlClient;
+import org.koishi.launcher.h2co3.controller.Controller;
+import org.koishi.launcher.h2co3.controller.H2CO3VirtualController;
+import org.koishi.launcher.h2co3.controller.definitions.id.key.KeyEvent;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.core.utils.PicUtils;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;

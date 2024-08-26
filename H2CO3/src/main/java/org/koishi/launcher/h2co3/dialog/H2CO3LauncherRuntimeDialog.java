@@ -21,7 +21,7 @@ public class H2CO3LauncherRuntimeDialog extends H2CO3CustomViewDialog implements
     public H2CO3LauncherRuntimeDialog(Context context) {
         super(context);
         setTitle(org.koishi.launcher.h2co3.library.R.string.title_runtime);
-        setCustomView(R.layout.custom_dialog_runtime);
+        setCustomView(R.layout.dialog_custom_runtime);
         gameHelper = new H2CO3GameHelper();
         initViews();
     }

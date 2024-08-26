@@ -1,4 +1,4 @@
-package org.koishi.launcher.h2co3.core.game.download;/*
+/*
  * Hello Minecraft! Launcher
  * Copyright (C) 2020  huangyuhui <huanghongxun2008@126.com> and contributors
  *
@@ -15,6 +15,7 @@ package org.koishi.launcher.h2co3.core.game.download;/*
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package org.koishi.launcher.h2co3.core.game.download;
 
 import static org.koishi.launcher.h2co3.core.utils.Logging.LOG;
 
@@ -23,7 +24,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jetbrains.annotations.Nullable;
-import org.koishi.launcher.h2co3.core.game.download.vanilla.VersionJsonSaveTask;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.AssetIndex;
 import org.koishi.launcher.h2co3.core.game.AssetObject;
 import org.koishi.launcher.h2co3.core.game.ClassicVersion;
@@ -32,8 +33,10 @@ import org.koishi.launcher.h2co3.core.game.GameRepository;
 import org.koishi.launcher.h2co3.core.game.GameVersion;
 import org.koishi.launcher.h2co3.core.game.SimpleVersionProvider;
 import org.koishi.launcher.h2co3.core.game.TLauncherVersion;
+import org.koishi.launcher.h2co3.core.game.download.vanilla.VersionJsonSaveTask;
 import org.koishi.launcher.h2co3.core.game.mod.ModManager;
 import org.koishi.launcher.h2co3.core.game.mod.ModpackConfiguration;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.Artifact;
 import org.koishi.launcher.h2co3.core.utils.Lang;
 import org.koishi.launcher.h2co3.core.utils.event.Event;
@@ -54,13 +57,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.stream.Stream;
@@ -156,7 +153,7 @@ public class DefaultGameRepository implements GameRepository {
         return gameVersions.computeIfAbsent(getVersionJar(version), versionJar -> {
             Optional<String> gameVersion = GameVersion.minecraftVersion(versionJar);
             if (!gameVersion.isPresent()) {
-                LOG.warning("Cannot find out game version of " + version.getId() + ", primary jar: " + versionJar.toString() + ", jar exists: " + versionJar.exists());
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, "Cannot find out game version of " + version.getId() + ", primary jar: " + versionJar.toString() + ", jar exists: " + versionJar.exists());
             }
             return gameVersion;
         });
@@ -189,7 +186,7 @@ public class DefaultGameRepository implements GameRepository {
         } catch (JsonParseException ignored) {
         }
 
-        LOG.warning("Cannot parse version json: " + file.toString() + "\n" + jsonText);
+        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Cannot parse version json: " + file.toString() + "\n" + jsonText);
         throw new JsonParseException("Version json incorrect");
     }
 
@@ -235,7 +232,7 @@ public class DefaultGameRepository implements GameRepository {
             }
             return true;
         } catch (IOException | JsonParseException | VersionNotFoundException | InvalidPathException e) {
-            LOG.log(Level.WARNING, "Unable to rename version " + from + " to " + to, e);
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Unable to rename version " + from + " to " + to + e);
             return false;
         }
     }
@@ -260,13 +257,13 @@ public class DefaultGameRepository implements GameRepository {
             List<File> jsons = FileTools.listFilesByExtension(removedFile, "json");
             jsons.forEach(f -> {
                 if (!f.delete())
-                    LOG.warning("Unable to delete file " + f);
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, "Unable to delete file " + f);
             });
             // remove the version from version list regardless of whether the directory was removed successfully or not.
             try {
                 FileTools.deleteDirectory(removedFile);
             } catch (IOException e) {
-                LOG.log(Level.WARNING, "Unable to remove version folder: " + file, e);
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, "Unable to remove version folder: " + file + e);
             }
             return true;
         } finally {

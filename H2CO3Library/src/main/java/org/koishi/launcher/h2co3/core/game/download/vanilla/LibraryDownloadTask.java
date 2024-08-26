@@ -17,8 +17,6 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.vanilla;
 
-import static org.koishi.launcher.h2co3.core.utils.Logging.LOG;
-
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.download.AbstractDependencyManager;
 import org.koishi.launcher.h2co3.core.game.download.DefaultCacheRepository;
@@ -41,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -56,15 +55,15 @@ import java.util.jar.JarOutputStream;
 import java.util.logging.Level;
 
 public class LibraryDownloadTask extends Task<Void> {
+    private FileDownloadTask task;
     protected final File jar;
     protected final DefaultCacheRepository cacheRepository;
     protected final AbstractDependencyManager dependencyManager;
+    private final File xzFile;
     protected final Library library;
     protected final String url;
-    private final File xzFile;
-    private final Library originalLibrary;
     protected boolean xz;
-    private FileDownloadTask task;
+    private final Library originalLibrary;
     private boolean cached = false;
 
     public LibraryDownloadTask(AbstractDependencyManager dependencyManager, File file, Library library) {
@@ -83,103 +82,6 @@ public class LibraryDownloadTask extends Task<Void> {
         jar = file;
 
         xzFile = new File(file.getAbsoluteFile().getParentFile(), file.getName() + ".pack.xz");
-    }
-
-    public static boolean checksumValid(File libPath, List<String> checksums) {
-        try {
-            if (checksums == null || checksums.isEmpty()) {
-                return true;
-            }
-            byte[] fileData = Files.readAllBytes(libPath.toPath());
-            boolean valid = checksums.contains(DigestUtils.digestToString("SHA-1", fileData));
-            if (!valid && libPath.getName().endsWith(".jar")) {
-                valid = validateJar(fileData, checksums);
-            }
-            return valid;
-        } catch (IOException e) {
-            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
-        }
-        return false;
-    }
-
-    private static boolean validateJar(byte[] data, List<String> checksums) throws IOException {
-        HashMap<String, String> files = new HashMap<>();
-        String[] hashes = null;
-        JarInputStream jar = new JarInputStream(new ByteArrayInputStream(data));
-        JarEntry entry = jar.getNextJarEntry();
-        while (entry != null) {
-            byte[] eData = IOUtils.readFullyWithoutClosing(jar);
-            if (entry.getName().equals("checksums.sha1")) {
-                hashes = new String(eData, "UTF-8").split("\n");
-            }
-            if (!entry.isDirectory()) {
-                files.put(entry.getName(), DigestUtils.digestToString("SHA-1", eData));
-            }
-            entry = jar.getNextJarEntry();
-        }
-        jar.close();
-        if (hashes != null) {
-            boolean failed = !checksums.contains(files.get("checksums.sha1"));
-            if (!failed) {
-                for (String hash : hashes) {
-                    if ((!hash.trim().isEmpty()) && (hash.contains(" "))) {
-                        String[] e = hash.split(" ");
-                        String validChecksum = e[0];
-                        String target = hash.substring(validChecksum.length() + 1);
-                        String checksum = files.get(target);
-                        if ((!files.containsKey(target)) || (checksum == null)) {
-                            LOG.warning("    " + target + " : missing");
-                            failed = true;
-                            break;
-                        } else if (!checksum.equals(validChecksum)) {
-                            LOG.warning("    " + target + " : failed (" + checksum + ", " + validChecksum + ")");
-                            failed = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            return !failed;
-        }
-        return false;
-    }
-
-    private static void unpackLibrary(File dest, byte[] src) throws IOException {
-        if (dest.exists())
-            if (!dest.delete())
-                throw new IOException("Unable to delete file " + dest);
-
-        byte[] decompressed;
-        try {
-            decompressed = IOUtils.readFullyAsByteArray(new XZInputStream(new ByteArrayInputStream(src)));
-        } catch (IOException e) {
-            throw new ArtifactMalformedException("Library " + dest + " is malformed");
-        }
-
-        String end = new String(decompressed, decompressed.length - 4, 4);
-        if (!end.equals("SIGN"))
-            throw new IOException("Unpacking failed, signature missing " + end);
-
-        int x = decompressed.length;
-        int len = decompressed[(x - 8)] & 0xFF | (decompressed[(x - 7)] & 0xFF) << 8 | (decompressed[(x - 6)] & 0xFF) << 16 | (decompressed[(x - 5)] & 0xFF) << 24;
-
-        Path temp = Files.createTempFile("minecraft", ".pack");
-
-        byte[] checksums = Arrays.copyOfRange(decompressed, decompressed.length - len - 8, decompressed.length - 8);
-
-        try (OutputStream out = Files.newOutputStream(temp)) {
-            out.write(decompressed, 0, decompressed.length - len - 8);
-        }
-
-        try (FileOutputStream jarBytes = new FileOutputStream(dest); JarOutputStream jos = new JarOutputStream(jarBytes)) {
-            Pack200Utils.unpack(H2CO3Tools.NATIVE_LIB_DIR, temp.toAbsolutePath().toString(), dest.getAbsolutePath());
-
-            JarEntry checksumsFile = new JarEntry("checksums.sha1");
-            checksumsFile.setTime(0L);
-            jos.putNextEntry(checksumsFile);
-            jos.write(checksums);
-            jos.closeEntry();
-        }
     }
 
     @Override
@@ -226,7 +128,7 @@ public class LibraryDownloadTask extends Task<Void> {
                 cached = true;
                 return;
             } catch (IOException e) {
-                LOG.log(Level.WARNING, "Failed to copy file from cache", e);
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
                 // We cannot copy cached file to current location
                 // so we try to download a new one.
             }
@@ -260,7 +162,7 @@ public class LibraryDownloadTask extends Task<Void> {
                         return false;
                     return NetworkUtils.urlExists(xzURL);
                 } catch (IOException e) {
-                    LOG.log(Level.WARNING, "Failed to test for url existence: " + url + ".pack.xz", e);
+                    H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to test for url existence: " + url + ".pack.xz" + e);
                 }
             }
         }
@@ -278,8 +180,105 @@ public class LibraryDownloadTask extends Task<Void> {
             try {
                 cacheRepository.cacheLibrary(library, jar.toPath(), xz);
             } catch (IOException e) {
-                LOG.log(Level.WARNING, "Failed to cache downloaded library " + library, e);
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "Failed to cache downloaded library " + library + e);
             }
+        }
+    }
+
+    public static boolean checksumValid(File libPath, List<String> checksums) {
+        try {
+            if (checksums == null || checksums.isEmpty()) {
+                return true;
+            }
+            byte[] fileData = Files.readAllBytes(libPath.toPath());
+            boolean valid = checksums.contains(DigestUtils.digestToString("SHA-1", fileData));
+            if (!valid && libPath.getName().endsWith(".jar")) {
+                valid = validateJar(fileData, checksums);
+            }
+            return valid;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static boolean validateJar(byte[] data, List<String> checksums) throws IOException {
+        HashMap<String, String> files = new HashMap<>();
+        String[] hashes = null;
+        JarInputStream jar = new JarInputStream(new ByteArrayInputStream(data));
+        JarEntry entry = jar.getNextJarEntry();
+        while (entry != null) {
+            byte[] eData = IOUtils.readFullyWithoutClosing(jar);
+            if (entry.getName().equals("checksums.sha1")) {
+                hashes = new String(eData, StandardCharsets.UTF_8).split("\n");
+            }
+            if (!entry.isDirectory()) {
+                files.put(entry.getName(), DigestUtils.digestToString("SHA-1", eData));
+            }
+            entry = jar.getNextJarEntry();
+        }
+        jar.close();
+        if (hashes != null) {
+            boolean failed = !checksums.contains(files.get("checksums.sha1"));
+            if (!failed) {
+                for (String hash : hashes) {
+                    if ((!hash.trim().equals("")) && (hash.contains(" "))) {
+                        String[] e = hash.split(" ");
+                        String validChecksum = e[0];
+                        String target = hash.substring(validChecksum.length() + 1);
+                        String checksum = files.get(target);
+                        if ((!files.containsKey(target)) || (checksum == null)) {
+                            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, target + " : missing");
+                            failed = true;
+                            break;
+                        } else if (!checksum.equals(validChecksum)) {
+                            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, target + " : failed (" + checksum + ", " + validChecksum + ")");
+                            failed = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            return !failed;
+        }
+        return false;
+    }
+
+    private static void unpackLibrary(File dest, byte[] src) throws IOException {
+        if (dest.exists())
+            if (!dest.delete())
+                throw new IOException("Unable to delete file " + dest);
+
+        byte[] decompressed;
+        try {
+            decompressed = IOUtils.readFullyAsByteArray(new XZInputStream(new ByteArrayInputStream(src)));
+        } catch (IOException e) {
+            throw new ArtifactMalformedException("Library " + dest + " is malformed");
+        }
+
+        String end = new String(decompressed, decompressed.length - 4, 4);
+        if (!end.equals("SIGN"))
+            throw new IOException("Unpacking failed, signature missing " + end);
+
+        int x = decompressed.length;
+        int len = decompressed[(x - 8)] & 0xFF | (decompressed[(x - 7)] & 0xFF) << 8 | (decompressed[(x - 6)] & 0xFF) << 16 | (decompressed[(x - 5)] & 0xFF) << 24;
+
+        Path temp = Files.createTempFile("minecraft", ".pack");
+
+        byte[] checksums = Arrays.copyOfRange(decompressed, decompressed.length - len - 8, decompressed.length - 8);
+
+        try (OutputStream out = Files.newOutputStream(temp)) {
+            out.write(decompressed, 0, decompressed.length - len - 8);
+        }
+
+        try (FileOutputStream jarBytes = new FileOutputStream(dest); JarOutputStream jos = new JarOutputStream(jarBytes)) {
+            Pack200Utils.unpack(H2CO3Tools.NATIVE_LIB_DIR, temp.toAbsolutePath().toString(), dest.getAbsolutePath());
+
+            JarEntry checksumsFile = new JarEntry("checksums.sha1");
+            checksumsFile.setTime(0L);
+            jos.putNextEntry(checksumsFile);
+            jos.write(checksums);
+            jos.closeEntry();
         }
     }
 }

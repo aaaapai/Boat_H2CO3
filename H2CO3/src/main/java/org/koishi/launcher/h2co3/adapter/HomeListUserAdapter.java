@@ -20,13 +20,13 @@ import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.application.H2CO3Application;
 import org.koishi.launcher.h2co3.core.H2CO3Auth;
-import org.koishi.launcher.h2co3.core.H2CO3Loader;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.login.bean.UserBean;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MaterialDialog;
+import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MessageDialog;
 import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 
 import java.util.ArrayList;
@@ -107,6 +107,11 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
                 isRemoveUserDialogShowing = true;
             }
         });
+
+        holder.selectorCardView.setOnLongClickListener(v -> {
+            showUserInfoDialog(user);
+            return true;
+        });
     }
 
     private void handleUserSelection(ViewHolder holder, int position) {
@@ -115,7 +120,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
             selectedPosition = newPosition;
             try {
                 updateSelectedUser(selectedPosition);
-                fragment.reLoadUser();
+                fragment.reLoadUsers();
             } catch (Exception e) {
                 H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
@@ -131,7 +136,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
             return ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_home_user);
         } else {
             return userIconCache.computeIfAbsent(user.getUserName(),
-                    k -> H2CO3Loader.getHeadDrawable(fragment.requireActivity(), user.getSkinTexture()));
+                    k -> H2CO3Auth.getHeadDrawable(fragment.requireActivity(), user.getSkinTexture()));
         }
     }
 
@@ -151,7 +156,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
     }
 
     private void removeUser(int position) {
-        if (position < 0 || position >= data.size()) return; // Prevent IndexOutOfBoundsException
+        if (position < 0 || position >= data.size()) return;
         H2CO3Application.sExecutorService.execute(() -> {
             try {
                 UserBean removedUser = data.remove(position);
@@ -166,7 +171,11 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
                 usersJson.remove(removedUser.getUserName());
                 H2CO3Auth.setUserJson(usersJson.toString());
 
-                fragment.reLoadUser();
+                fragment.runOnUiThread(() -> {
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, getItemCount() - position);
+                });
+
             } catch (JSONException e) {
                 H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
             }
@@ -175,25 +184,28 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
 
     private void updateUserState(UserBean user) {
         setUserState(user);
-        fragment.homeUserName.setText(user.getUserName());
-        fragment.homeUserState.setText(getUserStateText(user));
-        fragment.homeUserIcon.setImageDrawable(getUserIcon(user));
+        fragment.userNameTextView.setText(user.getUserName());
+        fragment.userStateTextView.setText(getUserStateText(user));
+        fragment.userIconImageView.setImageDrawable(getUserIcon(user));
     }
 
     private void resetUserState() {
         UserBean emptyUser = new UserBean();
         setUserState(emptyUser);
-        fragment.homeUserName.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
-        fragment.homeUserState.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
-        fragment.homeUserIcon.setImageDrawable(ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.xicon));
+        fragment.userNameTextView.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
+        fragment.userStateTextView.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
+        fragment.userIconImageView.setImageDrawable(ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.xicon));
     }
 
     private String getUserStateText(UserBean user) {
         String userType = user.getUserType();
         return switch (userType) {
-            case "1" -> context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_microsoft);
-            case "2" -> context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_other) + user.getApiUrl();
-            default -> context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_offline);
+            case "1" ->
+                    context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_microsoft);
+            case "2" ->
+                    context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_other) + user.getApiUrl();
+            default ->
+                    context.getString(org.koishi.launcher.h2co3.library.R.string.user_state_offline);
         };
     }
 
@@ -223,5 +235,13 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
             removeImageButton = itemView.findViewById(R.id.item_listview_user_remove);
             addCardView = itemView.findViewById(R.id.login_user_add);
         }
+    }
+
+    private void showUserInfoDialog(UserBean userBean) {
+        new H2CO3MessageDialog(context)
+                .setTitle("INFO")
+                .setMessage(userBean.getUserName() + "\n" + userBean.getApiUrl() + "\n" + userBean.getToken())
+                .setPositiveButton("确定", null)
+                .show();
     }
 }

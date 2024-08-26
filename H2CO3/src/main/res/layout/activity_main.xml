@@ -20,8 +20,8 @@
             android:id="@+id/appBarLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
             android:background="@null"
+            android:fitsSystemWindows="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/guide"
             app:layout_constraintTop_toTopOf="parent">
@@ -54,28 +54,29 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="@dimen/guide_l" />
+
         <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
             android:id="@+id/card"
-            android:layout_margin="@dimen/app_15dp"
-            app:cardCornerRadius="@dimen/card_radius"
             style="@style/Widget.Material3.CardView.Elevated"
-            app:contentPaddingTop="@dimen/app_15dp"
-            app:contentPaddingBottom="@dimen/app_15dp"
-            app:strokeWidth="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/guide"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            app:cardElevation="@dimen/elevation_2">
+            android:layout_margin="@dimen/app_15dp"
+            app:cardCornerRadius="@dimen/card_radius"
+            app:cardElevation="@dimen/elevation_2"
+            app:contentPaddingBottom="@dimen/app_15dp"
+            app:contentPaddingTop="@dimen/app_15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guide"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeWidth="0dp">
 
             <com.google.android.material.navigation.NavigationView
                 android:id="@+id/nav"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
                 android:background="@macro/m3_comp_elevated_card_container_color"
+                android:fitsSystemWindows="true"
                 app:menu="@menu/bottom_nav_menu" />
         </org.koishi.launcher.h2co3.resources.component.H2CO3CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

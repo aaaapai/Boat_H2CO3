@@ -17,7 +17,6 @@
  */
 package org.koishi.launcher.h2co3.core.game.download.fabric;
 
-
 import static org.koishi.launcher.h2co3.core.utils.io.UnsupportedInstallationException.FABRIC_NOT_COMPATIBLE_WITH_FORGE;
 
 import com.google.gson.JsonElement;

@@ -77,7 +77,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                     dialogBuilder.create().dismiss();
                     updateDirAdapter();
                 }
-                case MSG_SHOW_ERROR -> H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, getString(org.koishi.launcher.h2co3.library.R.string.ver_add_done));
+                case MSG_SHOW_ERROR -> H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.INFO, getString(org.koishi.launcher.h2co3.library.R.string.ver_add_done));
             }
         }
     };
@@ -115,14 +115,19 @@ public class DirectoryFragment extends H2CO3Fragment {
             List<String> dirList = getDirList();
 
             requireActivity().runOnUiThread(() -> {
-                dirRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-                dirAdapter = new DirectoryListAdapter(dirList, requireActivity(), dirsJsonObj, gameHelper, this);
-                dirAdapter.setRvItemOnclickListener(this::removeOrDeleteDirectory);
-                ensureDefaultDirectory();
-                dirRecyclerView.setAdapter(dirAdapter);
-                updateVerList(gameHelper.getGameDirectory() + "/versions");
-                verProgressBar.setVisibility(View.GONE);
-                dirProgressBar.setVisibility(View.GONE);
+
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    dirAdapter = new DirectoryListAdapter(dirList, requireActivity(), dirsJsonObj, gameHelper, this);
+                    dirAdapter.setRvItemOnclickListener(this::removeOrDeleteDirectory);
+                    ensureDefaultDirectory();
+                    dirRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+                    dirRecyclerView.setAdapter(dirAdapter);
+                    dirProgressBar.setVisibility(View.GONE);
+                    updateVerList(gameHelper.getGameDirectory() + "/versions");
+                    verProgressBar.setVisibility(View.GONE);
+                }, 220);
+
+
             });
         });
     }
@@ -170,7 +175,7 @@ public class DirectoryFragment extends H2CO3Fragment {
 
     private void showDirDialog() {
         dialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
-        View dialogView = requireActivity().getLayoutInflater().inflate(R.layout.custom_dialog_directory, null);
+        View dialogView = requireActivity().getLayoutInflater().inflate(R.layout.dialog_new_directory, null);
         dialogBuilder.setView(dialogView).setTitle(org.koishi.launcher.h2co3.library.R.string.add_directory);
 
         MaterialButton cancel = dialogView.findViewById(R.id.custom_dir_cancel);
@@ -233,7 +238,7 @@ public class DirectoryFragment extends H2CO3Fragment {
         dirAdapter = new DirectoryListAdapter(getDirList(), requireActivity(), dirsJsonObj, gameHelper, this);
         dirAdapter.updateData(getDirList());
 
-        verAdapter = new MCVersionListAdapter(requireActivity(), getVerList(gameHelper.getGameCurrentVersion()), this, gameHelper, gameHelper.getGameCurrentVersion());
+        verAdapter = new MCVersionListAdapter(requireActivity(), new ArrayList<>(getVerList(gameHelper.getGameCurrentVersion())), this, gameHelper, gameHelper.getGameCurrentVersion());
         verAdapter.updateData(getVerList(currentDir));
 
         if (!f.isDirectory()) {
@@ -330,7 +335,7 @@ public class DirectoryFragment extends H2CO3Fragment {
     }
 
     public void logError(Exception e) {
-        Log.e("DirectoryFragment", "Error: ", e);
+        H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
     }
 
     private class DirectoryTextWatcher implements TextWatcher {

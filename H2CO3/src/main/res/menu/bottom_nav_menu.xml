@@ -19,8 +19,15 @@
             android:title="@string/title_download" />
 
         <item
+            android:id="@+id/navigation_terminal"
+            android:icon="@drawable/ic_terminal"
+            android:title="@string/title_terminal" />
+
+        <item
             android:id="@+id/navigation_manage"
             android:icon="@drawable/ic_menu_manager"
             android:title="@string/title_manage" />
+
+
     </group>
 </menu>

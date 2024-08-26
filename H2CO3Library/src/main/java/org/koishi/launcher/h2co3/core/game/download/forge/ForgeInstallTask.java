@@ -21,6 +21,8 @@ import static org.koishi.launcher.h2co3.core.utils.StringUtils.removePrefix;
 import static org.koishi.launcher.h2co3.core.utils.StringUtils.removeSuffix;
 import static org.koishi.launcher.h2co3.core.utils.io.UnsupportedInstallationException.UNSUPPORTED_LAUNCH_WRAPPER;
 
+import android.util.Log;
+
 import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.game.download.DependencyManager;
 import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
@@ -132,6 +134,7 @@ public final class ForgeInstallTask extends Task<Version> {
      */
     public static boolean detectForgeInstallerType(DependencyManager dependencyManager, Version version, Path installer) throws IOException, VersionMismatchException {
         Optional<String> gameVersion = dependencyManager.getGameRepository().getGameVersion(version);
+        Log.e("test", String.valueOf(gameVersion));
         if (!gameVersion.isPresent()) throw new IOException();
         try (FileSystem fs = CompressingUtils.createReadOnlyZipFileSystem(installer)) {
             String installProfileText = FileTools.readText(fs.getPath("install_profile.json"));

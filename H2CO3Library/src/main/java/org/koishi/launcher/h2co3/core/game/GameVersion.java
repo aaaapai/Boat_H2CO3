@@ -1,14 +1,30 @@
+/*
+ * Hello Minecraft! Launcher
+ * Copyright (C) 2020  huangyuhui <huanghongxun2008@126.com> and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 package org.koishi.launcher.h2co3.core.game;
-
-import static org.koishi.launcher.h2co3.core.utils.Lang.tryCast;
-import static org.koishi.launcher.h2co3.core.utils.Logging.LOG;
 
 import com.google.gson.JsonParseException;
 
 import org.jenkinsci.constant_pool_scanner.ConstantPool;
 import org.jenkinsci.constant_pool_scanner.ConstantPoolScanner;
 import org.jenkinsci.constant_pool_scanner.ConstantType;
-import org.koishi.launcher.h2co3.core.fakefx.binding.StringConstant;
+import org.jenkinsci.constant_pool_scanner.StringConstant;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.gson.JsonUtils;
 
 import java.io.File;
@@ -18,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -34,7 +51,7 @@ public final class GameVersion {
                 id = id.substring(0, id.indexOf(" / "));
             return Optional.ofNullable(id);
         } catch (IOException | JsonParseException | ClassCastException e) {
-            LOG.log(Level.WARNING, "Failed to parse version.json", e);
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, "Failed to parse version.json" + e);
             return Optional.empty();
         }
     }
@@ -52,22 +69,17 @@ public final class GameVersion {
     private static Optional<String> getVersionFromClassMinecraftServer(InputStream bytecode) throws IOException {
         ConstantPool pool = ConstantPoolScanner.parse(bytecode, ConstantType.STRING);
 
-        List<String> list = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            list = StreamSupport.stream(pool.list(StringConstant.class).spliterator(), false)
-                    .map(StringConstant::get)
-                    .toList();
-        }
+        List<String> list = StreamSupport.stream(pool.list(StringConstant.class).spliterator(), false)
+                .map(StringConstant::get)
+                .collect(Collectors.toList());
 
         int idx = -1;
 
-        if (list != null) {
-            for (int i = 0; i < list.size(); ++i)
-                if (list.get(i).startsWith("Can't keep up!")) {
-                    idx = i;
-                    break;
-                }
-        }
+        for (int i = 0; i < list.size(); ++i)
+            if (list.get(i).startsWith("Can't keep up!")) {
+                idx = i;
+                break;
+            }
 
         for (int i = idx - 1; i >= 0; --i)
             if (list.get(i).matches(".*[0-9].*"))

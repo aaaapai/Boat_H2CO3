@@ -27,9 +27,9 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
-import org.koishi.launcher.h2co3.control.client.H2CO3ControlClient;
-import org.koishi.launcher.h2co3.control.controller.H2CO3VirtualController;
-import org.koishi.launcher.h2co3.control.controller.HardwareController;
+import org.koishi.launcher.h2co3.controller.client.H2CO3ControlClient;
+import org.koishi.launcher.h2co3.controller.H2CO3VirtualController;
+import org.koishi.launcher.h2co3.controller.HardwareController;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;

@@ -13,7 +13,7 @@ import java.util.logging.Level;
 public class H2CO3GameRepository extends DefaultGameRepository {
     private static final String PROFILE = "{\"profiles\": {\"(Default)\": {\"name\": \"(Default)\"}},\"clientToken\": \"88888888-8888-8888-8888-888888888888\"}";
 
-    private H2CO3GameHelper gameHelper;
+    private final H2CO3GameHelper gameHelper;
 
     public H2CO3GameRepository(File baseDirectory) {
         super(baseDirectory);

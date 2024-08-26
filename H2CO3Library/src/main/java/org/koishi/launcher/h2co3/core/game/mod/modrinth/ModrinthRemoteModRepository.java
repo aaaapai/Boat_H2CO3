@@ -63,6 +63,11 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
         this.projectType = projectType;
     }
 
+    @Override
+    public Type getType() {
+        return Type.MOD;
+    }
+
     private static String convertSortType(SortType sortType) {
         switch (sortType) {
             case DATE_CREATED:
@@ -78,11 +83,6 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
             default:
                 throw new IllegalArgumentException("Unsupported sort type " + sortType);
         }
-    }
-
-    @Override
-    public Type getType() {
-        return Type.MOD;
     }
 
     @Override
@@ -105,11 +105,11 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
         Response<ProjectSearchResult> response = HttpRequest.GET(NetworkUtils.withQuery(PREFIX + "/v2/search", query))
                 .getJson(new TypeToken<Response<ProjectSearchResult>>() {
                 }.getType());
-        return new SearchResult(response.getHits().stream().map(ProjectSearchResult::toMod), (int) Math.ceil((double) response.totalHits / pageSize));
+        return new SearchResult(response.getHits().stream().map(ProjectSearchResult::toMod), (int)Math.ceil((double)response.totalHits / pageSize));
     }
 
     @Override
-    public Optional<RemoteMod.VersionMod> getRemoteVersionByLocalFile(LocalModFile localModFile, Path file) throws IOException {
+    public Optional<RemoteMod.Version> getRemoteVersionByLocalFile(LocalModFile localModFile, Path file) throws IOException {
         String sha1 = DigestUtils.digestToString("SHA-1", file);
 
         try {
@@ -139,7 +139,7 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
     }
 
     @Override
-    public Stream<RemoteMod.VersionMod> getRemoteVersionsById(String id) throws IOException {
+    public Stream<RemoteMod.Version> getRemoteVersionsById(String id) throws IOException {
         id = StringUtils.removePrefix(id, "local-");
         List<ProjectVersion> versions = HttpRequest.GET(PREFIX + "/v2/project/" + id + "/version")
                 .getJson(new TypeToken<List<ProjectVersion>>() {
@@ -148,8 +148,7 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
     }
 
     public List<Category> getCategoriesImpl() throws IOException {
-        List<Category> categories = HttpRequest.GET(PREFIX + "/v2/tag/category").getJson(new TypeToken<List<Category>>() {
-        }.getType());
+        List<Category> categories = HttpRequest.GET(PREFIX + "/v2/tag/category").getJson(new TypeToken<List<Category>>() {}.getType());
         return categories.stream().filter(category -> category.getProjectType().equals(projectType)).collect(Collectors.toList());
     }
 
@@ -167,7 +166,7 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
         private final String projectType;
 
         public Category() {
-            this("", "", "");
+            this("","","");
         }
 
         public Category(String icon, String name, String projectType) {
@@ -299,7 +298,7 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
         @Override
         public List<RemoteMod> loadDependencies(RemoteModRepository modRepository) throws IOException {
             Set<RemoteMod.Dependency> dependencies = modRepository.getRemoteVersionsById(getId())
-                    .flatMap(version -> version.dependencies().stream())
+                    .flatMap(version -> version.getDependencies().stream())
                     .collect(Collectors.toSet());
             List<RemoteMod> mods = new ArrayList<>();
             for (RemoteMod.Dependency dependency : dependencies) {
@@ -309,7 +308,7 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
         }
 
         @Override
-        public Stream<RemoteMod.VersionMod> loadVersions(RemoteModRepository modRepository) throws IOException {
+        public Stream<RemoteMod.Version> loadVersions(RemoteModRepository modRepository) throws IOException {
             return modRepository.getRemoteVersionsById(getId());
         }
 
@@ -484,7 +483,7 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
             return RemoteMod.Type.MODRINTH;
         }
 
-        public Optional<RemoteMod.VersionMod> toVersion() {
+        public Optional<RemoteMod.Version> toVersion() {
             RemoteMod.VersionType type;
             if ("release".equals(versionType)) {
                 type = RemoteMod.VersionType.Release;
@@ -500,7 +499,7 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
                 return Optional.empty();
             }
 
-            return Optional.of(new RemoteMod.VersionMod(
+            return Optional.of(new RemoteMod.Version(
                     this,
                     projectId,
                     name,
@@ -522,16 +521,11 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
                     }).filter(Objects::nonNull).collect(Collectors.toList()),
                     gameVersions,
                     loaders.stream().flatMap(loader -> {
-                        if ("fabric".equalsIgnoreCase(loader))
-                            return Stream.of(ModLoaderType.FABRIC);
-                        else if ("forge".equalsIgnoreCase(loader))
-                            return Stream.of(ModLoaderType.FORGE);
-                        else if ("neoforge".equalsIgnoreCase(loader))
-                            return Stream.of(ModLoaderType.NEO_FORGED);
-                        else if ("quilt".equalsIgnoreCase(loader))
-                            return Stream.of(ModLoaderType.QUILT);
-                        else if ("liteloader".equalsIgnoreCase(loader))
-                            return Stream.of(ModLoaderType.LITE_LOADER);
+                        if ("fabric".equalsIgnoreCase(loader)) return Stream.of(ModLoaderType.FABRIC);
+                        else if ("forge".equalsIgnoreCase(loader)) return Stream.of(ModLoaderType.FORGE);
+                        else if ("neoforge".equalsIgnoreCase(loader)) return Stream.of(ModLoaderType.NEO_FORGED);
+                        else if ("quilt".equalsIgnoreCase(loader)) return Stream.of(ModLoaderType.QUILT);
+                        else if ("liteloader".equalsIgnoreCase(loader)) return Stream.of(ModLoaderType.LITE_LOADER);
                         else return Stream.empty();
                     }).collect(Collectors.toList())
             ));
@@ -682,7 +676,7 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
         @Override
         public List<RemoteMod> loadDependencies(RemoteModRepository modRepository) throws IOException {
             Set<RemoteMod.Dependency> dependencies = modRepository.getRemoteVersionsById(getProjectId())
-                    .flatMap(version -> version.dependencies().stream())
+                    .flatMap(version -> version.getDependencies().stream())
                     .collect(Collectors.toSet());
             List<RemoteMod> mods = new ArrayList<>();
             for (RemoteMod.Dependency dependency : dependencies) {
@@ -692,7 +686,7 @@ public final class ModrinthRemoteModRepository implements RemoteModRepository {
         }
 
         @Override
-        public Stream<RemoteMod.VersionMod> loadVersions(RemoteModRepository modRepository) throws IOException {
+        public Stream<RemoteMod.Version> loadVersions(RemoteModRepository modRepository) throws IOException {
             return modRepository.getRemoteVersionsById(getProjectId());
         }
 
