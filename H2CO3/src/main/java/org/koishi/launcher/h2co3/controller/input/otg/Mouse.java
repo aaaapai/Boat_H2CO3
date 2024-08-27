@@ -20,7 +20,7 @@ import org.koishi.launcher.h2co3.controller.definitions.map.MouseMap;
 import org.koishi.launcher.h2co3.controller.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.controller.input.HwInput;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 
 import java.util.Timer;

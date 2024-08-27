@@ -16,7 +16,7 @@
  * //
  */
 
-package org.koishi.launcher.h2co3.core.game.h2co3launcher;
+package org.koishi.launcher.h2co3.core.launch;
 
 import android.app.Activity;
 import android.content.ClipData;
@@ -35,6 +35,7 @@ import android.view.Surface;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 
 import java.io.File;
@@ -77,7 +78,7 @@ public class H2CO3LauncherBridge implements Serializable {
     private Thread thread;
     private ExecutorService mExecutor;
     private SurfaceTexture surfaceTexture;
-    private H2CO3GameHelper gameHelper;
+    private H2CO3Settings gameHelper;
 
     // Constructor
     public H2CO3LauncherBridge() {
@@ -138,7 +139,7 @@ public class H2CO3LauncherBridge implements Serializable {
         Handler handler = new Handler();
         this.callback = callback;
         this.surface = surface;
-        this.gameHelper = new H2CO3GameHelper();
+        this.gameHelper = new H2CO3Settings();
         setH2CO3LauncherBridge(this);
         receiveLog("invoke redirectStdio");
         int errorCode = redirectStdio(H2CO3Tools.LOG_DIR);

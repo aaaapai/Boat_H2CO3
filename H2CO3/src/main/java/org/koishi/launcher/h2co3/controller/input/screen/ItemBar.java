@@ -32,7 +32,7 @@ import org.koishi.launcher.h2co3.controller.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.controller.input.OnscreenInput;
 import org.koishi.launcher.h2co3.controller.input.screen.button.BaseButton;
 import org.koishi.launcher.h2co3.controller.input.screen.button.ItemButton;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.resources.component.dialog.DialogUtils;
 import org.koishi.launcher.h2co3.resources.component.dialog.support.DialogSupports;
 

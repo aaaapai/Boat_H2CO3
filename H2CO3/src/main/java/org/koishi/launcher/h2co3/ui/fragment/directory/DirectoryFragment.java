@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,7 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.adapter.DirectoryListAdapter;
 import org.koishi.launcher.h2co3.adapter.MCVersionListAdapter;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.file.AssetsUtils;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
@@ -58,7 +57,7 @@ public class DirectoryFragment extends H2CO3Fragment {
     public MCVersionListAdapter verAdapter;
     private String H2CO3Dir;
     private JSONObject dirsJsonObj;
-    private H2CO3GameHelper gameHelper;
+    private H2CO3Settings gameHelper;
     private TextInputEditText nameEditText;
 
     private static final int MSG_DIALOG_DISMISS = 0;
@@ -88,7 +87,7 @@ public class DirectoryFragment extends H2CO3Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gameHelper = new H2CO3GameHelper();
+        gameHelper = new H2CO3Settings();
     }
 
     @Override

@@ -4,7 +4,7 @@
  * //
  */
 
-package org.koishi.launcher.h2co3.core.game.h2co3launcher;
+package org.koishi.launcher.h2co3.core.launch;
 
 import android.graphics.SurfaceTexture;
 

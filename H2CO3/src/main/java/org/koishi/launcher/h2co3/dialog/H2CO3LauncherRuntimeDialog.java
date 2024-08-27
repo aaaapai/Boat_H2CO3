@@ -7,7 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3CustomViewDialog;
 
@@ -16,13 +16,13 @@ public class H2CO3LauncherRuntimeDialog extends H2CO3CustomViewDialog implements
     private static final int BUTTON_COUNT = 4;
     private H2CO3CardView[] buttons;
     private String[] javaPaths;
-    private H2CO3GameHelper gameHelper;
+    private H2CO3Settings gameHelper;
 
     public H2CO3LauncherRuntimeDialog(Context context) {
         super(context);
         setTitle(org.koishi.launcher.h2co3.library.R.string.title_runtime);
         setCustomView(R.layout.dialog_custom_runtime);
-        gameHelper = new H2CO3GameHelper();
+        gameHelper = new H2CO3Settings();
         initViews();
     }
 

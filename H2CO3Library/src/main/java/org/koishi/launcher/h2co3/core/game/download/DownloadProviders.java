@@ -28,7 +28,10 @@ import java.util.stream.Stream;
 import javax.net.ssl.SSLHandshakeException;
 
 public final class DownloadProviders {
-    public DownloadProviders() {
+    private static H2CO3Settings h2co3Settings = null;
+
+    public DownloadProviders(H2CO3Settings h2co3Settings) {
+        DownloadProviders.h2co3Settings = h2co3Settings;
         init();
     }
 
@@ -64,20 +67,20 @@ public final class DownloadProviders {
     }
 
     static void init() {
-        if (!providersById.containsKey(H2CO3Settings.getDownloadSource())) {
-            H2CO3Settings.setDownloadSource(DEFAULT_PROVIDER_ID);
+        if (!providersById.containsKey(h2co3Settings.getDownloadSource())) {
+            h2co3Settings.setDownloadSource(DEFAULT_PROVIDER_ID);
             return;
         }
 
-        currentDownloadProvider = Optional.ofNullable(providersById.get(H2CO3Settings.getDownloadSource()))
+        currentDownloadProvider = Optional.ofNullable(providersById.get(h2co3Settings.getDownloadSource()))
                 .orElse(providersById.get(DEFAULT_PROVIDER_ID));
 
-        if (!rawProviders.containsKey(H2CO3Settings.getDownloadType())) {
-            H2CO3Settings.setDownloadType(DEFAULT_RAW_PROVIDER_ID);
+        if (!rawProviders.containsKey(h2co3Settings.getDownloadType())) {
+            h2co3Settings.setDownloadType(DEFAULT_RAW_PROVIDER_ID);
             return;
         }
 
-        DownloadProvider primary = Optional.ofNullable(rawProviders.get(H2CO3Settings.getDownloadType()))
+        DownloadProvider primary = Optional.ofNullable(rawProviders.get(h2co3Settings.getDownloadType()))
                 .orElse(rawProviders.get(DEFAULT_RAW_PROVIDER_ID));
         fileDownloadProvider.setDownloadProviderCandidates(
                 Stream.concat(

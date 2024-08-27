@@ -1,15 +1,18 @@
-package org.koishi.launcher.h2co3.core.game.h2co3launcher;
+package org.koishi.launcher.h2co3.core.launch.utils;
 
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.oracle.dalvik.VMLauncher;
+import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.launch.LaunchVersion;
+import org.koishi.launcher.h2co3.core.launch.oracle.dalvik.VMLauncher;
+import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.Architecture;
 import org.koishi.launcher.h2co3.core.utils.CommandBuilder;
-import org.koishi.launcher.h2co3.core.utils.Logging;
 import org.koishi.launcher.h2co3.core.utils.OperatingSystem;
 import org.koishi.launcher.h2co3.core.utils.StringUtils;
 
@@ -28,15 +31,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TimeZone;
-import java.util.logging.Level;
 import java.util.stream.Stream;
 
-public class H2CO3LauncherHelper {
+public class BaseLaunch {
 
-    private static final String TAG = H2CO3LauncherHelper.class.getSimpleName();
+    private static final String TAG = BaseLaunch.class.getSimpleName();
 
     // Public methods for launching and setting up the environment
-    public static H2CO3LauncherBridge launchMinecraft(Context context, H2CO3GameHelper gameHelper, int width, int height) throws IOException {
+    public static H2CO3LauncherBridge launchMinecraft(Context context, H2CO3Settings gameHelper, int width, int height) throws IOException {
         H2CO3LauncherBridge bridge = new H2CO3LauncherBridge();
         bridge.setLogPath(H2CO3Tools.LOG_DIR + "/latest_game.txt");
         bridge.receiveLog("surface ready, start jvm now!");
@@ -59,7 +61,7 @@ public class H2CO3LauncherHelper {
         return bridge;
     }
 
-    public static H2CO3LauncherBridge launchJarExecutor(Context context, H2CO3GameHelper gameHelper, int width, int height) {
+    public static H2CO3LauncherBridge launchJarExecutor(Context context, H2CO3Settings gameHelper, int width, int height) {
         H2CO3LauncherBridge bridge = new H2CO3LauncherBridge();
         bridge.setLogPath(H2CO3Tools.LOG_FILE_PATH + "/latest_jar_executor.log");
         Thread javaGUIThread = new Thread(() -> {
@@ -82,7 +84,7 @@ public class H2CO3LauncherHelper {
 
     public static void apiLaunch(Context context, H2CO3LauncherBridge bridge, String[] command, String jre, String task) throws IOException {
         printTaskTitle(bridge, task + " Arguments");
-        String[] args = rebaseApiArgs(context, command, jre);
+        String[] args = rebaseApiArgs(command, jre);
         for (String arg : args) {
             bridge.getCallback().onLog(task + " argument: " + arg + "\n");
         }
@@ -97,7 +99,7 @@ public class H2CO3LauncherHelper {
         printTaskTitle(bridge, task + " Logs");
     }
 
-    public static H2CO3LauncherBridge launchAPIInstaller(Context context, H2CO3GameHelper gameHelper, String[] command, String jre) {
+    public static H2CO3LauncherBridge launchAPIInstaller(Context context, H2CO3Settings gameHelper, String[] command, String jre) {
         H2CO3LauncherBridge bridge = new H2CO3LauncherBridge();
         bridge.setLogPath(H2CO3Tools.LOG_DIR + "/latest_api_installer.log");
         Thread apiInstallerThread = new Thread(() -> {
@@ -118,7 +120,7 @@ public class H2CO3LauncherHelper {
     }
 
     // Environment setup methods
-    public static void setEnv(Context context, H2CO3GameHelper gameHelper, H2CO3LauncherBridge bridge, boolean isRender) throws IOException {
+    public static void setEnv(Context context, H2CO3Settings gameHelper, H2CO3LauncherBridge bridge, boolean isRender) throws IOException {
         Map<String, String> envMap = new HashMap<>(8);
         addCommonEnv(context, gameHelper, envMap);
         if (isRender) {
@@ -136,7 +138,7 @@ public class H2CO3LauncherHelper {
         printTaskTitle(bridge, "Env Map");
     }
 
-    public static void addCommonEnv(Context context, H2CO3GameHelper gameHelper, Map<String, String> envMap) {
+    public static void addCommonEnv(Context context, H2CO3Settings gameHelper, Map<String, String> envMap) {
         envMap.put("HOME", H2CO3Tools.LOG_DIR + "\n");
         envMap.put("JAVA_HOME", gameHelper.getJavaPath() + "\n");
         envMap.put("H2CO3LAUNCHER_NATIVEDIR", context.getApplicationInfo().nativeLibraryDir + "\n");
@@ -196,7 +198,7 @@ public class H2CO3LauncherHelper {
     }
 
     // Java runtime setup methods
-    public static void setUpJavaRuntime(Context context, H2CO3LauncherBridge bridge, H2CO3GameHelper gameHelper) throws IOException {
+    public static void setUpJavaRuntime(Context context, H2CO3LauncherBridge bridge, H2CO3Settings gameHelper) throws IOException {
         String jreLibDir = gameHelper.getJavaPath() + getJreLibDir(gameHelper.getJavaPath());
         String jliLibDir = new File(jreLibDir + "/jli/libjli.so").exists() ? jreLibDir + "/jli" : jreLibDir;
         String jvmLibDir = jreLibDir + getJvmLibDir(gameHelper.getJavaPath());
@@ -235,7 +237,7 @@ public class H2CO3LauncherHelper {
     }
 
     // Launching methods
-    public static void launch(Context context, H2CO3LauncherBridge bridge, H2CO3GameHelper gameHelper, int width, int height, String task) throws IOException {
+    public static void launch(Context context, H2CO3LauncherBridge bridge, H2CO3Settings gameHelper, int width, int height, String task) throws IOException {
         printTaskTitle(bridge, task + " Arguments");
         String[] args = rebaseArgs(context, gameHelper, width, height);
         for (String arg : args) {
@@ -253,7 +255,7 @@ public class H2CO3LauncherHelper {
     }
 
     // Argument handling methods
-    public static String[] rebaseArgs(Context context, H2CO3GameHelper gameHelper, int width, int height) throws IOException {
+    public static String[] rebaseArgs(Context context, H2CO3Settings gameHelper, int width, int height) throws IOException {
         final CommandBuilder command = getMcArgs(context, gameHelper, width, height);
         List<String> rawCommandLine = command.asList();
 
@@ -269,38 +271,69 @@ public class H2CO3LauncherHelper {
         return argList.toArray(new String[0]);
     }
 
-    public static String[] rebaseApiArgs(Context context, String[] command, String jre) throws IOException {
+    public static String[] rebaseApiArgs(String[] command, String jre) throws IOException {
         String javaPath = H2CO3Tools.JAVA_PATH + "/" + jre + "/bin/java";
         List<String> argList = new ArrayList<>(Arrays.asList(command));
         argList.add(0, javaPath);
         return argList.toArray(new String[0]);
     }
 
-    // Minecraft argument building
-    public static CommandBuilder getMcArgs(Context context, H2CO3GameHelper gameHelper, int width, int height) throws IOException {
+    public static CommandBuilder getMcArgs(Context context, H2CO3Settings gameHelper, int width, int height) throws IOException {
         H2CO3Tools.loadPaths(context);
+
         CommandBuilder args = new CommandBuilder();
+
         gameHelper.setRender(H2CO3Tools.GL_GL114);
-        MinecraftVersion version = MinecraftVersion.fromDirectory(new File(gameHelper.getGameCurrentVersion()));
+
+        LaunchVersion version = LaunchVersion.fromDirectory(new File(gameHelper.getGameCurrentVersion()));
+
         String lwjglPath = H2CO3Tools.RUNTIME_DIR + "/h2co3Launcher/lwjgl";
         String javaPath = gameHelper.getJavaPath();
+
         boolean highVersion = version.minimumLauncherVersion >= 21;
-        String classPath;
         boolean isJava8 = javaPath.equals(H2CO3Tools.JAVA_8_PATH);
-        if (!highVersion) {
-            classPath = lwjglPath + "/lwjgl.jar:" + version.getClassPath(gameHelper, false, isJava8);
-        } else {
-            classPath = lwjglPath + "/lwjgl.jar:" + version.getClassPath(gameHelper, true, isJava8);
-        }
+
+        String classPath;
+        classPath = lwjglPath + "/lwjgl.jar:" + version.getClassPath(gameHelper, highVersion, isJava8) + ":" + H2CO3Tools.PLUGIN_DIR + "/H2CO3LaunchWrapper.jar" + ":" + gameHelper.getGameCurrentVersion() + "/" + new File(gameHelper.getGameCurrentVersion()).getName() + ".jar";
 
         addCacioOptions(args, height, width, javaPath);
+
+        args.add("-Xms" + "1024" + "M");
+        args.add("-Xmx" + "6000" + "M");
+
+        Charset encoding = OperatingSystem.NATIVE_CHARSET;
+        String fileEncoding = args.addDefault("-Dfile.encoding=", encoding.name());
+        if (fileEncoding != null && !"-Dfile.encoding=COMPAT".equals(fileEncoding)) {
+            try {
+                encoding = Charset.forName(fileEncoding.substring("-Dfile.encoding=".length()));
+            } catch (Throwable ex) {
+                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING, "Bad file encoding" + ex);
+            }
+        }
+        args.addDefault("-Dsun.stdout.encoding=", encoding.name());
+        args.addDefault("-Dsun.stderr.encoding=", encoding.name());
+
+        args.addDefault("-Djava.rmi.server.useCodebaseOnly=", "true");
+        args.addDefault("-Dcom.sun.jndi.rmi.object.trustURLCodebase=", "false");
+        args.addDefault("-Dcom.sun.jndi.cosnaming.object.trustURLCodebase=", "false");
+
+        args.addDefault("-Dminecraft.client.jar=", gameHelper.getGameCurrentVersion() + "/" + new File(gameHelper.getGameCurrentVersion()).getName() + ".jar");
+
+        if (Architecture.is32BitsDevice()) {
+            args.addDefault("-Xss", "1m");
+        }
+
+        args.addDefault("-Dfml.ignoreInvalidMinecraftCertificates=", "true");
+        args.addDefault("-Dfml.ignorePatchDiscrepancies=", "true");
+
+        args.addDefault("-Dext.net.resolvPath=", gameHelper.getJavaPath() + "/resolv.conf");
+
         args.add("-cp");
         args.add(classPath);
+
         args.addDefault("-Djava.library.path=", getLibraryPath(context, javaPath));
         args.addDefault("-Djna.boot.library.path=", H2CO3Tools.NATIVE_LIB_DIR);
         args.addDefault("-Dfml.earlyprogresswindow=", "false");
-        args.addDefault("-Dorg.lwjgl.util.DebugLoader=", "true");
-        args.addDefault("-Dorg.lwjgl.util.Debug=", "true");
         args.addDefault("-Dos.name=", "Linux");
         args.addDefault("-Dos.version=Android-", Build.VERSION.RELEASE);
         args.addDefault("-Dlwjgl.platform=", "H2CO3Launcher");
@@ -311,16 +344,6 @@ public class H2CO3LauncherHelper {
         args.addDefault("-Djava.rmi.server.useCodebaseOnly=", "true");
         args.addDefault("-Dcom.sun.jndi.rmi.object.trustURLCodebase=", "false");
         args.addDefault("-Dcom.sun.jndi.cosnaming.object.trustURLCodebase=", "false");
-
-        Charset encoding = OperatingSystem.NATIVE_CHARSET;
-        String fileEncoding = args.addDefault("-Dfile.encoding=", encoding.name());
-        if (fileEncoding != null && !"-Dfile.encoding=COMPAT".equals(fileEncoding)) {
-            try {
-                encoding = Charset.forName(fileEncoding.substring("-Dfile.encoding=".length()));
-            } catch (Throwable ex) {
-                Logging.LOG.log(Level.WARNING, "Bad file encoding", ex);
-            }
-        }
 
         args.addDefault("-Dfml.ignoreInvalidMinecraftCertificates=", "true");
         args.addDefault("-Dfml.ignorePatchDiscrepancies=", "true");
@@ -346,8 +369,8 @@ public class H2CO3LauncherHelper {
                 args.add(JVMArg);
             }
         }
-        args.add("-Xms" + "1024" + "M");
-        args.add("-Xmx" + "6000" + "M");
+
+        args.add("h2co3.Wrapper");
         args.add(version.mainClass);
         String[] minecraftArgs = version.getMinecraftArguments(gameHelper, highVersion);
         args.add(minecraftArgs);

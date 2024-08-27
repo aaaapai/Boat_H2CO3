@@ -18,9 +18,9 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridgeCallBack;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
+import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridgeCallBack;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextureView;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
@@ -37,7 +37,7 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
     private TimerTask systemUiTimerTask;
     public static IH2CO3Launcher h2co3LauncherInterface;
 
-    public H2CO3GameHelper gameHelper;
+    public H2CO3Settings gameHelper;
 
     private final View.OnSystemUiVisibilityChangeListener onSystemUiVisibilityChangeListener = visibility -> {
         if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {

@@ -12,7 +12,7 @@
 
 package org.koishi.launcher.h2co3.ui;
 
-import static org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherHelper.launchMinecraft;
+import static org.koishi.launcher.h2co3.core.launch.utils.BaseLaunch.launchMinecraft;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
@@ -31,10 +31,10 @@ import org.koishi.launcher.h2co3.controller.client.H2CO3ControlClient;
 import org.koishi.launcher.h2co3.controller.H2CO3VirtualController;
 import org.koishi.launcher.h2co3.controller.HardwareController;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridgeCallBack;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.MCOptionUtils;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
+import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridgeCallBack;
+import org.koishi.launcher.h2co3.core.launch.utils.MCOptionUtils;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 import org.koishi.launcher.h2co3.core.utils.Logging;
@@ -133,7 +133,7 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overlay);
         showMessageListView();
-        gameHelper = new H2CO3GameHelper();
+        gameHelper = new H2CO3Settings();
         mainTextureView = findViewById(R.id.main_game_render_view);
         mainTextureView.setSurfaceTextureListener(this);
         baseLayout = findViewById(R.id.main_base);
@@ -229,11 +229,11 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     private void configureSurfaceTexture(SurfaceTexture surface, int width, int height) {
         int scaleFactor = 1;
         surface.setDefaultBufferSize(width * scaleFactor, height * scaleFactor);
-        MCOptionUtils.saveOptions(this, gameHelper.getGameDirectory());
-        MCOptionUtils.setOption("overrideWidth", String.valueOf(width * scaleFactor));
-        MCOptionUtils.setOption("overrideHeight", String.valueOf(height * scaleFactor));
-        MCOptionUtils.setOption("fullscreen", "true");
-        MCOptionUtils.saveOptions(this, gameHelper.getGameDirectory());
+        MCOptionUtils.load(gameHelper.getGameDirectory());
+        MCOptionUtils.set("overrideWidth", String.valueOf(width * scaleFactor));
+        MCOptionUtils.set("overrideHeight", String.valueOf(height * scaleFactor));
+        MCOptionUtils.set("fullscreen", "true");
+        MCOptionUtils.save(gameHelper.getGameDirectory());
     }
 
     @Override

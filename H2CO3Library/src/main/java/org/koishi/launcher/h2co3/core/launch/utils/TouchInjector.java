@@ -1,5 +1,6 @@
-package org.koishi.launcher.h2co3.core.game.h2co3launcher;
+package org.koishi.launcher.h2co3.core.launch.utils;
 
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.utils.CommandBuilder;
 
@@ -11,7 +12,7 @@ public class TouchInjector {
     private static final String TOUCH_INJECTOR_JAR_PATH = H2CO3Tools.APP_DATA_PATH + "/h2co3Launcher" + "/plugin/touch/TouchInjector.jar";
     private static final String TOUCH_INJECTOR_FORGE_JAR_PATH = H2CO3Tools.APP_DATA_PATH + "/h2co3Launcher" + "/plugin/touch/TouchInjector-forge.jar";
 
-    public static CommandBuilder rebaseArguments(CommandBuilder args, H2CO3GameHelper gameHelper) {
+    public static CommandBuilder rebaseArguments(CommandBuilder args, H2CO3Settings gameHelper) {
         return args;
 
 //        CommandBuilder newArgs = new CommandBuilder();

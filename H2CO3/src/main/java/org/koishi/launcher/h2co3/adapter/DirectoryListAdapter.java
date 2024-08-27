@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.application.H2CO3Application;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
@@ -31,12 +31,12 @@ import java.util.List;
 
 public class DirectoryListAdapter extends H2CO3RecycleAdapter<String> {
     private final DirectoryFragment directoryFragment;
-    private final H2CO3GameHelper gameHelper;
+    private final H2CO3Settings gameHelper;
     private final JSONObject directoriesJsonObj;
     private final String h2co3DirectoryPath = MINECRAFT_DIR;
     private boolean isRemoveButtonClickable = true, isProcessingClick = false;
 
-    public DirectoryListAdapter(List<String> directoryList, Context context, JSONObject directoriesJsonObj, H2CO3GameHelper gameHelper, DirectoryFragment directoryFragment) {
+    public DirectoryListAdapter(List<String> directoryList, Context context, JSONObject directoriesJsonObj, H2CO3Settings gameHelper, DirectoryFragment directoryFragment) {
         super(directoryList, context);
         this.directoriesJsonObj = directoriesJsonObj;
         this.gameHelper = gameHelper;

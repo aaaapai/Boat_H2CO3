@@ -8,7 +8,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Button;
@@ -27,13 +27,13 @@ import java.util.concurrent.Executors;
 public class MCVersionListAdapter extends H2CO3RecycleAdapter<String> {
 
     private final DirectoryFragment directoryFragment;
-    private final H2CO3GameHelper gameHelper;
+    private final H2CO3Settings gameHelper;
     private String path;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private boolean isVersionItemClickable = true;
     private boolean isDeleteButtonClickable = true;
 
-    public MCVersionListAdapter(Context context, List<String> list, DirectoryFragment directoryFragment, H2CO3GameHelper gameHelper, String path) {
+    public MCVersionListAdapter(Context context, List<String> list, DirectoryFragment directoryFragment, H2CO3Settings gameHelper, String path) {
         super(list, context);
         this.directoryFragment = directoryFragment;
         this.gameHelper = gameHelper;

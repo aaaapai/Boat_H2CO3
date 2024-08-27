@@ -2,7 +2,7 @@ package org.koishi.launcher.h2co3.core.game.download;
 
 import static org.koishi.launcher.h2co3.core.utils.Logging.LOG;
 
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 
 import java.io.File;
@@ -13,11 +13,11 @@ import java.util.logging.Level;
 public class H2CO3GameRepository extends DefaultGameRepository {
     private static final String PROFILE = "{\"profiles\": {\"(Default)\": {\"name\": \"(Default)\"}},\"clientToken\": \"88888888-8888-8888-8888-888888888888\"}";
 
-    private final H2CO3GameHelper gameHelper;
+    private final H2CO3Settings gameHelper;
 
     public H2CO3GameRepository(File baseDirectory) {
         super(baseDirectory);
-        this.gameHelper = new H2CO3GameHelper();
+        this.gameHelper = new H2CO3Settings();
         this.setBaseDirectory(new File(gameHelper.getGameDirectory()));
         this.versions = new TreeMap<>();
     }
