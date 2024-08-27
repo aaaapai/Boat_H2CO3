@@ -1,7 +1,5 @@
 package org.koishi.launcher.h2co3.ui.fragment.home;
 
-import static org.koishi.launcher.h2co3.core.H2CO3Settings.serversFile;
-import static org.koishi.launcher.h2co3.core.H2CO3Settings.usersFile;
 import static org.koishi.launcher.h2co3.ui.H2CO3LauncherClientActivity.attachControllerInterface;
 
 import android.annotation.SuppressLint;
@@ -41,6 +39,7 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.adapter.HomeListUserAdapter;
 import org.koishi.launcher.h2co3.application.H2CO3Application;
 import org.koishi.launcher.h2co3.core.H2CO3Auth;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.login.bean.UserBean;
 import org.koishi.launcher.h2co3.core.login.other.AuthResult;
@@ -110,6 +109,9 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
 
     public AlertDialog loginDialogAlert;
 
+    private H2CO3Settings h2co3Settings;
+    public H2CO3Auth h2co3Auth;
+
     private final LoginUtils.Listener loginListener = new LoginUtils.Listener() {
         @SuppressLint("NotifyDataSetChanged")
         @Override
@@ -159,6 +161,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     }
 
     private void initializeFragment() throws IOException {
+        this.h2co3Settings = new H2CO3Settings();
+        this.h2co3Auth = new H2CO3Auth(h2co3Settings);
         initializeUserState();
         setupRecyclerView();
         loadUsers();
@@ -166,9 +170,9 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     }
 
     private void initializeUserState() {
-        String userJson = H2CO3Auth.getUserJson();
+        String userJson = h2co3Auth.getUserJson();
         if (TextUtils.isEmpty(userJson) || "{}".equals(userJson)) {
-            FileTools.writeFile(usersFile, "{}");
+            FileTools.writeFile(h2co3Settings.usersFile, "{}");
             setDefaultUserState();
         } else {
             setUserStateFromJson();
@@ -363,7 +367,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     }
 
     private void addUserAndReload(String username) {
-        H2CO3Auth.addUserToJson(username,
+        h2co3Auth.addUserToJson(
+                username,
                 "0",
                 "0",
                 "0",
@@ -425,7 +430,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                     serverData.setServer(new ArrayList<>());
                 }
                 serverData.getServer().add(server);
-                H2CO3Tools.write(serversFile.getAbsolutePath(), gson.toJson(serverData, Servers.class));
+                H2CO3Tools.write(h2co3Settings.serversFile.getAbsolutePath(), gson.toJson(serverData, Servers.class));
                 refreshServerList();
                 currentBaseUrl = server.getBaseUrl();
                 currentRegisterUrl = server.getRegister();
@@ -458,8 +463,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
 
     public void refreshServerList() {
         serverNames = new ArrayList<>();
-        if (serversFile.exists() && serversFile.canRead()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(serversFile))) {
+        if (h2co3Settings.serversFile.exists() && h2co3Settings.serversFile.canRead()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(h2co3Settings.serversFile))) {
                 StringBuilder json = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -517,7 +522,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     private void updateUserAdapter() {
         requireActivity().runOnUiThread(() -> {
             if (userAdapter == null || users.isEmpty()) {
-                userAdapter = new HomeListUserAdapter(this, users);
+                userAdapter = new HomeListUserAdapter(this, h2co3Auth, users);
                 userRecyclerView.setAdapter(userAdapter);
             } else {
                 for (int i = 0; i < userAdapter.getItemCount(); i++) {
@@ -529,7 +534,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
 
     private void updateUserList() throws JSONException, IOException {
         users.clear();
-        users.addAll(H2CO3Auth.getUserList(new JSONObject(H2CO3Auth.getUserJson())));
+        users.addAll(h2co3Auth.getUserList(new JSONObject(h2co3Auth.getUserJson())));
     }
 
     @Override
@@ -556,7 +561,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         switch (userType) {
             case "1":
                 userStateTextView.setText(MICROSOFT_USER_STATE);
-                H2CO3Auth.getHead(requireActivity(), userSkinTexture, userIconImageView);
+                h2co3Auth.getHead(requireActivity(), userSkinTexture, userIconImageView);
                 break;
             case "2":
                 userStateTextView.setText(OTHER_USER_STATE + apiUrl);
@@ -580,7 +585,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
 
     private void handleAuthResult(AuthResult authResult) {
         if (authResult.getSelectedProfile() != null) {
-            H2CO3Auth.addUserToJson(
+            h2co3Auth
+                    .addUserToJson(
                     authResult.getSelectedProfile().getName(),
                     username,
                     password,
@@ -606,7 +612,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
             profileSelectionDialog.setTitle("请选择角色");
             profileSelectionDialog.setItems(profileNames, (dialog, which) -> {
                 AuthResult.AvailableProfiles selectedProfile = authResult.getAvailableProfiles().get(which);
-                H2CO3Auth.addUserToJson(
+                h2co3Auth.addUserToJson(
                         selectedProfile.getName(),
                         username,
                         password,

@@ -63,7 +63,7 @@ const char *h2co3LauncherGetPrimaryClipString() {
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_H2CO3LauncherBridge_setH2CO3LauncherNativeWindow(
+Java_org_koishi_launcher_h2co3_core_launch_H2CO3LauncherBridge_setH2CO3LauncherNativeWindow(
         JNIEnv *env, jclass clazz, jobject surface) {
     h2co3Launcher->window = ANativeWindow_fromSurface(env, surface);
     if (h2co3Launcher->window) {
@@ -76,7 +76,7 @@ Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_H2CO3LauncherBridge_setH2
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_H2CO3LauncherBridge_setH2CO3LauncherBridge(
+Java_org_koishi_launcher_h2co3_core_launch_H2CO3LauncherBridge_setH2CO3LauncherBridge(
         JNIEnv *env, jobject thiz, jobject h2co3Launcher_bridge) {
     h2co3Launcher->object_H2CO3LauncherBridge = (jclass) (*env)->NewGlobalRef(env, thiz);
 }
@@ -96,10 +96,10 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     }
 
     jclass class_H2CO3LauncherBridge = (*env)->FindClass(env,
-                                                         "org/koishi/launcher/h2co3/core/game/h2co3launcher/H2CO3LauncherBridge");
+                                                         "org/koishi/launcher/h2co3/core/launch/H2CO3LauncherBridge");
     if (class_H2CO3LauncherBridge == NULL) {
         H2CO3_INTERNAL_LOG(
-                "Failed to find class: org/koishi/launcher/h2co3/core/game/h2co3launcher/H2CO3LauncherBridge.");
+                "Failed to find class: org/koishi/launcher/h2co3/core/launch/H2CO3LauncherBridge.");
         return JNI_ERR;
     }
 

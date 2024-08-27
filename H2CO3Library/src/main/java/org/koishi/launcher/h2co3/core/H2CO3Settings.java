@@ -7,92 +7,192 @@ import org.koishi.launcher.h2co3.core.login.bean.UserBean;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class H2CO3Settings {
 
-    public static final ArrayList<UserBean> userList = new ArrayList<>();
-    /************账户相关
-     *
-     */
+    private final List<String> extraJavaFlags;
+    private final List<String> extraMinecraftFlags;
+
+    public final ArrayList<UserBean> userList = new ArrayList<>();
     private static final String USER_PROPERTIES = "user_properties";
+    private static final String DEFAULT_DOWNLOAD_SOURCE = "balanced";
+    private static final String DEFAULT_PLAYER_NAME = null;
+    private static final String DEFAULT_SESSION = "0";
+    private static final String DEFAULT_USER_TYPE = "mojang";
+    private static final String DEFAULT_UUID = UUID.randomUUID().toString();
+    private static final String DEFAULT_TOKEN = "0";
+    private static final String DEFAULT_RENDER = H2CO3Tools.GL_GL114;
+    private static final String DEFAULT_GAME_DIRECTORY = H2CO3Tools.MINECRAFT_DIR;
+    private static final String DEFAULT_ASSETS_ROOT = DEFAULT_GAME_DIRECTORY + "/assets/";
+    private static final String DEFAULT_RUNTIME_PATH = H2CO3Tools.RUNTIME_DIR;
+    private static final String DEFAULT_H2CO3_HOME = H2CO3Tools.PUBLIC_FILE_PATH;
 
-    /************游戏相关
-     *
-     */
-    private static final String LOGIN_USER_TYPE = "mojang";
-    private static final String LOGIN_UUID = UUID.randomUUID().toString();
-    private static final String LOGIN_TOKEN = "0";
-    private static final String LOGIN_INFO = "login_info";
-    private static final String LOGIN_IS_OFFLINE = "login_is_offline";
-    private static final String LOGIN_IS_SELECTED = "login_is_selected";
-    public static File serversFile = new File(H2CO3Tools.H2CO3_SETTING_DIR + "/h2co3_servers.json");
-    public static File usersFile = new File(H2CO3Tools.H2CO3_SETTING_DIR, "h2co3_users.json");
+    public File serversFile = new File(H2CO3Tools.H2CO3_SETTING_DIR + "/h2co3_servers.json");
+    public File usersFile = new File(H2CO3Tools.H2CO3_SETTING_DIR, "h2co3_users.json");
 
-    /************游戏设置相关
-     *
-     */
-    public static String getDownloadSource() {
-        return H2CO3Tools.getH2CO3Value(DOWNLOAD_SOURCE, "balanced", String.class);
+    public H2CO3Settings() {
+        this.extraJavaFlags = List.of();
+        this.extraMinecraftFlags = List.of();
     }
 
-    public static void setDownloadSource(String type) {
+    public String getDownloadSource() {
+        return H2CO3Tools.getH2CO3Value(DOWNLOAD_SOURCE, DEFAULT_DOWNLOAD_SOURCE, String.class);
+    }
+
+    public void setDownloadSource(String type) {
         H2CO3Tools.setH2CO3Value(DOWNLOAD_SOURCE, type);
     }
 
-    public static String getPlayerName() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_AUTH_PLAYER_NAME, null, String.class);
+    public String getPlayerName() {
+        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_AUTH_PLAYER_NAME, DEFAULT_PLAYER_NAME, String.class);
     }
 
-    public static void setPlayerName(String properties) {
+    public void setPlayerName(String properties) {
         H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_AUTH_PLAYER_NAME, properties);
     }
 
-    public static String getAuthSession() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_AUTH_SESSION, "0", String.class);
+    public String getAuthSession() {
+        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_AUTH_SESSION, DEFAULT_SESSION, String.class);
     }
 
-    public static void setAuthSession(String session) {
+    public void setAuthSession(String session) {
         H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_AUTH_SESSION, session);
     }
 
-    public static String getUserProperties() {
+    public String getUserProperties() {
         return H2CO3Tools.getH2CO3Value(USER_PROPERTIES, "{}", String.class);
     }
 
-    public static void setUserProperties(String properties) {
+    public void setUserProperties(String properties) {
         H2CO3Tools.setH2CO3Value(USER_PROPERTIES, properties);
     }
 
-    public static String getUserType() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_USER_TYPE, LOGIN_USER_TYPE, String.class);
+    public String getUserType() {
+        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_USER_TYPE, DEFAULT_USER_TYPE, String.class);
     }
 
-    public static void setUserType(String type) {
+    public void setUserType(String type) {
         H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_USER_TYPE, type);
     }
 
-    public static String getAuthUUID() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_UUID, LOGIN_UUID, String.class);
+    public String getAuthUUID() {
+        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_UUID, DEFAULT_UUID, String.class);
     }
 
-    public static void setAuthUUID(String uuid) {
+    public void setAuthUUID(String uuid) {
         H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_UUID, uuid);
     }
 
-    public static String getAuthAccessToken() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_TOKEN, LOGIN_TOKEN, String.class);
+    public String getAuthAccessToken() {
+        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_TOKEN, DEFAULT_TOKEN, String.class);
     }
 
-    public static void setAuthAccessToken(String token) {
+    public void setAuthAccessToken(String token) {
         H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_TOKEN, token);
     }
 
-    public static String getDownloadType() {
+    public String getDownloadType() {
         return H2CO3Tools.getH2CO3Value("DOWNLOAD_TYPE", "bmclapi", String.class);
     }
 
-    public static void setDownloadType(String defaultRawProviderId) {
+    public void setDownloadType(String defaultRawProviderId) {
         H2CO3Tools.setH2CO3Value("DOWNLOAD_TYPE", defaultRawProviderId);
+    }
+
+    public String getRender() {
+        return H2CO3Tools.getH2CO3Value("h2co3_launcher_render", DEFAULT_RENDER, String.class);
+    }
+
+    public void setRender(String path) {
+        H2CO3Tools.setH2CO3Value("h2co3_launcher_render", path);
+    }
+
+    public String getJavaPath() {
+        return H2CO3Tools.getH2CO3LauncherValue("h2co3_launcher_java", H2CO3Tools.JAVA_8_PATH, String.class);
+    }
+
+    public void setJavaPath(String path) {
+        H2CO3Tools.setH2CO3LauncherValue("h2co3_launcher_java", path);
+    }
+
+    public String getGameDirectory() {
+        return H2CO3Tools.getH2CO3Value("game_directory", DEFAULT_GAME_DIRECTORY, String.class);
+    }
+
+    public void setGameDirectory(String directory) {
+        H2CO3Tools.setH2CO3Value("game_directory", directory);
+    }
+
+    public String getGameAssetsRoot() {
+        return H2CO3Tools.getH2CO3Value("game_assets_root", DEFAULT_ASSETS_ROOT, String.class);
+    }
+
+    public void setGameAssetsRoot(String assetsRoot) {
+        H2CO3Tools.setH2CO3Value("game_assets_root", assetsRoot);
+    }
+
+    public String getExtraMinecraftFlags() {
+        return H2CO3Tools.getH2CO3LauncherValue("extra_minecraft_flags", "", String.class);
+    }
+
+    public void setExtraMinecraftFlags(String minecraftFlags) {
+        H2CO3Tools.setH2CO3LauncherValue("extra_minecraft_flags", minecraftFlags);
+    }
+
+    public String getGameCurrentVersion() {
+        return H2CO3Tools.getH2CO3Value("current_version", "null", String.class);
+    }
+
+    public void setGameCurrentVersion(String version) {
+        H2CO3Tools.setH2CO3Value("current_version", version);
+    }
+
+    public String getRuntimePath() {
+        return H2CO3Tools.getH2CO3Value("runtime_path", DEFAULT_RUNTIME_PATH, String.class);
+    }
+
+    public void setRuntimePath(String path) {
+        H2CO3Tools.setH2CO3Value("runtime_path", path);
+    }
+
+    public String getH2CO3Home() {
+        return H2CO3Tools.getH2CO3Value("h2co3_home", DEFAULT_H2CO3_HOME, String.class);
+    }
+
+    public void setGameAssets(String assets) {
+        H2CO3Tools.setH2CO3Value("game_assets", assets);
+    }
+
+    public String getBackground() {
+        return H2CO3Tools.getH2CO3Value("background", "", String.class);
+    }
+
+    public void setH2CO3Home(String home) {
+        H2CO3Tools.setH2CO3Value("h2co3_home", home);
+    }
+
+    public String getGameAssets() {
+        return H2CO3Tools.getH2CO3Value("game_assets", DEFAULT_GAME_DIRECTORY + "/assets/virtual/legacy/", String.class);
+    }
+
+    public void setBackground(String background) {
+        H2CO3Tools.setH2CO3Value("background", background);
+    }
+
+    public String getExtraJavaFlags() {
+        return H2CO3Tools.getH2CO3LauncherValue("extra_java_flags", "", String.class);
+    }
+
+    public void setExtraJavaFlags(String javaFlags) {
+        H2CO3Tools.setH2CO3LauncherValue("extra_java_flags", javaFlags);
+    }
+
+    public void setDir(String dir) {
+        setGameDirectory(dir);
+        setGameAssets(dir + "/assets/virtual/legacy");
+        setGameAssetsRoot(dir + "/assets");
+        setGameCurrentVersion(dir + "/versions");
     }
 }

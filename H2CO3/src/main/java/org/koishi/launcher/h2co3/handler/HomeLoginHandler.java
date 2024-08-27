@@ -79,7 +79,7 @@ public class HomeLoginHandler extends Handler {
                     if (skin != null) {
                         fragment.requireActivity().runOnUiThread(() -> {
                             String skinTextureString = Avatar.bitmapToString(skin);
-                            H2CO3Auth.addUserToJson(microsoftLoginUtils.mcName,
+                            fragment.h2co3Auth.addUserToJson(microsoftLoginUtils.mcName,
                                     "",
                                     "",
                                     "1",

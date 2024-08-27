@@ -1,8 +1,5 @@
 package org.koishi.launcher.h2co3.core;
 
-import static org.koishi.launcher.h2co3.core.H2CO3Settings.userList;
-import static org.koishi.launcher.h2co3.core.H2CO3Settings.usersFile;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +23,7 @@ import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,14 +36,15 @@ public class H2CO3Auth {
     private static final int HEAD_RIGHT = 17;
     private static final int HEAD_BOTTOM = 16;
 
-    public static void addUserToJson(String name, String email, String password, String userType, String apiUrl, String authSession, String uuid, String skinTexture, String token, String refreshToken, String clientToken, Boolean isOffline, boolean isSelected) {
+    private H2CO3Settings settings;
+
+    public H2CO3Auth(H2CO3Settings settings) {
+        this.settings = settings;
+    }
+
+    public void addUserToJson(String name, String email, String password, String userType, String apiUrl, String authSession, String uuid, String skinTexture, String token, String refreshToken, String clientToken, Boolean isOffline, boolean isSelected) {
         try {
-            JSONObject jsonObj;
-            if (usersFile.exists()) {
-                jsonObj = new JSONObject(readFileContent(usersFile));
-            } else {
-                jsonObj = new JSONObject();
-            }
+            JSONObject jsonObj = settings.usersFile.exists() ? new JSONObject(readFileContent(settings.usersFile)) : new JSONObject();
             JSONObject userData = new JSONObject();
             userData.put(H2CO3Tools.LOGIN_USER_EMAIL, email);
             userData.put(H2CO3Tools.LOGIN_USER_PASSWORD, password);
@@ -61,15 +61,14 @@ public class H2CO3Auth {
             userData.put(H2CO3Tools.LOGIN_INFO, new JSONArray().put(0, name).put(1, isOffline));
             jsonObj.put(name, userData);
 
-            writeFileContent(usersFile, jsonObj.toString());
+            writeFileContent(settings.usersFile, jsonObj.toString());
             parseJsonToUser(jsonObj);
-        } catch (JSONException ignored) {
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (JSONException | IOException e) {
+            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
-    public static void parseJsonToUser(JSONObject usersObj) throws IOException {
+    public void parseJsonToUser(JSONObject usersObj) {
         if (usersObj == null || usersObj.length() == 0) {
             return;
         }
@@ -101,25 +100,25 @@ public class H2CO3Auth {
                     user.setUserPassword(loginInfoArray.optString(1, ""));
                 }
 
-                userList.add(user);
+                settings.userList.add(user);
             }
         } catch (JSONException e) {
             H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
-    public static void resetUserState() {
+    public void resetUserState() {
         UserBean emptyUser = new UserBean();
         setUserState(emptyUser);
     }
 
-    public static ArrayList<UserBean> getUserList(JSONObject obj) throws IOException {
-        userList.clear();
+    public ArrayList<UserBean> getUserList(JSONObject obj) {
+        settings.userList.clear();
         parseJsonToUser(obj);
-        return userList;
+        return settings.userList;
     }
 
-    public static void setUserState(UserBean user) {
+    public void setUserState(UserBean user) {
         H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_AUTH_PLAYER_NAME, user.getUserName());
         H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_USER_EMAIL, user.getUserEmail());
         H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_USER_PASSWORD, user.getUserPassword());
@@ -135,37 +134,38 @@ public class H2CO3Auth {
         H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_IS_OFFLINE, user.getIsOffline());
     }
 
-    public static String getUserJson() {
+    public String getUserJson() {
         try {
-            return readFileContent(usersFile);
+            Log.e("TEST", "getUserJson: " + settings.usersFile);
+            return readFileContent(settings.usersFile);
         } catch (IOException e) {
             H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
         return "";
     }
 
-    public static void setUserJson(String json) {
+    public void setUserJson(String json) {
         try {
             JSONObject jsonObject = new JSONObject(json);
-            writeFileContent(usersFile, json);
+            writeFileContent(settings.usersFile, json);
             parseJsonToUser(jsonObject);
         } catch (JSONException | IOException e) {
             H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
     }
 
-    private static void writeFileContent(File file, String content) throws IOException {
-        Files.write(file.toPath(), content.getBytes("UTF-8"));
+    private void writeFileContent(File file, String content) throws IOException {
+        Files.write(file.toPath(), content.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static String readFileContent(File file) throws IOException {
-        return new String(Files.readAllBytes(file.toPath()), "UTF-8");
+    public String readFileContent(File file) throws IOException {
+        return new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
     }
 
-    private static final RequestOptions requestOptions = new RequestOptions()
+    private final RequestOptions requestOptions = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL);
 
-    public static Drawable getHeadDrawable(Context context, String texture) {
+    public Drawable getHeadDrawable(Context context, String texture) {
         if (context == null || texture == null) {
             throw new IllegalArgumentException("Context or texture is null");
         }
@@ -178,7 +178,7 @@ public class H2CO3Auth {
         }
     }
 
-    public static void getHead(Context context, String texture, ImageView imageView) {
+    public void getHead(Context context, String texture, ImageView imageView) {
         if (context == null || texture == null || imageView == null) {
             throw new IllegalArgumentException("Context, texture or imageView is null");
         }
@@ -194,7 +194,7 @@ public class H2CO3Auth {
         }
     }
 
-    private static Bitmap decodeAndCropHeadBitmap(String texture) {
+    private Bitmap decodeAndCropHeadBitmap(String texture) {
         byte[] decodedBytes = Base64.decode(texture, Base64.DEFAULT);
         Bitmap skinBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
         if (skinBitmap == null) {
@@ -203,7 +203,7 @@ public class H2CO3Auth {
         return cropHeadFromSkin(skinBitmap);
     }
 
-    private static Bitmap cropHeadFromSkin(Bitmap skinBitmap) {
+    private Bitmap cropHeadFromSkin(Bitmap skinBitmap) {
         Bitmap headBitmap = Bitmap.createBitmap(HEAD_SIZE, HEAD_SIZE, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(headBitmap);
         Rect srcRect = new Rect(HEAD_LEFT, HEAD_TOP, HEAD_RIGHT, HEAD_BOTTOM);

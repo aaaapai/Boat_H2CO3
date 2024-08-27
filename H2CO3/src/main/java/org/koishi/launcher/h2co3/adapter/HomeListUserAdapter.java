@@ -1,7 +1,5 @@
 package org.koishi.launcher.h2co3.adapter;
 
-import static org.koishi.launcher.h2co3.core.H2CO3Auth.setUserState;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -37,15 +35,17 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
 
     private final Context context;
     private final HomeFragment fragment;
+    private final H2CO3Auth h2co3Auth;
     private int selectedPosition;
     private boolean isRemoveUserDialogShowing = false;
     private final Map<String, Drawable> userIconCache = new HashMap<>();
 
-    public HomeListUserAdapter(HomeFragment fragment, ArrayList<UserBean> list) {
+    public HomeListUserAdapter(HomeFragment fragment, H2CO3Auth h2co3Auth, ArrayList<UserBean> list) {
         super(list, fragment.requireActivity());
         this.context = fragment.requireActivity();
         this.fragment = fragment;
         this.selectedPosition = -1;
+        this.h2co3Auth = h2co3Auth;
 
         setUserIcons();
         View footerView = LayoutInflater.from(context).inflate(R.layout.item_user_add, null);
@@ -136,20 +136,20 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
             return ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_home_user);
         } else {
             return userIconCache.computeIfAbsent(user.getUserName(),
-                    k -> H2CO3Auth.getHeadDrawable(fragment.requireActivity(), user.getSkinTexture()));
+                    k -> h2co3Auth.getHeadDrawable(fragment.requireActivity(), user.getSkinTexture()));
         }
     }
 
     private void updateSelectedUser(int selectedPosition) {
         try {
-            JSONObject usersJson = new JSONObject(H2CO3Auth.getUserJson());
+            JSONObject usersJson = new JSONObject(h2co3Auth.getUserJson());
             UserBean selectedUser = data.get(selectedPosition);
             for (UserBean user : data) {
                 boolean isSelected = user == selectedUser;
                 user.setIsSelected(isSelected);
                 usersJson.getJSONObject(user.getUserName()).put(H2CO3Tools.LOGIN_IS_SELECTED, isSelected);
             }
-            H2CO3Auth.setUserJson(usersJson.toString());
+            h2co3Auth.setUserJson(usersJson.toString());
         } catch (JSONException e) {
             H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, e.getMessage());
         }
@@ -167,9 +167,9 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
                     selectedPosition--;
                 }
 
-                JSONObject usersJson = new JSONObject(H2CO3Auth.getUserJson());
+                JSONObject usersJson = new JSONObject(h2co3Auth.getUserJson());
                 usersJson.remove(removedUser.getUserName());
-                H2CO3Auth.setUserJson(usersJson.toString());
+                h2co3Auth.setUserJson(usersJson.toString());
 
                 fragment.runOnUiThread(() -> {
                     notifyItemRemoved(position);
@@ -183,7 +183,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
     }
 
     private void updateUserState(UserBean user) {
-        setUserState(user);
+        h2co3Auth.setUserState(user);
         fragment.userNameTextView.setText(user.getUserName());
         fragment.userStateTextView.setText(getUserStateText(user));
         fragment.userIconImageView.setImageDrawable(getUserIcon(user));
@@ -191,7 +191,7 @@ public class HomeListUserAdapter extends H2CO3RecycleAdapter<UserBean> {
 
     private void resetUserState() {
         UserBean emptyUser = new UserBean();
-        setUserState(emptyUser);
+        h2co3Auth.setUserState(emptyUser);
         fragment.userNameTextView.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
         fragment.userStateTextView.setText(context.getString(org.koishi.launcher.h2co3.library.R.string.user_add));
         fragment.userIconImageView.setImageDrawable(ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.xicon));

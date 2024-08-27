@@ -102,7 +102,7 @@ void setup_signal_handler(int signal, struct sigaction *catcher) {
     }
 }
 
-jint JNICALL Java_org_koishi_launcher_h2co3_core_game_h2co3launcher_oracle_dalvik_VMLauncher_launchJVM(JNIEnv *env, jclass clazz, jobjectArray argsArray) {
+jint JNICALL Java_org_koishi_launcher_h2co3_core_launch_oracle_dalvik_VMLauncher_launchJVM(JNIEnv *env, jclass clazz, jobjectArray argsArray) {
 #ifdef TRY_SIG2JVM
     void* libjvm = dlopen("libjvm.so", RTLD_LAZY | RTLD_GLOBAL);
     if (libjvm == NULL) {

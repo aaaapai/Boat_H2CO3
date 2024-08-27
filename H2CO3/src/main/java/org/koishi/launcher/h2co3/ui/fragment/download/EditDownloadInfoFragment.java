@@ -1,6 +1,5 @@
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,7 +27,7 @@ import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
 import org.koishi.launcher.h2co3.core.game.download.RemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.VersionList;
 import org.koishi.launcher.h2co3.core.game.H2CO3CacheRepository;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
@@ -68,7 +67,7 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
     private AlertDialog paneAlert;
     private final ChooseMcVersionFragment chooseMcVersionFragment;
 
-    private H2CO3GameHelper gameHelper;
+    private H2CO3Settings gameHelper;
 
     private final Bundle args;
 
@@ -76,7 +75,7 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
         super();
         this.chooseMcVersionFragment = chooseMcVersionFragment;
         this.args = bundle;
-        this.gameHelper = new H2CO3GameHelper();
+        this.gameHelper = new H2CO3Settings();
     }
 
     @Override
@@ -84,7 +83,7 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_download_edit_version, container, false);
         initView();
-        downloadProviders = new DownloadProviders();
+        downloadProviders = new DownloadProviders(gameHelper);
 
         showLoadingIndicator();
 

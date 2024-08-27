@@ -17,7 +17,7 @@ import org.koishi.launcher.h2co3.controller.codes.AndroidKeyMap;
 import org.koishi.launcher.h2co3.controller.Controller;
 import org.koishi.launcher.h2co3.controller.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.controller.input.HwInput;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridge;
 
 public class Keyboard implements HwInput {
 

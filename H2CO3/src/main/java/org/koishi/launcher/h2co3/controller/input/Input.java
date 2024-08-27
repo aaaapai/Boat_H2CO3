@@ -9,7 +9,7 @@ package org.koishi.launcher.h2co3.controller.input;
 import android.content.Context;
 
 import org.koishi.launcher.h2co3.controller.Controller;
-import org.koishi.launcher.h2co3.core.game.h2co3launcher.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridge;
 
 public interface Input {
     boolean load(Context context, Controller controller, H2CO3LauncherBridge bridge);
