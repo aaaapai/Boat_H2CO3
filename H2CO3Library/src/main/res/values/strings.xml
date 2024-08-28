@@ -7,46 +7,79 @@
 <resources>
     <string name="app_name" translatable="false">Boat_H2CO3</string>
     <string name="app_restart">Restart</string>
+    <string name="action_sign_in">Sign</string>
+    <string name="add_directory">New Directory</string>
+    <string name="assets_download">Downloading Assets</string>
+    <string name="assets_download_all">Validating assets integrity</string>
+    <string name="assets_index_malformed">Index files of downloaded assets were corrupted.</string>
+
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
+
+    <string name="curse_api_key">null</string>
+    <string name="crash_test">Crash test</string>
+    <string name="crash_hint">App is crashed! Do not worry, app will restart if you press the restart button. You can also view the information from this page.</string>
+    <string name="crash_title">Error</string>
+
+    <string name="download_release">release</string>
+    <string name="download_snapshot">snapshot</string>
+    <string name="download_old_beta">Old</string>
+    <string name="download_tip">Tip</string>
+    <string name="download_page_title">Downloading</string>
+    <string name="dialog_title_choose_installer_version">Choose installer version</string>
+
     <string name="file_browser_provider" translatable="false">org.koishi.launcher.h2co3.provider</string>
+
+    <string name="install_installer_fabric" translatable="false">Fabric</string>
+    <string name="install_installer_fabric_api" translatable="false">Fabric API</string>
+    <string name="install_installer_fabric_api_warning">Warning: Fabric API is a mod, and will be installed into the mod directory of the game instance. Please do not change the working directory of the game, or the Fabric API will not work. If you do want to change these settings, you should reinstall it.</string>
+    <string name="install_installer_forge" translatable="false">Forge</string>
+    <string name="install_installer_neoforge" translatable="false">NeoForge</string>
+    <string name="install_installer_game" translatable="false">Minecraft</string>
+    <string name="install_installer_incompatible">Incompatible with %s</string>
+    <string name="install_installer_install">Install %s</string>
+    <string name="install_installer_install_offline">Install/Update from Local File</string>
+    <string name="install_installer_install_offline_extension">Forge/OptiFine installer</string>
+    <string name="install_installer_liteloader" translatable="false">LiteLoader</string>
+    <string name="install_installer_not_installed">Not Selected</string>
+    <string name="install_installer_optifine" translatable="false">OptiFine</string>
+    <string name="install_installer_quilt" translatable="false">Quilt</string>
+    <string name="install_installer_quilt_api" translatable="false">QSL/QFAPI</string>
+
+    <string name="login_password">Password</string>
+    <string name="login_api" translatable="false">API</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="login_name">Email or  Name</string>
+    <string name="login_offline">Offline</string>
+    <string name="login_microsoft">Microsoft</string>
+    <string name="login_other">Other</string>
+    <string name="login_wait">Wait…</string>
+    <string name="login_yggdrasil">Yggdrasil API</string>
+    <string name="login_unified_pass">Unified Pass</string>
+    <string name="launcher_initial_install_check">Checking files…</string>
+
+    <string name="message_delete">"Do you want to delete "</string>
+
+    <string name="runtime_h2co3launcher" translatable="false">H2CO3Launcher</string>
+    <string name="runtime_java8" translatable="false">JAVA 8</string>
+    <string name="runtime_java11" translatable="false">JAVA 11</string>
+    <string name="runtime_java17" translatable="false">JAVA 17</string>
+    <string name="runtime_java21" translatable="false">JAVA 21</string>
+
+    <string name="storage_permission">Storage Permission</string>
+    <string name="storage_permission_description">Allows software to read and write to internal storage.</string>
+    <string name="sweet_smell">114514</string>
+    <string name="spinner_official">official</string>
+    <string name="spinner_bmclapi">bmclapi</string>
 
     <string name="title_home">Home</string>
     <string name="title_directory">Directory</string>
     <string name="title_manage">Manage</string>
     <string name="title_install_runtime">Runtime is installing</string>
     <string name="title_warn">Warn</string>
-
-    <string name="crash_test">Crash test</string>
-    <string name="crash_hint">App is crashed! Do not worry, app will restart if you press the restart button. You can also view the information from this page.</string>
-    <string name="crash_title">Error</string>
-
-
-    <string name="sweet_smell">114514</string>
-
-    <string name="button_ok">OK</string>
-    <string name="button_cancel">Cancel</string>
-
-    <string name="welcome_permission_hint">Boat_H2CO3 needs some necessary permissions to ensure its normal operation.</string>
-
+    <string name="title_refresh">Refresh</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="login_password">Password</string>
-    <string name="login_api" translatable="false">API</string>
-    <string name="action_sign_in">Sign</string>
-    <string name="login_failed">"Login failed"</string>
-    <string name="login_name">Email or  Name</string>
-    <string name="login_offline">Offline</string>
-    <string name="login_microsoft">Microsoft</string>
-    <string name="login_other">Other</string>
-    <string name="launcher_initial_install_check">Checking files…</string>
-    <string name="user_add">Create User</string>
-    <string name="user_state_offline">Offline</string>
-    <string name="login_wait">Wait…</string>
     <string name="title_delete">Delete</string>
-    <string name="message_delete">"Do you want to delete "</string>
-    <string name="login_yggdrasil">Yggdrasil API</string>
-    <string name="login_unified_pass">Unified Pass</string>
-    <string name="user_state_microsoft">Microsoft</string>
-    <string name="user_state_other">"Server: "</string>
-
     <string name="title_all">All</string>
     <string name="title_in_game">In-game</string>
     <string name="title_out_game">Out-game</string>
@@ -123,7 +156,35 @@
     <string name="title_shortcut">Shortcut</string>
     <string name="title_console">Console</string>
     <string name="title_default">Default</string>
-
+    <string name="title_version">Versions</string>
+    <string name="title_remove">Remove</string>
+    <string name="title_action">Action</string>
+    <string name="title_reg">Register</string>
+    <string name="title_runtime">Java Runtime</string>
+    <string name="title_progress">Progress</string>
+    <string name="title_terminal">Terminal</string>
+    <string name="title_point_up" translatable="false">↑</string>
+    <string name="title_point_right" translatable="false">→</string>
+    <string name="title_point_left" translatable="false">←</string>
+    <string name="title_point_down" translatable="false">↓</string>
+    <string name="title_enter" translatable="false">Enter</string>
+    <string name="title_t_enter" translatable="false">T + Enter</string>
+    <string name="title_done" translatable="false">Done</string>
+    <string name="title_download">Download</string>
+    <string name="title_runtime_install_tips">Install runtime</string>
+    <string name="title_minecraftVersion">Minecraft</string>
+    <string name="title_modList">Mod</string>
+    <string name="title_modPackList">ModPack</string>
+    <string name="title_resourcesPack">ResourcesPack</string>
+    <string name="title_forge" translatable="false">Forge</string>
+    <string name="title_neo_forge" translatable="false">NeoForge</string>
+    <string name="title_optifine" translatable="false">Optifine</string>
+    <string name="title_fabric" translatable="false">Fabric</string>
+    <string name="title_fabric_api" translatable="false">FabricApi</string>
+    <string name="title_quilt" translatable="false">Quilt</string>
+    <string name="title_qsl_qfapi" translatable="false">QSL &amp; QSAPI</string>
+    <string name="title_liteloader" translatable="false">LiteLoader</string>
+    <string name="title_notification">Notification</string>
     <string name="tips_failed_to_import_keyboard_layout">Failed to load the keyboard file, the file is damaged!</string>
     <string name="tips_successed_to_import_keyboard_layout">The keyboard file is loaded successfully!</string>
     <string name="tips_filename_can_not_be_void">The file name cannot be empty!</string>
@@ -144,90 +205,21 @@
     <string name="tips_successed_to_convert_keyboard_file">Success to convert it，new file name: %s</string>
     <string name="tips_failed_to_convert_keyboard_file">Failed to convert the keyboard file.</string>
 
-    <string name="title_point_up" translatable="false">↑</string>
-    <string name="title_point_right" translatable="false">→</string>
-    <string name="title_point_left" translatable="false">←</string>
-    <string name="title_point_down" translatable="false">↓</string>
+    <string name="user_add">Create User</string>
+    <string name="user_state_offline">Offline</string>
+    <string name="user_state_microsoft">Microsoft</string>
+    <string name="user_state_other">"Server: "</string>
 
-    <string name="title_enter" translatable="false">Enter</string>
-    <string name="title_t_enter" translatable="false">T + Enter</string>
-    <string name="title_done" translatable="false">Done</string>
-
-    <string name="add_directory">New Directory</string>
-
-    <string name="ver_input_hint" translatable="false">/storage/emulated/0 or /sdcard or /mnt/sdcard</string>
+    <string name="ver_input_hint">/storage/emulated/0 or /sdcard or /mnt/sdcard</string>
     <string name="ver_not_dir">It is not a directory</string>
     <string name="ver_already_exists">Directory already exists</string>
     <string name="ver_not_right_dir">It is not a right directory.</string>
     <string name="ver_add_done">Done</string>
     <string name="ver_null_dir">This directory was disappointed or null.</string>
     <string name="ver_if_del">Delete this version?</string>
-
-    <string name="manager_set_directory">Directory</string>
-    <string name="menu_ver">Versions</string>
-    <string name="title_remove">Remove</string>
-    <string name="title_action">Action</string>
-    <string name="title_reg">Register</string>
-    <string name="title_runtime">Java Runtime</string>
     <string name="ver_type_release">Release</string>
-    <string name="download_release">release</string>
-    <string name="download_snapshot">snapshot</string>
-    <string name="download_old_beta">Old</string>
-    <string name="download_tip">Tip</string>
-    <string name="download_page_title">Downloading</string>
-    <string name="total">Progress</string>
-    <string name="spinner_official">official</string>
-    <string name="spinner_bmclapi">bmclapi</string>
-    <string name="refresh">Refresh</string>
-
-    <string name="title_download">Download</string>
-
-    <string name="storage_permission">Storage Permission</string>
-    <string name="storage_permission_description">Allows software to read and write to internal storage.</string>
-
-    <string name="runtime_h2co3launcher" translatable="false">H2CO3Launcher</string>
-    <string name="runtime_java8" translatable="false">JAVA 8</string>
-    <string name="runtime_java11" translatable="false">JAVA 11</string>
-    <string name="runtime_java17" translatable="false">JAVA 17</string>
-    <string name="runtime_java21" translatable="false">JAVA 21</string>
-    <string name="title_runtime_install_tips">Install runtime</string>
-    <string name="title_minecraftVersion">Minecraft</string>
-    <string name="title_modList">Mod</string>
-    <string name="title_modPackList">ModPack</string>
-    <string name="title_resourcesPack">ResourcesPack</string>
-    <string name="title_forge" translatable="false">Forge</string>
-    <string name="title_neo_forge" translatable="false">NeoForge</string>
-    <string name="title_optifine" translatable="false">Optifine</string>
-    <string name="title_fabric" translatable="false">Fabric</string>
-    <string name="title_fabric_api" translatable="false">FabricApi</string>
-    <string name="title_quilt" translatable="false">Quilt</string>
-    <string name="title_qsl_qfapi" translatable="false">QSL &amp; QSAPI</string>
-    <string name="title_liteloader" translatable="false">LiteLoader</string>
-    <string name="title_notification" translatable="false">Notification</string>
-
     <string name="ver_if_remove">Remove this dir?</string>
 
-    <string name="install_installer_fabric" translatable="false">Fabric</string>
-    <string name="install_installer_fabric_api" translatable="false">Fabric API</string>
-    <string name="install_installer_fabric_api_warning">Warning: Fabric API is a mod, and will be installed into the mod directory of the game instance. Please do not change the working directory of the game, or the Fabric API will not work. If you do want to change these settings, you should reinstall it.</string>
-    <string name="install_installer_forge" translatable="false">Forge</string>
-    <string name="install_installer_neoforge" translatable="false">NeoForge</string>
-    <string name="install_installer_game" translatable="false">Minecraft</string>
-    <string name="install_installer_incompatible">Incompatible with %s</string>
-    <string name="install_installer_install">Install %s</string>
-    <string name="install_installer_install_offline">Install/Update from Local File</string>
-    <string name="install_installer_install_offline_extension">Forge/OptiFine installer</string>
-    <string name="install_installer_liteloader" translatable="false">LiteLoader</string>
-    <string name="install_installer_not_installed">Not Selected</string>
-    <string name="install_installer_optifine" translatable="false">OptiFine</string>
-    <string name="install_installer_quilt" translatable="false">Quilt</string>
-    <string name="install_installer_quilt_api" translatable="false">QSL/QFAPI</string>
-
-    <string name="assets_download">Downloading Assets</string>
-    <string name="assets_download_all">Validating assets integrity</string>
-    <string name="assets_index_malformed">Index files of downloaded assets were corrupted.</string>
-    <string name="title_terminal">Terminal</string>
-    <string name="curse_api_key">null</string>
-    <string name="dialog_title_choose_installer_version">Choose installer version</string>
+    <string name="welcome_permission_hint">Boat_H2CO3 needs some necessary permissions to ensure its normal operation.</string>
 
 </resources>
