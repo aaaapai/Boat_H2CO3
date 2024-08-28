@@ -1,6 +1,13 @@
 package org.koishi.launcher.h2co3.utils.download;
 
-import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.*;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.FABRIC;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.FABRIC_API;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.FORGE;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.LITELOADER;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.NEO_FORGE;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.OPTIFINE;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.QUILT;
+import static org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer.LibraryType.QUILT_API;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,8 +22,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.card.MaterialCardView;
 
 import org.koishi.launcher.h2co3.R;
-import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
-import org.koishi.launcher.h2co3.core.game.download.VersionNumber;
 import org.koishi.launcher.h2co3.core.fakefx.beans.InvalidationListener;
 import org.koishi.launcher.h2co3.core.fakefx.beans.binding.Bindings;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.BooleanProperty;
@@ -25,12 +30,20 @@ import org.koishi.launcher.h2co3.core.fakefx.beans.property.SimpleBooleanPropert
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.SimpleObjectProperty;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.SimpleStringProperty;
 import org.koishi.launcher.h2co3.core.fakefx.beans.property.StringProperty;
+import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
+import org.koishi.launcher.h2co3.core.game.download.VersionNumber;
 import org.koishi.launcher.h2co3.core.utils.AndroidUtils;
 import org.koishi.launcher.h2co3.core.utils.ConvertUtils;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Button;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class InstallerItem {
 
@@ -47,6 +60,8 @@ public class InstallerItem {
     private final String id;
     private final String name;
     private final Drawable icon;
+
+    private static final Map<LibraryAnalyzer.LibraryType, Drawable> drawableCache = new EnumMap<>(LibraryAnalyzer.LibraryType.class);
 
     public InstallerItem(Context context, LibraryAnalyzer.LibraryType id) {
         this.context = context;
@@ -75,14 +90,18 @@ public class InstallerItem {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private Drawable getDrawable(Context context, LibraryAnalyzer.LibraryType id) {
+        return drawableCache.computeIfAbsent(id, key -> ContextCompat.getDrawable(context, getDrawableResourceId(key)));
+    }
+
+    private int getDrawableResourceId(LibraryAnalyzer.LibraryType id) {
         return switch (id) {
-            case FORGE -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_forge);
-            case NEO_FORGE -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_neoforge);
-            case LITELOADER -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_liteloader);
-            case OPTIFINE -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_optifine);
-            case FABRIC, FABRIC_API -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_fabric);
-            case QUILT, QUILT_API -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_quilt);
-            default -> ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.library.R.drawable.ic_mc_mods);
+            case FORGE -> org.koishi.launcher.h2co3.library.R.drawable.ic_mc_forge;
+            case NEO_FORGE -> org.koishi.launcher.h2co3.library.R.drawable.ic_mc_neoforge;
+            case LITELOADER -> org.koishi.launcher.h2co3.library.R.drawable.ic_mc_liteloader;
+            case OPTIFINE -> org.koishi.launcher.h2co3.library.R.drawable.ic_mc_optifine;
+            case FABRIC, FABRIC_API -> org.koishi.launcher.h2co3.library.R.drawable.ic_mc_fabric;
+            case QUILT, QUILT_API -> org.koishi.launcher.h2co3.library.R.drawable.ic_mc_quilt;
+            default -> org.koishi.launcher.h2co3.library.R.drawable.ic_mc_mods;
         };
     }
 
