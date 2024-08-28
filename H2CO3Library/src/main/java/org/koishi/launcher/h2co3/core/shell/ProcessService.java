@@ -8,11 +8,11 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.H2CO3Settings;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.launch.H2CO3BaseLaunch;
 import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridgeCallBack;
-import org.koishi.launcher.h2co3.core.launch.utils.BaseLaunch;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 
 import java.io.File;
@@ -43,7 +43,7 @@ public class ProcessService extends Service {
     }
 
     public void startProcess(String[] command, H2CO3Settings gameHelper, String jre) {
-        H2CO3LauncherBridge bridge = BaseLaunch.launchAPIInstaller(H2CO3Tools.CONTEXT, gameHelper, command, jre);
+        H2CO3LauncherBridge bridge = H2CO3BaseLaunch.launchAPIInstaller(H2CO3Tools.CONTEXT, gameHelper, command, jre);
         File logFile = new File(bridge.getLogPath());
         H2CO3LauncherBridgeCallBack callback = new H2CO3LauncherBridgeCallBack() {
             /**

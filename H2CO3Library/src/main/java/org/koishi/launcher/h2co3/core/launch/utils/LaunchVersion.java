@@ -1,6 +1,4 @@
-package org.koishi.launcher.h2co3.core.launch;
-
-import android.util.Log;
+package org.koishi.launcher.h2co3.core.launch.utils;
 
 import androidx.annotation.NonNull;
 
@@ -106,50 +104,10 @@ public class LaunchVersion {
         }
     }
 
-    public String getClassPath(H2CO3Settings gameHelper, boolean high, boolean isJava17) {
-        StringBuilder cp = new StringBuilder();
-        String librariesPath = gameHelper.getGameDirectory() + "/libraries/";
-        int count = 0;
-
-        for (Library lib : this.libraries) {
-            if (lib.name == null || lib.name.isEmpty() || lib.name.contains("org.lwjgl") ||
-                    lib.name.contains("natives") || (!isJava17 && lib.name.contains("java-objc-bridge"))) {
-                continue;
-            }
-            Log.e("boat", lib.name);
-            String path = getString(lib, librariesPath);
-            Log.e("path", path);
-            if (!new File(path).exists()) continue;
-
-            if (count > 0) cp.append(":");
-            cp.append(path);
-            count++;
-        }
-        if (high) {
-            cp.append(count > 0 ? ":" : "").append(minecraftPath);
-        } else {
-            cp.insert(0, minecraftPath + (count > 0 ? ":" : ""));
-        }
-        return cp.toString();
-    }
-
     private static @NonNull String getString(Library lib, String librariesPath) {
         String[] names = lib.name.split(":");
         return librariesPath + names[0].replace(".", "/") + "/" + names[1] + "/" + names[2] + "/" +
                 names[1] + "-" + names[2] + ".jar";
-    }
-
-    public String[] getJVMArguments(H2CO3Settings gameLaunchSetting) {
-        StringBuilder test = new StringBuilder();
-        if (arguments != null && arguments.jvm != null) {
-            for (Object obj : arguments.jvm) {
-                if (obj instanceof String && !((String) obj).startsWith("-Djava.library.path") &&
-                        !((String) obj).startsWith("-cp") && !((String) obj).startsWith("${classpath}")) {
-                    test.append(obj).append(" ");
-                }
-            }
-        }
-        return parseArguments(test.toString(), gameLaunchSetting);
     }
 
     private String[] parseArguments(String args, H2CO3Settings gameLaunchSetting) {
