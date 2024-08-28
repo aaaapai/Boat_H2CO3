@@ -49,7 +49,6 @@ import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 import org.koishi.launcher.h2co3.core.utils.task.TaskExecutor;
 import org.koishi.launcher.h2co3.core.utils.task.TaskListener;
-import org.koishi.launcher.h2co3.resources.component.H2CO3Button;
 import org.koishi.launcher.h2co3.resources.component.H2CO3LinearProgress;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3ToolBar;
@@ -57,7 +56,6 @@ import org.koishi.launcher.h2co3.resources.component.adapter.H2CO3RecycleAdapter
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3CustomViewDialog;
 import org.koishi.launcher.h2co3.utils.download.TaskCancellationAction;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,7 +77,7 @@ public class H2CO3DownloadTaskDialog extends H2CO3CustomViewDialog implements Vi
     @SuppressLint({"DefaultLocale", "SetTextI18n"})
     public H2CO3DownloadTaskDialog(@NonNull Context context, int style) {
         super(context, style);
-        setCustomView(R.layout.dialog_task);
+        setCustomView(R.layout.dialog_download_task);
         setCancelable(false);
 
         rightTaskListView = findViewById(R.id.list_right);

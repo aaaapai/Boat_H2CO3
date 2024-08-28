@@ -17,7 +17,9 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.adapter.RemoteVersionListAdapter;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.game.H2CO3CacheRepository;
 import org.koishi.launcher.h2co3.core.game.download.CacheRepository;
 import org.koishi.launcher.h2co3.core.game.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.game.download.DownloadProviders;
@@ -26,17 +28,16 @@ import org.koishi.launcher.h2co3.core.game.download.H2CO3GameRepository;
 import org.koishi.launcher.h2co3.core.game.download.LibraryAnalyzer;
 import org.koishi.launcher.h2co3.core.game.download.RemoteVersion;
 import org.koishi.launcher.h2co3.core.game.download.VersionList;
-import org.koishi.launcher.h2co3.core.game.H2CO3CacheRepository;
-import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 import org.koishi.launcher.h2co3.core.utils.task.TaskExecutor;
 import org.koishi.launcher.h2co3.core.utils.task.TaskListener;
 import org.koishi.launcher.h2co3.dialog.H2CO3DownloadTaskDialog;
-import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
+import org.koishi.launcher.h2co3.resources.component.H2CO3LinearProgress;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3CustomViewDialog;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MessageDialog;
+import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
 import org.koishi.launcher.h2co3.utils.download.InstallerItem;
 import org.koishi.launcher.h2co3.utils.download.TaskCancellationAction;
 
@@ -44,14 +45,14 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class EditDownloadInfoFragment extends H2CO3Fragment {
 
     private final Map<String, RemoteVersion> map = new HashMap<>();
-    public H2CO3CustomViewDialog chooseInstallerVersionDialog;
-    public AlertDialog chooseInstallerVersionDialogAlert;
+    private final H2CO3Settings gameHelper;
+    private H2CO3CustomViewDialog chooseInstallerVersionDialog;
     private View view;
     private TextInputEditText versionNameEditText;
     private AppCompatImageButton backButton, downloadButton;
@@ -63,13 +64,12 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
     private RecyclerView installerVersionListView;
     private VersionList<?> currentVersionList;
     private DownloadProviders downloadProviders;
-    private H2CO3DownloadTaskDialog pane;
-    private AlertDialog paneAlert;
+    private AlertDialog chooseInstallerVersionDialogAlert;
+    private H2CO3DownloadTaskDialog taskListPane;
     private final ChooseMcVersionFragment chooseMcVersionFragment;
-
-    private H2CO3Settings gameHelper;
-
+    private AlertDialog taskListPaneAlert;
     private final Bundle args;
+    private H2CO3LinearProgress progressBar;
 
     public EditDownloadInfoFragment(ChooseMcVersionFragment chooseMcVersionFragment, Bundle bundle) {
         super();
@@ -86,7 +86,6 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
         downloadProviders = new DownloadProviders(gameHelper);
 
         showLoadingIndicator();
-
         loadInitialData();
 
         backButton.setOnClickListener(v -> navigateBack());
@@ -96,37 +95,35 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
     }
 
     private void initView() {
-        versionNameEditText = findViewById(view, R.id.version_name_edit);
-        backButton = findViewById(view, R.id.minecraft_back_button);
-        downloadButton = findViewById(view, R.id.minecraft_download_button);
-        installerScrollView = findViewById(view, R.id.installer_list_layout);
+        versionNameEditText = view.findViewById(R.id.version_name_edit);
+        backButton = view.findViewById(R.id.minecraft_back_button);
+        downloadButton = view.findViewById(R.id.minecraft_download_button);
+        installerScrollView = view.findViewById(R.id.installer_list_layout);
+        progressBar = view.findViewById(R.id.progress_bar);
     }
 
     private void loadInitialData() {
         Schedulers.io().execute(() -> {
-            if (args != null) {
-                this.gameVersion = args.getString("versionName");
+            Optional.ofNullable(args).ifPresent(bundle -> {
+                gameVersion = bundle.getString("versionName");
                 runOnUiThread(() -> versionNameEditText.setText(gameVersion));
-            }
+            });
 
             group = new InstallerItem.InstallerItemGroup(getContext(), gameVersion);
-
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                installerScrollView.post(() -> {
-                    installerScrollView.addView(group.getView());
-                    hideLoadingIndicator();
-                    setupLibraryActions();
-                });
-            }, 220);
+                installerScrollView.addView(group.getView());
+                hideLoadingIndicator();
+                setupLibraryActions();
+            }, 600);
         });
     }
 
     private void showLoadingIndicator() {
-        // progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void hideLoadingIndicator() {
-        // progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
     private void navigateBack() {
@@ -169,15 +166,17 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
     }
 
     private void showFabricApiWarning() {
-        H2CO3MessageDialog builder = new H2CO3MessageDialog(getContext());
-        builder.setCancelable(false);
-        builder.setMessage(requireContext().getString(org.koishi.launcher.h2co3.library.R.string.install_installer_fabric_api_warning));
-        builder.setNegativeButton(requireContext().getString(org.koishi.launcher.h2co3.library.R.string.button_cancel), null);
-        builder.create().show();
+        new H2CO3MessageDialog(getContext())
+                .setCancelable(false)
+                .setMessage(requireContext().getString(org.koishi.launcher.h2co3.library.R.string.install_installer_fabric_api_warning))
+                .setNegativeButton(requireContext().getString(org.koishi.launcher.h2co3.library.R.string.button_cancel), null)
+                .create().show();
     }
 
     private void startDownload() {
-        String versionName = versionNameEditText.getText() != null ? versionNameEditText.getText().toString() : "";
+        String versionName = Optional.ofNullable(versionNameEditText.getText())
+                .map(CharSequence::toString)
+                .orElse("");
         H2CO3CacheRepository cacheRepository = H2CO3CacheRepository.REPOSITORY;
         CacheRepository.setInstance(cacheRepository);
         cacheRepository.setDirectory(H2CO3Tools.CACHE_DIR);
@@ -185,44 +184,38 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
         DefaultDependencyManager dependencyManager = new DefaultDependencyManager(new H2CO3GameRepository(new File(gameHelper.getGameDirectory())), downloadProviders.getDownloadProvider(), cacheRepository);
         GameBuilder builder = dependencyManager.gameBuilder();
 
-        builder.name(versionName);
-        builder.gameVersion(gameVersion);
-
+        builder.name(versionName).gameVersion(gameVersion);
         String minecraftPatchId = LibraryAnalyzer.LibraryType.MINECRAFT.getPatchId();
-        for (Map.Entry<String, RemoteVersion> entry : map.entrySet()) {
-            if (!minecraftPatchId.equals(entry.getKey())) {
-                builder.version(entry.getValue());
+        map.forEach((key, value) -> {
+            if (!minecraftPatchId.equals(key)) {
+                builder.version(value);
             }
-        }
+        });
 
         Task<?> task = builder.buildAsync();
-
-        pane = new H2CO3DownloadTaskDialog(requireContext(), org.koishi.launcher.h2co3.library.R.style.ThemeOverlay_App_MaterialAlertDialog_FullScreen);
-        paneAlert = pane.create();
-        pane.setAlertDialog(paneAlert);
-        pane.setCancel(new TaskCancellationAction(() -> paneAlert.dismiss()));
-        paneAlert.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        paneAlert.show();
+        taskListPane = new H2CO3DownloadTaskDialog(requireContext(), org.koishi.launcher.h2co3.library.R.style.ThemeOverlay_App_MaterialAlertDialog_FullScreen);
+        taskListPaneAlert = taskListPane.create();
+        taskListPane.setAlertDialog(taskListPaneAlert);
+        taskListPane.setCancel(new TaskCancellationAction(taskListPaneAlert::dismiss));
+        taskListPaneAlert.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        taskListPaneAlert.show();
 
         Schedulers.androidUIThread().execute(() -> {
             TaskExecutor executor = task.executor(new TaskListener() {
                 @Override
                 public void onStop(boolean success, TaskExecutor executor) {
                     Schedulers.androidUIThread().execute(() -> {
+                        taskListPaneAlert.dismiss();
                         if (success) {
-                            paneAlert.dismiss();
                             H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.INFO, "Download success");
-                        } else {
-                            if (executor.getException() != null) {
-                                paneAlert.dismiss();
-                                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, String.valueOf(executor.getException()));
-                            }
+                        } else if (executor.getException() != null) {
+                            H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, String.valueOf(executor.getException()));
                         }
                     });
                 }
             });
-            pane.setExecutor(executor, true);
-            paneAlert.show();
+            taskListPane.setExecutor(executor, true);
+            taskListPaneAlert.show();
             executor.start();
         });
     }
@@ -258,7 +251,6 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
         currentVersionList.refreshAsync(gameVersion).whenComplete((result, exception) -> {
             if (exception == null) {
                 List<RemoteVersion> items = loadVersions(libraryId);
-
                 Schedulers.androidUIThread().execute(() -> {
                     if (items.isEmpty()) {
                         H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.ERROR, "No version found for " + libraryId + "!");
@@ -276,7 +268,7 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
     }
 
     private String getVersion(String id) {
-        return Objects.requireNonNull(map.get(id)).getSelfVersion();
+        return Optional.ofNullable(map.get(id)).map(RemoteVersion::getSelfVersion).orElse(null);
     }
 
     protected void reload() {

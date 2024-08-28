@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.download.EditDownloadInfoFragment">
 
+    <org.koishi.launcher.h2co3.resources.component.H2CO3LinearProgress
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/version_name_linearlayout"
         android:layout_width="match_parent"
