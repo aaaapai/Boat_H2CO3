@@ -12,14 +12,14 @@ import org.koishi.launcher.h2co3.core.utils.CommandBuilder;
 import org.koishi.launcher.h2co3.core.utils.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class BaseLaunch {
+public class H2CO3BaseLaunch {
 
-    private static final String TAG = BaseLaunch.class.getSimpleName();
+    private static final String TAG = H2CO3BaseLaunch.class.getSimpleName();
 
     public static H2CO3LauncherBridge launchGame(Context context, H2CO3Settings gameHelper, int width, int height, String task, String logFilePath) {
         H2CO3LauncherBridge bridge = new H2CO3LauncherBridge();
@@ -30,7 +30,7 @@ public class BaseLaunch {
                 setEnv(context, gameHelper, bridge, task.equals("Minecraft"));
                 H2CO3LaunchUtils.setUpJavaRuntime(context, gameHelper, bridge);
                 H2CO3LaunchUtils.setupGraphicAndSoundEngine(context, gameHelper, bridge);
-                bridge.getCallback().onLog("Working directory: " + gameHelper.getGameDirectory() + "\n");
+                logWorkingDirectory(bridge, gameHelper);
                 bridge.chdir(gameHelper.getGameDirectory());
                 launch(context, bridge, gameHelper, width, height, task);
             } catch (IOException e) {
@@ -61,7 +61,7 @@ public class BaseLaunch {
                 logStartInfo(bridge, "API Installer");
                 setEnv(context, gameHelper, bridge, false);
                 H2CO3LaunchUtils.setUpJavaRuntime(context, gameHelper, bridge);
-                bridge.getCallback().onLog("Working directory: " + gameHelper.getGameDirectory() + "\n");
+                logWorkingDirectory(bridge, gameHelper);
                 bridge.chdir(gameHelper.getGameDirectory());
                 apiLaunch(context, bridge, command, jre, "API Installer");
             } catch (IOException e) {
@@ -75,10 +75,8 @@ public class BaseLaunch {
 
     public static void apiLaunch(Context context, H2CO3LauncherBridge bridge, String[] command, String jre, String task) throws IOException {
         printTaskTitle(bridge, task + " Arguments");
-        String[] args = rebaseApiArgs(command, jre);
-        for (String arg : args) {
-            bridge.getCallback().onLog(task + " argument: " + arg + "\n");
-        }
+        String[] args = rebaseArgs(command, jre);
+        logArguments(bridge, task, args);
         bridge.setLdLibraryPath(H2CO3LaunchUtils.getLibraryPath(context, H2CO3Tools.JAVA_PATH + "/" + jre));
         printTaskTitle(bridge, task + " Logs");
         bridge.setupExitTrap(bridge);
@@ -109,9 +107,7 @@ public class BaseLaunch {
     public static void launch(Context context, H2CO3LauncherBridge bridge, H2CO3Settings gameHelper, int width, int height, String task) throws IOException {
         printTaskTitle(bridge, task + " Arguments");
         String[] args = rebaseArgs(context, gameHelper, width, height);
-        for (String arg : args) {
-            bridge.getCallback().onLog(task + " argument: " + arg + "\n");
-        }
+        logArguments(bridge, task, args);
         bridge.setLdLibraryPath(H2CO3LaunchUtils.getLibraryPath(context, gameHelper.getJavaPath()));
         printTaskTitle(bridge, task + " Logs");
         bridge.setupExitTrap(bridge);
@@ -119,6 +115,29 @@ public class BaseLaunch {
         int exitCode = H2CO3JVMLauncher.launchJVM(args);
         bridge.onExit(exitCode);
         printTaskTitle(bridge, task + " Logs");
+    }
+
+    public static void printTaskTitle(H2CO3LauncherBridge bridge, String task) throws IOException {
+        if (bridge != null && bridge.getCallback() != null) {
+            bridge.getCallback().onLog("==================== " + task + " ====================\n");
+        }
+    }
+
+    public static void logWorkingDirectory(H2CO3LauncherBridge bridge, H2CO3Settings gameHelper) throws IOException {
+        bridge.getCallback().onLog("Working directory: " + gameHelper.getGameDirectory() + "\n");
+    }
+
+    public static void logArguments(H2CO3LauncherBridge bridge, String task, String[] args) throws IOException {
+        for (String arg : args) {
+            bridge.getCallback().onLog(task + " argument: " + arg + "\n");
+        }
+    }
+
+    public static void logStartInfo(H2CO3LauncherBridge bridge, String task) throws IOException {
+        printTaskTitle(bridge, "Start " + task);
+        bridge.getCallback().onLog("Architecture: " + Architecture.archAsString(Architecture.getDeviceArchitecture()) + "\n");
+        bridge.getCallback().onLog("CPU:" + Build.HARDWARE + "\n");
+        bridge.getCallback().onLog("Device info:" + Build.DEVICE + "\n " + Build.MODEL + "\n " + Build.PRODUCT + "\n " + Build.BOARD + "\n " + Build.BRAND + "\n " + Build.FINGERPRINT + "\n");
     }
 
     public static String[] rebaseArgs(Context context, H2CO3Settings gameHelper, int width, int height) throws IOException {
@@ -132,30 +151,13 @@ public class BaseLaunch {
             throw new IllegalStateException("Illegal command line " + rawCommandLine);
         }
 
-        List<String> argList = new ArrayList<>(rawCommandLine);
-        argList.add(0, gameHelper.getJavaPath() + "/bin/java");
-        return argList.toArray(new String[0]);
+        return Stream.concat(Stream.of(gameHelper.getJavaPath() + "/bin/java"), rawCommandLine.stream())
+                .toArray(String[]::new);
     }
 
-    public static String[] rebaseApiArgs(String[] command, String jre) throws IOException {
+    public static String[] rebaseArgs(String[] command, String jre) {
         String javaPath = H2CO3Tools.JAVA_PATH + "/" + jre + "/bin/java";
-        List<String> argList = new ArrayList<>(Arrays.asList(command));
-        argList.add(0, javaPath);
-        return argList.toArray(new String[0]);
-    }
-
-    public static void printTaskTitle(H2CO3LauncherBridge bridge, String task) throws IOException {
-        if (bridge != null && bridge.getCallback() != null) {
-            bridge.getCallback().onLog("==================== " + task + " ====================\n");
-        }
-    }
-
-    public static void logStartInfo(H2CO3LauncherBridge bridge, String task) throws IOException {
-        printTaskTitle(bridge, "Start " + task);
-        if (bridge.getCallback() != null) {
-            bridge.getCallback().onLog("Architecture: " + Architecture.archAsString(Architecture.getDeviceArchitecture()) + "\n");
-            bridge.getCallback().onLog("CPU:" + Build.HARDWARE + "\n");
-            bridge.getCallback().onLog("Device info:" + Build.DEVICE + "\n " + Build.MODEL + "\n " + Build.PRODUCT + "\n " + Build.BOARD + "\n " + Build.BRAND + "\n " + Build.FINGERPRINT + "\n");
-        }
+        return Stream.concat(Stream.of(javaPath), Arrays.stream(command))
+                .toArray(String[]::new);
     }
 }

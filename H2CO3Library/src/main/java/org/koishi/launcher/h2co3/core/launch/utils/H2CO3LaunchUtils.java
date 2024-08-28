@@ -15,7 +15,6 @@ import org.koishi.launcher.h2co3.core.utils.Architecture;
 import org.koishi.launcher.h2co3.core.utils.CommandBuilder;
 import org.koishi.launcher.h2co3.core.utils.Logging;
 import org.koishi.launcher.h2co3.core.utils.OperatingSystem;
-import org.koishi.launcher.h2co3.core.utils.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,7 +26,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -54,20 +52,17 @@ public class H2CO3LaunchUtils {
 
     public static String getJreLibDir(String javaPath) throws IOException {
         String jreArchitecture = readJREReleaseProperties(javaPath).get("OS_ARCH");
-        if (Architecture.archAsInt(jreArchitecture) == Architecture.ARCH_X86) {
-            jreArchitecture = "i386/i486/i586";
-        }
-        String jreLibDir = "/lib";
         if (jreArchitecture == null) {
             throw new IOException("Unsupported architecture!");
         }
+        jreArchitecture = jreArchitecture.equals("x86") ? "i386/i486/i586" : jreArchitecture;
         for (String arch : jreArchitecture.split("/")) {
             File file = new File(javaPath, "lib/" + arch);
             if (file.exists() && file.isDirectory()) {
-                jreLibDir = "/lib/" + arch;
+                return "/lib/" + arch;
             }
         }
-        return jreLibDir;
+        return "/lib";
     }
 
     public static String getJvmLibDir(String javaPath) throws IOException {
@@ -82,26 +77,13 @@ public class H2CO3LaunchUtils {
         String jreLibDir = getJreLibDir(javaPath);
         String jvmLibDir = getJvmLibDir(javaPath);
         String jliLibDir = "/jli";
-        return String.join(":",
-                javaPath + jreLibDir,
-                javaPath + jreLibDir + jliLibDir,
-                javaPath + jreLibDir + jvmLibDir,
-                "/system/" + libDirName,
-                "/vendor/" + libDirName,
-                "/vendor/" + libDirName + "/hw",
-                nativeDir
-        );
-    }
 
-    public static String[] rebaseArgs(Context context, H2CO3Settings settings, int width, int height) throws IOException {
-        final CommandBuilder command = getMcArgs(context, settings, width, height);
-        List<String> rawCommandLine = command.asList();
-        if (rawCommandLine.stream().anyMatch(StringUtils::isBlank)) {
-            throw new IllegalStateException("Illegal command line " + rawCommandLine);
-        }
-        List<String> argList = new ArrayList<>(rawCommandLine);
-        argList.add(0, settings.getJavaPath() + "/bin/java");
-        return argList.toArray(new String[0]);
+        return javaPath + jreLibDir + ":" +
+                javaPath + jreLibDir + jliLibDir + ":" +
+                javaPath + jreLibDir + jvmLibDir + ":" +
+                "/system/" + libDirName + ":" +
+                "/vendor/" + libDirName + ":" +
+                "/vendor/" + libDirName + "/hw:" + nativeDir;
     }
 
     public static void addCommonEnv(Context context, H2CO3Settings settings, HashMap<String, String> envMap) {
@@ -114,80 +96,69 @@ public class H2CO3LaunchUtils {
     public static void addRendererEnv(Context context, HashMap<String, String> envMap, String render) {
         envMap.put("LIBGL_STRING", render);
         if (render.equals(H2CO3Tools.GL_GL114)) {
-            envMap.put("LIBGL_NAME", "libgl4es_114.so");
-            envMap.put("LIBEGL_NAME", "libEGL.so");
-            setGLValues(envMap, "2", "3", "1", "1", "1", "1");
+            setGLValues(envMap, "libgl4es_114.so", "libEGL.so", "2", "3", "1", "1", "1", "1");
         } else if (render.equals(H2CO3Tools.GL_VGPU)) {
-            envMap.put("LIBGL_NAME", "libvgpu.so");
-            envMap.put("LIBEGL_NAME", "libEGL.so");
-            setGLValues(envMap, "2", "3", "1", "1", "1", "1");
+            setGLValues(envMap, "libvgpu.so", "libEGL.so", "2", "3", "1", "1", "1", "1");
         } else if (render.equals(H2CO3Tools.GL_VIRGL)) {
-            envMap.put("LIBGL_NAME", "libOSMesa_81.so");
-            envMap.put("LIBEGL_NAME", "libEGL.so");
-            setGLValues(envMap, "2", "3", "1", "1", "1", "1");
-            envMap.put("MESA_GLSL_CACHE_DIR", context.getCacheDir().getAbsolutePath());
-            envMap.put("MESA_GL_VERSION_OVERRIDE", "4.3");
-            envMap.put("MESA_GLSL_VERSION_OVERRIDE", "430");
-            envMap.put("force_glsl_extensions_warn", "true");
-            envMap.put("allow_higher_compat_version", "true");
-            envMap.put("allow_glsl_extension_directive_midshader", "true");
-            envMap.put("MESA_LOADER_DRIVER_OVERRIDE", "zink");
-            envMap.put("VTEST_SOCKET_NAME", new File(context.getCacheDir().getAbsolutePath(), ".virgl_test").getAbsolutePath());
-            envMap.put("GALLIUM_DRIVER", "virpipe");
-            envMap.put("OSMESA_NO_FLUSH_FRONTBUFFER", "1");
+            setGLValues(envMap, "libOSMesa_81.so", "libEGL.so", "2", "3", "1", "1", "1", "1");
+            setVirglEnv(context, envMap);
         } else if (render.equals(H2CO3Tools.GL_ZINK)) {
-            envMap.put("LIBGL_NAME", "libOSMesa_8.so");
-            envMap.put("LIBEGL_NAME", "libEGL.so");
-            setGLValues(envMap, "2", "3", "1", "1", "1", "1");
-            envMap.put("MESA_GLSL_CACHE_DIR", context.getCacheDir().getAbsolutePath());
-            envMap.put("MESA_GL_VERSION_OVERRIDE", "4.6");
-            envMap.put("MESA_GLSL_VERSION_OVERRIDE", "460");
-            envMap.put("force_glsl_extensions_warn", "true");
-            envMap.put("allow_higher_compat_version", "true");
-            envMap.put("allow_glsl_extension_directive_midshader", "true");
-            envMap.put("MESA_LOADER_DRIVER_OVERRIDE", "zink");
-            envMap.put("VTEST_SOCKET_NAME", new File(context.getCacheDir().getAbsolutePath(), ".virgl_test").getAbsolutePath());
-            envMap.put("GALLIUM_DRIVER", "zink");
+            setGLValues(envMap, "libOSMesa_8.so", "libEGL.so", "2", "3", "1", "1", "1", "1");
+            setVirglEnv(context, envMap);
         } else if (render.equals(H2CO3Tools.GL_ANGLE)) {
-            envMap.put("LIBGL_NAME", "libtinywrapper.so");
-            envMap.put("LIBEGL_NAME", "libEGL_angle.so");
-            envMap.put("LIBGL_ES", "3");
+            setGLValues(envMap, "libtinywrapper.so", "libEGL_angle.so", "3", null, null, null, null, null);
         }
     }
 
-    public static void setGLValues(HashMap<String, String> envMap, String libglEs, String libglMipmap, String libglNormalize, String libglVsync, String libglNointovlhack, String libglNoerror) {
-        envMap.put("LIBGL_ES", libglEs);
-        envMap.put("LIBGL_MIPMAP", libglMipmap);
-        envMap.put("LIBGL_NORMALIZE", libglNormalize);
-        envMap.put("LIBGL_VSYNC", libglVsync);
-        envMap.put("LIBGL_NOINTOVLHACK", libglNointovlhack);
-        envMap.put("LIBGL_NOERROR", libglNoerror);
+    private static void setGLValues(HashMap<String, String> envMap, String libglName, String libEglName, String... values) {
+        envMap.put("LIBGL_NAME", libglName);
+        envMap.put("LIBEGL_NAME", libEglName);
+        if (values.length >= 6) {
+            envMap.put("LIBGL_ES", values[0]);
+            envMap.put("LIBGL_MIPMAP", values[1]);
+            envMap.put("LIBGL_NORMALIZE", values[2]);
+            envMap.put("LIBGL_VSYNC", values[3]);
+            envMap.put("LIBGL_NOINTOVLHACK", values[4]);
+            envMap.put("LIBGL_NOERROR", values[5]);
+        }
+    }
+
+    private static void setVirglEnv(Context context, HashMap<String, String> envMap) {
+        envMap.put("MESA_GLSL_CACHE_DIR", context.getCacheDir().getAbsolutePath());
+        envMap.put("MESA_GL_VERSION_OVERRIDE", "4.3");
+        envMap.put("MESA_GLSL_VERSION_OVERRIDE", "430");
+        envMap.put("force_glsl_extensions_warn", "true");
+        envMap.put("allow_higher_compat_version", "true");
+        envMap.put("allow_glsl_extension_directive_midshader", "true");
+        envMap.put("MESA_LOADER_DRIVER_OVERRIDE", "zink");
+        envMap.put("VTEST_SOCKET_NAME", new File(context.getCacheDir().getAbsolutePath(), ".virgl_test").getAbsolutePath());
+        envMap.put("GALLIUM_DRIVER", "virpipe");
+        envMap.put("OSMESA_NO_FLUSH_FRONTBUFFER", "1");
     }
 
     public static void setUpJavaRuntime(Context context, H2CO3Settings settings, H2CO3LauncherBridge bridge) throws IOException {
         String jreLibDir = settings.getJavaPath() + getJreLibDir(settings.getJavaPath());
         String jliLibDir = new File(jreLibDir + "/jli/libjli.so").exists() ? jreLibDir + "/jli" : jreLibDir;
         String jvmLibDir = jreLibDir + getJvmLibDir(settings.getJavaPath());
-        // dlopen jre
-        bridge.dlopen(jliLibDir + "/libjli.so");
-        bridge.dlopen(jvmLibDir + "/libjvm.so");
-        bridge.dlopen(jreLibDir + "/libfreetype.so");
-        bridge.dlopen(jreLibDir + "/libverify.so");
-        bridge.dlopen(jreLibDir + "/libjava.so");
-        bridge.dlopen(jreLibDir + "/libnet.so");
-        bridge.dlopen(jreLibDir + "/libnio.so");
-        bridge.dlopen(jreLibDir + "/libawt.so");
-        bridge.dlopen(jreLibDir + "/libawt_headless.so");
-        bridge.dlopen(jreLibDir + "/libfontmanager.so");
-        bridge.dlopen(jreLibDir + "/libtinyiconv.so");
-        bridge.dlopen(jreLibDir + "/libinstrument.so");
-        bridge.dlopen(context.getApplicationInfo().nativeLibraryDir + "/libopenal.so");
-        bridge.dlopen(context.getApplicationInfo().nativeLibraryDir + "/libglfw.so");
-        bridge.dlopen(context.getApplicationInfo().nativeLibraryDir + "/liblwjgl.so");
+
+        dlopenLibraries(bridge, jliLibDir, jvmLibDir, jreLibDir, context);
+
         File javaPath = new File(settings.getJavaPath());
         for (File file : locateLibs(javaPath)) {
             bridge.dlopen(file.getAbsolutePath());
         }
+    }
+
+    private static void dlopenLibraries(H2CO3LauncherBridge bridge, String jliLibDir, String jvmLibDir, String jreLibDir, Context context) {
+        bridge.dlopen(jliLibDir + "/libjli.so");
+        bridge.dlopen(jvmLibDir + "/libjvm.so");
+        String[] libs = {"libfreetype.so", "libverify.so", "libjava.so", "libnet.so", "libnio.so", "libawt.so", "libawt_headless.so", "libfontmanager.so", "libtinyiconv.so", "libinstrument.so"};
+        for (String lib : libs) {
+            bridge.dlopen(jreLibDir + "/" + lib);
+        }
+        bridge.dlopen(context.getApplicationInfo().nativeLibraryDir + "/libopenal.so");
+        bridge.dlopen(context.getApplicationInfo().nativeLibraryDir + "/libglfw.so");
+        bridge.dlopen(context.getApplicationInfo().nativeLibraryDir + "/liblwjgl.so");
     }
 
     public static ArrayList<File> locateLibs(File path) throws IOException {
