@@ -104,12 +104,6 @@ public class LaunchVersion {
         }
     }
 
-    private static @NonNull String getString(Library lib, String librariesPath) {
-        String[] names = lib.name.split(":");
-        return librariesPath + names[0].replace(".", "/") + "/" + names[1] + "/" + names[2] + "/" +
-                names[1] + "-" + names[2] + ".jar";
-    }
-
     private String[] parseArguments(String args, H2CO3Settings gameLaunchSetting) {
         StringBuilder result = new StringBuilder();
         int state = 0, start = 0;
@@ -143,6 +137,7 @@ public class LaunchVersion {
             case "assets_index_name" -> assetIndex != null ? assetIndex.id : assets;
             case "game_directory" -> gameLaunchSetting.getGameDirectory();
             case "assets_root" -> gameLaunchSetting.getGameAssetsRoot();
+            case "game_assets" -> gameLaunchSetting.getGameAssets();
             case "user_properties" -> "{}";
             case "auth_player_name" -> gameLaunchSetting.getPlayerName();
             case "auth_session" -> gameLaunchSetting.getAuthSession();
