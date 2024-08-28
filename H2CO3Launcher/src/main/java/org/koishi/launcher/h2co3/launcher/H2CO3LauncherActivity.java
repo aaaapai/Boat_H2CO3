@@ -1,9 +1,3 @@
-/*
- * //
- * // Created by cainiaohh on 2024-03-31.
- * //
- */
-
 package org.koishi.launcher.h2co3.launcher;
 
 import android.content.Context;
@@ -60,12 +54,16 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
     @Override
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
         Log.d(TAG, "SurfaceTexture is available!");
-        h2co3LauncherCallback.onSurfaceTextureAvailable(surface, width, height);
+        if (h2co3LauncherCallback != null) {
+            h2co3LauncherCallback.onSurfaceTextureAvailable(surface, width, height);
+        }
     }
 
     @Override
     public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
-        h2co3LauncherCallback.onSurfaceTextureSizeChanged(surface, width, height);
+        if (h2co3LauncherCallback != null) {
+            h2co3LauncherCallback.onSurfaceTextureSizeChanged(surface, width, height);
+        }
     }
 
     @Override
@@ -77,7 +75,7 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
     @Override
     public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
         if (output < 2) {
-            if (output == 1) {
+            if (output == 1 && h2co3LauncherCallback != null) {
                 h2co3LauncherCallback.onPicOutput();
             }
             output++;
@@ -160,6 +158,7 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
     }
 
     public void exit(Context context, int code) {
+        // Implement exit logic here
     }
 
     public interface IH2CO3Launcher {

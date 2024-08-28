@@ -1,4 +1,4 @@
-package org.koishi.launcher.h2co3.core.launch;
+package org.koishi.launcher.h2co3.core.launch.utils;
 
 import android.util.Log;
 

@@ -8,11 +8,11 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.H2CO3Settings;
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.launch.BaseLaunch;
 import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.core.launch.H2CO3LauncherBridgeCallBack;
-import org.koishi.launcher.h2co3.core.launch.utils.BaseLaunch;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 
 import java.io.File;

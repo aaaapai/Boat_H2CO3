@@ -49,7 +49,7 @@ public class JREUtils {
         return jreLibDir;
     }
 
-    private static String getJvmLibDir(String javaPath) throws IOException {
+    public static String getJvmLibDir(String javaPath) throws IOException {
         String jvmLibDir;
         File jvmFile = new File(javaPath + getJreLibDir(javaPath) + File.separator + SERVER_DIR_NAME + File.separator + JVM_LIB_NAME);
         jvmLibDir = jvmFile.exists() ? File.separator + SERVER_DIR_NAME : File.separator + CLIENT_DIR_NAME;
