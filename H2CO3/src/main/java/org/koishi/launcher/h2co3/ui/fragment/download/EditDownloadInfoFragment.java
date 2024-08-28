@@ -52,7 +52,6 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
 
     private final Map<String, RemoteVersion> map = new HashMap<>();
     private final H2CO3Settings gameHelper;
-    private H2CO3CustomViewDialog chooseInstallerVersionDialog;
     private View view;
     private TextInputEditText versionNameEditText;
     private AppCompatImageButton backButton, downloadButton;
@@ -223,7 +222,7 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
     private void showChooseInstallerVersionDialog(String libId) {
         isChooseInstallerVersionDialogShowing = true;
 
-        chooseInstallerVersionDialog = new H2CO3CustomViewDialog(requireActivity());
+        H2CO3CustomViewDialog chooseInstallerVersionDialog = new H2CO3CustomViewDialog(requireActivity());
         chooseInstallerVersionDialog.setCustomView(R.layout.dialog_installer_version);
         chooseInstallerVersionDialog.setCancelable(false);
         chooseInstallerVersionDialog.setTitle(org.koishi.launcher.h2co3.library.R.string.dialog_title_choose_installer_version);

@@ -35,7 +35,7 @@
             android:id="@+id/dialog_dir_path"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/manager_set_directory"
+            android:hint="@string/title_directory"
             android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>

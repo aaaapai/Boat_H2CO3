@@ -7,7 +7,7 @@
         android:id="@+id/download_ref"
         android:icon="@drawable/ic_refresh"
         android:orderInCategory="90"
-        android:title="@string/refresh"
+        android:title="@string/title_refresh"
 
         tools:ignore="AppCompatResource" />
 
