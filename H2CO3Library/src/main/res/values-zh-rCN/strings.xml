@@ -6,6 +6,7 @@
     <string name="assets_download">正在下载资源</string>
     <string name="assets_download_all">正在验证资源完整性</string>
     <string name="assets_index_malformed">下载的资源索引文件已损坏。</string>
+    <string name="about_desc">Boat_H2CO3 是一个 Android Minecraft 启动器，允许用户在 Android 设备上启动 Minecraft: Java Edition。\nBoat_H2CO3 由 Github:Boat-H2CO3 开发, 且大多数功能是基于 HMCLCore 修改的。\n该应用程序使用了 PojavLauncher、Boat、FoldCraftLauncher 和 HMCL-PE 的一些代码，因此如果您打算分发此应用程序，请遵循 GPL-v3 许可证</string>
 
     <string name="button_ok">确定</string>
     <string name="button_cancel">取消</string>
@@ -141,10 +142,15 @@
     <string name="title_download">下载</string>
     <string name="title_runtime_install_tips">安装运行时环境</string>
     <string name="title_minecraftVersion">游戏</string>
-    <string name="title_modList">模组列表</string>
-    <string name="title_modPackList">模组包列表</string>
+    <string name="title_modList">模组</string>
+    <string name="title_modPackList">整合包</string>
     <string name="title_resourcesPack">纹理包</string>
     <string name="title_notification">公告</string>
+    <string name="title_global_game_setting">全局游戏设置</string>
+    <string name="title_h2co3_launcher_setting">启动器设置</string>
+    <string name="title_help">帮助</string>
+    <string name="title_about">关于</string>
+    <string name="title_third_lib">使用的第三方库</string>
     <string name="tips_failed_to_import_keyboard_layout">键盘文件加载失败，文件已损坏！</string>
     <string name="tips_successed_to_import_keyboard_layout">键盘文件加载成功！</string>
     <string name="tips_filename_can_not_be_void">文件名不能为空！</string>

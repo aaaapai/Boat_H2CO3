@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_global_game_setting"
+            android:title="@string/title_global_game_setting" />
+
+        <item
+            android:id="@+id/navigation_h2co3_launcher_setting"
+            android:title="@string/title_h2co3_launcher_setting" />
+
+        <item
+            android:id="@+id/navigation_help"
+            android:title="@string/title_help" />
+
+        <item
+            android:id="@+id/navigation_about"
+            android:title="@string/title_about" />
+    </group>
+</menu>

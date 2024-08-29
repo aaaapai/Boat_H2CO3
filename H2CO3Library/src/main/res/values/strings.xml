@@ -12,6 +12,7 @@
     <string name="assets_download">Downloading Assets</string>
     <string name="assets_download_all">Validating assets integrity</string>
     <string name="assets_index_malformed">Index files of downloaded assets were corrupted.</string>
+    <string name="about_desc">Boat_H2CO3 is an Android Minecraft Launcher, allows user to launch Minecraft: Java Edition on Android device.  Boat_H2CO3 is developed by Boat-H2CO3.  Boat_H2CO3\'s most features are modified based on HMCLCore.  The app borrows and quotes some codes of PojavLauncher, Boat, FoldCraftLauncher and HMCL-PE, so if you are going to distribute this app, please follow GPL-v3 License.</string>
 
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
@@ -176,6 +177,11 @@
     <string name="title_modList">Mod</string>
     <string name="title_modPackList">ModPack</string>
     <string name="title_resourcesPack">ResourcesPack</string>
+    <string name="title_global_game_setting">Global game settings</string>
+    <string name="title_h2co3_launcher_setting">Launcher Setting</string>
+    <string name="title_help">Help</string>
+    <string name="title_about">About</string>
+    <string name="title_third_lib">Third-party libraries used</string>
     <string name="title_forge" translatable="false">Forge</string>
     <string name="title_neo_forge" translatable="false">NeoForge</string>
     <string name="title_optifine" translatable="false">Optifine</string>
