@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.manage.GlobalGameSettingFragment">
 
-    <!-- 主内容区域 -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,82 +14,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- 设置项1 -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/settings_item1"
-                android:layout_width="match_parent"
+            android:orientation="vertical">
+            <org.koishi.launcher.h2co3.resources.component.H2CO3TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="通知设置"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="自定义应用通知"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
+                android:layout_marginHorizontal="@dimen/app_10dp"
+                android:layout_marginVertical="@dimen/app_5dp"
+                android:text="@string/app_name"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textColor="?colorPrimary"/>
+            <org.koishi.launcher.h2co3.resources.component.preference.CustomListPreference
+                android:id="@+id/preference_choose_java"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp">
+                android:layout_height="wrap_content"/>
+            <org.koishi.launcher.h2co3.resources.component.preference.CustomSwitchPreference
+                android:id="@+id/preference_set_pri_ver_dir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:id="@+id/switchSettingIcon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_save_acc"
-                        android:tint="?attr/colorOnSurface" />
-
-                    <TextView
-                        android:id="@+id/switchSettingTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="省电模式"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
-
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/switchSetting"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
+            <org.koishi.launcher.h2co3.resources.component.preference.RangeSliderPreference
+                android:id="@+id/preference_set_game_memory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

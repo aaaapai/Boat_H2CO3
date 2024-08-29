@@ -151,6 +151,8 @@
     <string name="title_help">帮助</string>
     <string name="title_about">关于</string>
     <string name="title_third_lib">使用的第三方库</string>
+    <string name="title_menu_java_auto">自动选择</string>
+    <string name="title_java_vesion">Java版本</string>
     <string name="tips_failed_to_import_keyboard_layout">键盘文件加载失败，文件已损坏！</string>
     <string name="tips_successed_to_import_keyboard_layout">键盘文件加载成功！</string>
     <string name="tips_filename_can_not_be_void">文件名不能为空！</string>
@@ -187,4 +189,6 @@
     <string name="ver_if_remove">移除这个目录？</string>
 
     <string name="welcome_permission_hint">Boat_H2CO3 需要一些必要的权限以确保其正常运行。</string>
+    <string name="title_pri_ver_dir">版本隔离</string>
+    <string name="title_game_memory">游戏运行内存</string>
 </resources>

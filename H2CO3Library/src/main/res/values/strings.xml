@@ -191,6 +191,8 @@
     <string name="title_qsl_qfapi" translatable="false">QSL &amp; QSAPI</string>
     <string name="title_liteloader" translatable="false">LiteLoader</string>
     <string name="title_notification">Notification</string>
+    <string name="title_menu_java_auto">Auto choose</string>
+    <string name="title_java_vesion">Java version</string>
     <string name="tips_failed_to_import_keyboard_layout">Failed to load the keyboard file, the file is damaged!</string>
     <string name="tips_successed_to_import_keyboard_layout">The keyboard file is loaded successfully!</string>
     <string name="tips_filename_can_not_be_void">The file name cannot be empty!</string>
@@ -227,5 +229,7 @@
     <string name="ver_if_remove">Remove this dir?</string>
 
     <string name="welcome_permission_hint">Boat_H2CO3 needs some necessary permissions to ensure its normal operation.</string>
+    <string name="title_pri_ver_dir">Private Version Directory</string>
+    <string name="title_game_memory">Game memory</string>
 
 </resources>

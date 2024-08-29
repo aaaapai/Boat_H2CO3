@@ -204,8 +204,8 @@ public class H2CO3LaunchUtils {
         String[] accountArgs = new String[0];
         Collections.addAll(args.asList(), accountArgs);
 
-        args.add("-Xms1024M");
-        args.add("-Xmx6000M");
+        args.addDefault("-Xms", settings.getGameMemoryMin() + "M");
+        args.addDefault("-Xmx", settings.getGameMemoryMax() + "M");
         args.add("h2co3.Wrapper");
         args.add(version.mainClass);
 
