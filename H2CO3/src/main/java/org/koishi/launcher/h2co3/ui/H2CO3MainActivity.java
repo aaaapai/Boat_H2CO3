@@ -49,7 +49,9 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
 
         preLoadFragments();
 
-        switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.library.R.string.app_name);
+        if (savedInstanceState == null) {
+            switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.library.R.string.app_name);
+        }
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
