@@ -7,12 +7,10 @@ import android.util.Log;
 import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.launch.utils.H2CO3LaunchUtils;
-import org.koishi.launcher.h2co3.core.launch.utils.LaunchVersion;
 import org.koishi.launcher.h2co3.core.utils.Architecture;
 import org.koishi.launcher.h2co3.core.utils.CommandBuilder;
 import org.koishi.launcher.h2co3.core.utils.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -110,28 +108,7 @@ public class H2CO3BaseLaunch {
         printTaskTitle(bridge, task + " Arguments");
         String[] args = rebaseArgs(context, gameHelper, width, height);
         logArguments(bridge, task, args);
-        LaunchVersion version = LaunchVersion.fromDirectory(new File(gameHelper.getGameCurrentVersion()));
-        int setGetJavaPath = gameHelper.getJavaVer();
-        String javaPath;
-        if (setGetJavaPath == 0) {
-            if (version.getMajorVersion(gameHelper) == 8) {
-                javaPath = H2CO3Tools.JAVA_8_PATH;
-            } else if (version.getMajorVersion(gameHelper) >= 21) {
-                javaPath = H2CO3Tools.JAVA_21_PATH;
-            } else {
-                javaPath = H2CO3Tools.JAVA_17_PATH;
-            }
-        } else {
-            if (setGetJavaPath == 1) {
-                javaPath = H2CO3Tools.JAVA_8_PATH;
-            } else if (setGetJavaPath == 2) {
-                javaPath = H2CO3Tools.JAVA_11_PATH;
-            } else if (setGetJavaPath == 3) {
-                javaPath = H2CO3Tools.JAVA_17_PATH;
-            } else {
-                javaPath = H2CO3Tools.JAVA_21_PATH;
-            }
-        }
+        String javaPath = H2CO3LaunchUtils.getJavaPath(gameHelper);
         bridge.setLdLibraryPath(H2CO3LaunchUtils.getLibraryPath(context, javaPath));
         printTaskTitle(bridge, task + " Logs");
         bridge.setupExitTrap(bridge);
@@ -175,28 +152,7 @@ public class H2CO3BaseLaunch {
             throw new IllegalStateException("Illegal command line " + rawCommandLine);
         }
 
-        LaunchVersion version = LaunchVersion.fromDirectory(new File(gameHelper.getGameCurrentVersion()));
-        int setGetJavaPath = gameHelper.getJavaVer();
-        String javaPath;
-        if (setGetJavaPath == 0) {
-            if (version.getMajorVersion(gameHelper) == 8) {
-                javaPath = H2CO3Tools.JAVA_8_PATH;
-            } else if (version.getMajorVersion(gameHelper) >= 21) {
-                javaPath = H2CO3Tools.JAVA_21_PATH;
-            } else {
-                javaPath = H2CO3Tools.JAVA_17_PATH;
-            }
-        } else {
-            if (setGetJavaPath == 1) {
-                javaPath = H2CO3Tools.JAVA_8_PATH;
-            } else if (setGetJavaPath == 2) {
-                javaPath = H2CO3Tools.JAVA_11_PATH;
-            } else if (setGetJavaPath == 3) {
-                javaPath = H2CO3Tools.JAVA_17_PATH;
-            } else {
-                javaPath = H2CO3Tools.JAVA_21_PATH;
-            }
-        }
+        String javaPath = H2CO3LaunchUtils.getJavaPath(gameHelper);
 
         return Stream.concat(Stream.of(javaPath + "/bin/java"), rawCommandLine.stream())
                 .toArray(String[]::new);
