@@ -2,7 +2,6 @@ package org.koishi.launcher.h2co3.core.launch.utils;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 import org.koishi.launcher.h2co3.core.H2CO3Settings;
@@ -86,9 +85,31 @@ public class H2CO3LaunchUtils {
                 "/vendor/" + libDirName + "/hw:" + nativeDir;
     }
 
-    public static void addCommonEnv(Context context, H2CO3Settings settings, HashMap<String, String> envMap) {
+    public static void addCommonEnv(Context context, H2CO3Settings settings, HashMap<String, String> envMap) throws Exception {
+        LaunchVersion version = LaunchVersion.fromDirectory(new File(settings.getGameCurrentVersion()));
+        int setGetJavaPath = settings.getJavaVer();
+        String javaPath;
+        if (setGetJavaPath == 0) {
+            if (version.getMajorVersion(settings) == 8) {
+                javaPath = H2CO3Tools.JAVA_8_PATH;
+            } else if (version.getMajorVersion(settings) >= 21) {
+                javaPath = H2CO3Tools.JAVA_21_PATH;
+            } else {
+                javaPath = H2CO3Tools.JAVA_17_PATH;
+            }
+        } else {
+            if (setGetJavaPath == 1) {
+                javaPath = H2CO3Tools.JAVA_8_PATH;
+            } else if (setGetJavaPath == 2) {
+                javaPath = H2CO3Tools.JAVA_11_PATH;
+            } else if (setGetJavaPath == 3) {
+                javaPath = H2CO3Tools.JAVA_17_PATH;
+            } else {
+                javaPath = H2CO3Tools.JAVA_21_PATH;
+            }
+        }
         envMap.put("HOME", H2CO3Tools.LOG_DIR);
-        envMap.put("JAVA_HOME", settings.getJavaPath());
+        envMap.put("JAVA_HOME", javaPath);
         envMap.put("H2CO3LAUNCHER_NATIVEDIR", context.getApplicationInfo().nativeLibraryDir);
         envMap.put("TMPDIR", context.getCacheDir().getAbsolutePath());
     }
@@ -136,15 +157,36 @@ public class H2CO3LaunchUtils {
         envMap.put("OSMESA_NO_FLUSH_FRONTBUFFER", "1");
     }
 
-    public static void setUpJavaRuntime(Context context, H2CO3Settings settings, H2CO3LauncherBridge bridge) throws IOException {
-        String jreLibDir = settings.getJavaPath() + getJreLibDir(settings.getJavaPath());
+    public static void setUpJavaRuntime(Context context, H2CO3Settings settings, H2CO3LauncherBridge bridge) throws Exception {
+        LaunchVersion version = LaunchVersion.fromDirectory(new File(settings.getGameCurrentVersion()));
+        int setGetJavaPath = settings.getJavaVer();
+        String javaPath;
+        if (setGetJavaPath == 0) {
+            if (version.getMajorVersion(settings) == 8) {
+                javaPath = H2CO3Tools.JAVA_8_PATH;
+            } else if (version.getMajorVersion(settings) >= 21) {
+                javaPath = H2CO3Tools.JAVA_21_PATH;
+            } else {
+                javaPath = H2CO3Tools.JAVA_17_PATH;
+            }
+        } else {
+            if (setGetJavaPath == 1) {
+                javaPath = H2CO3Tools.JAVA_8_PATH;
+            } else if (setGetJavaPath == 2) {
+                javaPath = H2CO3Tools.JAVA_11_PATH;
+            } else if (setGetJavaPath == 3) {
+                javaPath = H2CO3Tools.JAVA_17_PATH;
+            } else {
+                javaPath = H2CO3Tools.JAVA_21_PATH;
+            }
+        }
+        String jreLibDir = javaPath + getJreLibDir(javaPath);
         String jliLibDir = new File(jreLibDir + "/jli/libjli.so").exists() ? jreLibDir + "/jli" : jreLibDir;
-        String jvmLibDir = jreLibDir + getJvmLibDir(settings.getJavaPath());
+        String jvmLibDir = jreLibDir + getJvmLibDir(javaPath);
 
         dlopenLibraries(bridge, jliLibDir, jvmLibDir, jreLibDir, context);
 
-        File javaPath = new File(settings.getJavaPath());
-        for (File file : locateLibs(javaPath)) {
+        for (File file : locateLibs(new File(javaPath))) {
             bridge.dlopen(file.getAbsolutePath());
         }
     }
@@ -176,21 +218,38 @@ public class H2CO3LaunchUtils {
         bridge.dlopen(nativeDir + "/libopenal.so");
     }
 
-    public static CommandBuilder getMcArgs(Context context, H2CO3Settings settings, int width, int height) throws IOException {
+    public static CommandBuilder getMcArgs(Context context, H2CO3Settings settings, int width, int height) throws Exception {
         H2CO3Tools.loadPaths(context);
         CommandBuilder args = new CommandBuilder();
         settings.setRender(H2CO3Tools.GL_GL114);
 
         LaunchVersion version = LaunchVersion.fromDirectory(new File(settings.getGameCurrentVersion()));
-        String lwjglPath = H2CO3Tools.RUNTIME_DIR + "/h2co3Launcher/lwjgl";
-        String javaPath = settings.getJavaPath();
+        int setGetJavaPath = settings.getJavaVer();
+        String javaPath;
+        if (setGetJavaPath == 0) {
+            if (version.getMajorVersion(settings) == 8) {
+                javaPath = H2CO3Tools.JAVA_8_PATH;
+            } else if (version.getMajorVersion(settings) >= 21) {
+                javaPath = H2CO3Tools.JAVA_21_PATH;
+            } else {
+                javaPath = H2CO3Tools.JAVA_17_PATH;
+            }
+        } else {
+            if (setGetJavaPath == 1) {
+                javaPath = H2CO3Tools.JAVA_8_PATH;
+            } else if (setGetJavaPath == 2) {
+                javaPath = H2CO3Tools.JAVA_11_PATH;
+            } else if (setGetJavaPath == 3) {
+                javaPath = H2CO3Tools.JAVA_17_PATH;
+            } else {
+                javaPath = H2CO3Tools.JAVA_21_PATH;
+            }
+        }
         boolean highVersion = version.minimumLauncherVersion >= 21;
-        boolean isJava8 = javaPath.equals(H2CO3Tools.JAVA_8_PATH);
 
         H2CO3GameRepository repository = new H2CO3GameRepository(new File(settings.getGameDirectory()));
         repository.refreshVersions();
         AtomicReference<Version> versions = new AtomicReference<>(MaintainTask.maintain(repository, repository.getResolvedVersion(version.id)));
-        Log.e("version", versions.get().toString());
         Set<String> classpath = repository.getClasspath(versions.get());
 
         classpath.add(H2CO3Tools.PLUGIN_DIR + "/H2CO3LaunchWrapper.jar");

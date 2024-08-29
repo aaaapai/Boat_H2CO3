@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Settings;
-import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.resources.component.preference.CustomListPreference;
 import org.koishi.launcher.h2co3.resources.component.preference.CustomSwitchPreference;
 import org.koishi.launcher.h2co3.resources.component.preference.RangeSliderPreference;
@@ -39,6 +38,7 @@ public class GlobalGameSettingFragment extends H2CO3Fragment {
     }
 
     private void initSetGameMemoryPreference() {
+        preferenceSetGameMemory.setUse(true);
         preferenceSetGameMemory.setTitle(getContext().getString(org.koishi.launcher.h2co3.library.R.string.title_game_memory));
         ActivityManager activityManager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
@@ -77,39 +77,34 @@ public class GlobalGameSettingFragment extends H2CO3Fragment {
                 context.getString(org.koishi.launcher.h2co3.library.R.string.runtime_java21)
         };
         preferenceChooseJava.setEntries(entries, (preference, newValue) -> {
-            String javaPath;
-            if (newValue.equals(titleJavaVersion)) {
-                javaPath = H2CO3Settings.JAVA_AUTO;
-            } else if (newValue.equals(entries[1])) {
-                javaPath = H2CO3Tools.JAVA_8_PATH;
+            if (newValue.equals(entries[1])) {
+                settings.setJavaVer(1);
             } else if (newValue.equals(entries[2])) {
-                javaPath = H2CO3Tools.JAVA_11_PATH;
+                settings.setJavaVer(2);
             } else if (newValue.equals(entries[3])) {
-                javaPath = H2CO3Tools.JAVA_17_PATH;
+                settings.setJavaVer(3);
             } else if (newValue.equals(entries[4])) {
-                javaPath = H2CO3Tools.JAVA_21_PATH;
+                settings.setJavaVer(4);
             } else {
-                javaPath = H2CO3Settings.JAVA_AUTO;
+                settings.setJavaVer(0);
             }
-            settings.setJavaPath(javaPath);
         });
 
-        String currentJavaPath = settings.getJavaPath();
         for (int i = 0; i < entries.length; i++) {
-            if (currentJavaPath.equals(getJavaPathByIndex(i))) {
+            if (settings.getJavaVer() == getJavaPathByIndex(i)) {
                 preferenceChooseJava.setValue(entries[i]);
                 break;
             }
         }
     }
 
-    private String getJavaPathByIndex(int index) {
+    private int getJavaPathByIndex(int index) {
         return switch (index) {
-            case 1 -> H2CO3Tools.JAVA_8_PATH;
-            case 2 -> H2CO3Tools.JAVA_11_PATH;
-            case 3 -> H2CO3Tools.JAVA_17_PATH;
-            case 4 -> H2CO3Tools.JAVA_21_PATH;
-            default -> H2CO3Settings.JAVA_AUTO;
+            case 1 -> 1;
+            case 2 -> 2;
+            case 3 -> 3;
+            case 4 -> 4;
+            default -> 0;
         };
     }
 }

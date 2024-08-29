@@ -36,6 +36,7 @@
                 android:id="@+id/preference_set_game_memory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

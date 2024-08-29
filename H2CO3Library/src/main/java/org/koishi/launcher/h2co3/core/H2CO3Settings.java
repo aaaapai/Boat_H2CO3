@@ -103,18 +103,18 @@ public class H2CO3Settings {
     }
 
     public String getRender() {
-        return H2CO3Tools.getH2CO3Value("h2co3_launcher_render", DEFAULT_RENDER, String.class);
+        return H2CO3Tools.getH2CO3LauncherValue("h2co3_launcher_render", DEFAULT_RENDER, String.class);
     }
 
     public void setRender(String path) {
-        H2CO3Tools.setH2CO3Value("h2co3_launcher_render", path);
+        H2CO3Tools.setH2CO3LauncherValue("h2co3_launcher_render", path);
     }
 
-    public String getJavaPath() {
-        return H2CO3Tools.getH2CO3LauncherValue("h2co3_launcher_java", H2CO3Tools.JAVA_8_PATH, String.class);
+    public int getJavaVer() {
+        return H2CO3Tools.getH2CO3LauncherValue("h2co3_launcher_java", 0, Integer.class);
     }
 
-    public void setJavaPath(String path) {
+    public void setJavaVer(int path) {
         H2CO3Tools.setH2CO3LauncherValue("h2co3_launcher_java", path);
     }
 

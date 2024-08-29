@@ -7,10 +7,12 @@ import android.util.Log;
 import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.launch.utils.H2CO3LaunchUtils;
+import org.koishi.launcher.h2co3.core.launch.utils.LaunchVersion;
 import org.koishi.launcher.h2co3.core.utils.Architecture;
 import org.koishi.launcher.h2co3.core.utils.CommandBuilder;
 import org.koishi.launcher.h2co3.core.utils.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,7 +35,7 @@ public class H2CO3BaseLaunch {
                 logWorkingDirectory(bridge, gameHelper);
                 bridge.chdir(gameHelper.getGameDirectory());
                 launch(context, bridge, gameHelper, width, height, task);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Log.e(TAG, "Error launching " + task, e);
             }
         });
@@ -64,7 +66,7 @@ public class H2CO3BaseLaunch {
                 logWorkingDirectory(bridge, gameHelper);
                 bridge.chdir(gameHelper.getGameDirectory());
                 apiLaunch(context, bridge, command, jre, "API Installer");
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Log.e(TAG, "Error launching API Installer", e);
             }
         });
@@ -86,7 +88,7 @@ public class H2CO3BaseLaunch {
         printTaskTitle(bridge, task + " Logs");
     }
 
-    public static void setEnv(Context context, H2CO3Settings gameHelper, H2CO3LauncherBridge bridge, boolean isRender) throws IOException {
+    public static void setEnv(Context context, H2CO3Settings gameHelper, H2CO3LauncherBridge bridge, boolean isRender) throws Exception {
         HashMap<String, String> envMap = new HashMap<>(8);
         H2CO3LaunchUtils.addCommonEnv(context, gameHelper, envMap);
         if (isRender) {
@@ -104,11 +106,33 @@ public class H2CO3BaseLaunch {
         printTaskTitle(bridge, "Env Map");
     }
 
-    public static void launch(Context context, H2CO3LauncherBridge bridge, H2CO3Settings gameHelper, int width, int height, String task) throws IOException {
+    public static void launch(Context context, H2CO3LauncherBridge bridge, H2CO3Settings gameHelper, int width, int height, String task) throws Exception {
         printTaskTitle(bridge, task + " Arguments");
         String[] args = rebaseArgs(context, gameHelper, width, height);
         logArguments(bridge, task, args);
-        bridge.setLdLibraryPath(H2CO3LaunchUtils.getLibraryPath(context, gameHelper.getJavaPath()));
+        LaunchVersion version = LaunchVersion.fromDirectory(new File(gameHelper.getGameCurrentVersion()));
+        int setGetJavaPath = gameHelper.getJavaVer();
+        String javaPath;
+        if (setGetJavaPath == 0) {
+            if (version.getMajorVersion(gameHelper) == 8) {
+                javaPath = H2CO3Tools.JAVA_8_PATH;
+            } else if (version.getMajorVersion(gameHelper) >= 21) {
+                javaPath = H2CO3Tools.JAVA_21_PATH;
+            } else {
+                javaPath = H2CO3Tools.JAVA_17_PATH;
+            }
+        } else {
+            if (setGetJavaPath == 1) {
+                javaPath = H2CO3Tools.JAVA_8_PATH;
+            } else if (setGetJavaPath == 2) {
+                javaPath = H2CO3Tools.JAVA_11_PATH;
+            } else if (setGetJavaPath == 3) {
+                javaPath = H2CO3Tools.JAVA_17_PATH;
+            } else {
+                javaPath = H2CO3Tools.JAVA_21_PATH;
+            }
+        }
+        bridge.setLdLibraryPath(H2CO3LaunchUtils.getLibraryPath(context, javaPath));
         printTaskTitle(bridge, task + " Logs");
         bridge.setupExitTrap(bridge);
         bridge.getCallback().onLog("Hook success");
@@ -140,7 +164,7 @@ public class H2CO3BaseLaunch {
         bridge.getCallback().onLog("Device info:" + Build.DEVICE + "\n " + Build.MODEL + "\n " + Build.PRODUCT + "\n " + Build.BOARD + "\n " + Build.BRAND + "\n " + Build.FINGERPRINT + "\n");
     }
 
-    public static String[] rebaseArgs(Context context, H2CO3Settings gameHelper, int width, int height) throws IOException {
+    public static String[] rebaseArgs(Context context, H2CO3Settings gameHelper, int width, int height) throws Exception {
         final CommandBuilder command = H2CO3LaunchUtils.getMcArgs(context, gameHelper, width, height);
         List<String> rawCommandLine = command.asList();
 
@@ -151,7 +175,30 @@ public class H2CO3BaseLaunch {
             throw new IllegalStateException("Illegal command line " + rawCommandLine);
         }
 
-        return Stream.concat(Stream.of(gameHelper.getJavaPath() + "/bin/java"), rawCommandLine.stream())
+        LaunchVersion version = LaunchVersion.fromDirectory(new File(gameHelper.getGameCurrentVersion()));
+        int setGetJavaPath = gameHelper.getJavaVer();
+        String javaPath;
+        if (setGetJavaPath == 0) {
+            if (version.getMajorVersion(gameHelper) == 8) {
+                javaPath = H2CO3Tools.JAVA_8_PATH;
+            } else if (version.getMajorVersion(gameHelper) >= 21) {
+                javaPath = H2CO3Tools.JAVA_21_PATH;
+            } else {
+                javaPath = H2CO3Tools.JAVA_17_PATH;
+            }
+        } else {
+            if (setGetJavaPath == 1) {
+                javaPath = H2CO3Tools.JAVA_8_PATH;
+            } else if (setGetJavaPath == 2) {
+                javaPath = H2CO3Tools.JAVA_11_PATH;
+            } else if (setGetJavaPath == 3) {
+                javaPath = H2CO3Tools.JAVA_17_PATH;
+            } else {
+                javaPath = H2CO3Tools.JAVA_21_PATH;
+            }
+        }
+
+        return Stream.concat(Stream.of(javaPath + "/bin/java"), rawCommandLine.stream())
                 .toArray(String[]::new);
     }
 
