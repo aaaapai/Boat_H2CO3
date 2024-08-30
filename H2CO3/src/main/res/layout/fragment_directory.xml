@@ -93,16 +93,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/app_16dp"
+        android:visibility="gone"
         android:src="@drawable/file_folder"
-        app:layout_constraintBottom_toTopOf="@id/ver_new_ver"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/ver_new_ver"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/app_16dp"
-        android:src="@drawable/ic_launcher_install_file"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

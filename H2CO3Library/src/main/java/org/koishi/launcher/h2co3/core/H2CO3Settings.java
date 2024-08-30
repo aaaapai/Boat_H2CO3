@@ -209,7 +209,7 @@ public class H2CO3Settings {
         return H2CO3Tools.getH2CO3LauncherValue("game_memory_min", 256, Integer.class);
     }
 
-    public void setGameMemoryMin(int memoryMin) {
+    public void setGameMemoryMin(float memoryMin) {
         H2CO3Tools.setH2CO3LauncherValue("game_memory_min", memoryMin);
     }
 
@@ -217,7 +217,23 @@ public class H2CO3Settings {
         return H2CO3Tools.getH2CO3LauncherValue("game_memory_max", 2048, Integer.class);
     }
 
-    public void setGameMemoryMax(int memoryMax) {
+    public void setGameMemoryMax(float memoryMax) {
         H2CO3Tools.setH2CO3LauncherValue("game_memory_max", memoryMax);
+    }
+
+    public float getWindowResolution() {
+        return H2CO3Tools.getH2CO3LauncherValue("window_resolution", 100, Integer.class);
+    }
+
+    public void setWindowResolution(int resolution) {
+        H2CO3Tools.setH2CO3LauncherValue("window_resolution", resolution);
+    }
+
+    public String getJoinServer() {
+        return H2CO3Tools.getH2CO3LauncherValue("join_server", "", String.class);
+    }
+
+    public void setJoinServer(String server) {
+        H2CO3Tools.setH2CO3LauncherValue("join_server", server);
     }
 }

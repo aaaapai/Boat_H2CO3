@@ -14,7 +14,7 @@ import androidx.appcompat.widget.PopupMenu;
 import org.koishi.launcher.h2co3.library.R;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 
-public class CustomListPreference extends H2CO3CardView {
+public class H2CO3ListPreference extends H2CO3CardView {
 
     private TextView titleView;
     private TextView valueView;
@@ -24,12 +24,12 @@ public class CustomListPreference extends H2CO3CardView {
     private int checkedItem;
     private OnListPreferenceChangeListener onListPreferenceChangeListener;
 
-    public CustomListPreference(@NonNull Context context) {
+    public H2CO3ListPreference(@NonNull Context context) {
         super(context);
         init(context, null);
     }
 
-    public CustomListPreference(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public H2CO3ListPreference(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
@@ -103,6 +103,6 @@ public class CustomListPreference extends H2CO3CardView {
 
     // Define the interface for the preference change listener
     public interface OnListPreferenceChangeListener {
-        void onListPreferenceChange(CustomListPreference preference, String newValue);
+        void onListPreferenceChange(H2CO3ListPreference preference, String newValue);
     }
 }

@@ -15,26 +15,28 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import org.koishi.launcher.h2co3.library.R;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
+import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 
-public class CustomEditTextPreference extends H2CO3CardView {
+public class H2CO3EditTextPreference extends H2CO3CardView {
 
     private TextInputEditText editText;
+    private H2CO3TextView title;
     private String key;
     private String text;
     private H2CO3CardView rootView;
     private OnPreferenceChangeListener onPreferenceChangeListener;
 
-    public CustomEditTextPreference(@NonNull Context context) {
+    public H2CO3EditTextPreference(@NonNull Context context) {
         super(context);
         init(context, null);
     }
 
-    public CustomEditTextPreference(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public H2CO3EditTextPreference(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public CustomEditTextPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public H2CO3EditTextPreference(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
@@ -47,6 +49,7 @@ public class CustomEditTextPreference extends H2CO3CardView {
 
         // Initialize views
         editText = findViewById(R.id.editText);
+        title = findViewById(R.id.title);
         rootView = findViewById(R.id.root_view);
 
         // Set up the click listener for the card to give focus to EditText
@@ -64,7 +67,7 @@ public class CustomEditTextPreference extends H2CO3CardView {
             public void afterTextChanged(Editable s) {
                 text = s.toString();
                 if (onPreferenceChangeListener != null) {
-                    onPreferenceChangeListener.onPreferenceChange(CustomEditTextPreference.this, text);
+                    onPreferenceChangeListener.onPreferenceChange(H2CO3EditTextPreference.this, text);
                 }
             }
         });
@@ -89,7 +92,11 @@ public class CustomEditTextPreference extends H2CO3CardView {
 
     // Set the title of the preference
     public void setTitle(String title) {
-        editText.setHint(title);
+        this.title.setText(title);
+    }
+
+    public void setHint(String hint) {
+        editText.setHint(hint);
     }
 
     // Set the key for the preference
@@ -122,6 +129,6 @@ public class CustomEditTextPreference extends H2CO3CardView {
 
     // Define the interface for the preference change listener
     public interface OnPreferenceChangeListener {
-        void onPreferenceChange(CustomEditTextPreference preference, String newValue);
+        void onPreferenceChange(H2CO3EditTextPreference preference, String newValue);
     }
 }

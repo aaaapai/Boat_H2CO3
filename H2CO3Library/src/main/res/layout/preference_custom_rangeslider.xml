@@ -24,14 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:values="@array/initial_slider_values"
-                android:visibility="gone"
-                />
-
-            <com.google.android.material.slider.RangeSlider
-                android:id="@+id/range_slider2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
                 />
 
             <LinearLayout

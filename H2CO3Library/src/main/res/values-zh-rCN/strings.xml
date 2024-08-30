@@ -190,5 +190,7 @@
 
     <string name="welcome_permission_hint">Boat_H2CO3 需要一些必要的权限以确保其正常运行。</string>
     <string name="title_pri_ver_dir">版本隔离</string>
-    <string name="title_game_memory">游戏运行内存</string>
+    <string name="title_game_memory">游戏运行内存 (MB)</string>
+    <string name="title_window_resolution">窗口分辨率 (%)</string>
+    <string name="title_join_server">Server address</string>
 </resources>

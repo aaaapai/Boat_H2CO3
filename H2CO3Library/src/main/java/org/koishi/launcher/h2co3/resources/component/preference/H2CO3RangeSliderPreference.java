@@ -18,21 +18,21 @@ import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 
 import java.util.List;
 
-public class RangeSliderPreference extends H2CO3CardView {
+public class H2CO3RangeSliderPreference extends H2CO3CardView {
 
-    private RangeSlider rangeSlider, rangeSlider2;
+    private RangeSlider rangeSlider;
     private TextView titleView;
     private TextView valueFromView;
     private TextView valueToView;
     private MaterialCardView rootView;
     private OnRangePreferenceChangeListener onRangeChangeListener;
 
-    public RangeSliderPreference(@NonNull Context context) {
+    public H2CO3RangeSliderPreference(@NonNull Context context) {
         super(context);
         init(context, null);
     }
 
-    public RangeSliderPreference(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public H2CO3RangeSliderPreference(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
@@ -51,7 +51,6 @@ public class RangeSliderPreference extends H2CO3CardView {
         // Initialize views
         titleView = findViewById(R.id.textViewTitle);
         rangeSlider = findViewById(R.id.range_slider);
-        rangeSlider2 = findViewById(R.id.range_slider2);
         valueFromView = findViewById(R.id.textViewValueFrom);
         valueToView = findViewById(R.id.textViewValueTo);
         rootView = findViewById(R.id.root_view);
@@ -70,13 +69,13 @@ public class RangeSliderPreference extends H2CO3CardView {
 
         // Update the displayed values when the slider is moved
         rangeSlider.addOnChangeListener(
-                (slider, value, fromUser) -> {
-                    valueFromView.setText("From: " + (float) getValues().get(0));
-                    valueToView.setText("To: " + (float) getValues().get(1));
-                    if (onRangeChangeListener != null) {
-                        onRangeChangeListener.onPreferenceChange(this, getValues().get(0), getValues().get(1));
-                    }
+            (slider, value, fromUser) -> {
+                valueFromView.setText("From: " + (float) getValues().get(0));
+                valueToView.setText("To: " + (float) getValues().get(1));
+                if (onRangeChangeListener != null) {
+                    onRangeChangeListener.onPreferenceChange(this, getValues().get(0), getValues().get(1));
                 }
+            }
         );
     }
 
@@ -107,13 +106,6 @@ public class RangeSliderPreference extends H2CO3CardView {
     }
 
     public interface OnRangePreferenceChangeListener {
-        void onPreferenceChange(RangeSliderPreference preference, float valueFrom, float valueTo);
-    }
-
-    public void setUse(boolean use) {
-        if (use) {
-            rangeSlider.setVisibility(VISIBLE);
-        } else
-            rangeSlider2.setVisibility(VISIBLE);
+        void onPreferenceChange(H2CO3RangeSliderPreference preference, float valueFrom, float valueTo);
     }
 }
