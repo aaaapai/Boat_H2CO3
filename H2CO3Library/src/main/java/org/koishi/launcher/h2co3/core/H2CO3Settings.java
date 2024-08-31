@@ -7,7 +7,6 @@ import org.koishi.launcher.h2co3.core.login.bean.UserBean;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class H2CO3Settings {
@@ -28,6 +27,8 @@ public class H2CO3Settings {
     private static final String DEFAULT_ASSETS_ROOT = DEFAULT_GAME_DIRECTORY + "/assets/";
     private static final String DEFAULT_RUNTIME_PATH = H2CO3Tools.RUNTIME_DIR;
     private static final String DEFAULT_H2CO3_HOME = H2CO3Tools.PUBLIC_FILE_PATH;
+
+    public static String JAVA_AUTO = "AUTO";
 
     public File serversFile = new File(H2CO3Tools.H2CO3_SETTING_DIR + "/h2co3_servers.json");
     public File usersFile = new File(H2CO3Tools.H2CO3_SETTING_DIR, "h2co3_users.json");
@@ -102,18 +103,18 @@ public class H2CO3Settings {
     }
 
     public String getRender() {
-        return H2CO3Tools.getH2CO3Value("h2co3_launcher_render", DEFAULT_RENDER, String.class);
+        return H2CO3Tools.getH2CO3LauncherValue("h2co3_launcher_render", DEFAULT_RENDER, String.class);
     }
 
     public void setRender(String path) {
-        H2CO3Tools.setH2CO3Value("h2co3_launcher_render", path);
+        H2CO3Tools.setH2CO3LauncherValue("h2co3_launcher_render", path);
     }
 
-    public String getJavaPath() {
-        return H2CO3Tools.getH2CO3LauncherValue("h2co3_launcher_java", H2CO3Tools.JAVA_8_PATH, String.class);
+    public int getJavaVer() {
+        return H2CO3Tools.getH2CO3LauncherValue("h2co3_launcher_java", 0, Integer.class);
     }
 
-    public void setJavaPath(String path) {
+    public void setJavaVer(int path) {
         H2CO3Tools.setH2CO3LauncherValue("h2co3_launcher_java", path);
     }
 
@@ -194,5 +195,45 @@ public class H2CO3Settings {
         setGameAssets(dir + "/assets/virtual/legacy");
         setGameAssetsRoot(dir + "/assets");
         setGameCurrentVersion(dir + "/versions");
+    }
+
+    public boolean getIsPriVerDir() {
+        return H2CO3Tools.getH2CO3LauncherValue("pri_ver_dir", false, Boolean.class);
+    }
+
+    public void setSetPriVerDir(boolean newValue) {
+        H2CO3Tools.setH2CO3LauncherValue("pri_ver_dir", newValue);
+    }
+
+    public int getGameMemoryMin() {
+        return H2CO3Tools.getH2CO3LauncherValue("game_memory_min", 256, Integer.class);
+    }
+
+    public void setGameMemoryMin(float memoryMin) {
+        H2CO3Tools.setH2CO3LauncherValue("game_memory_min", memoryMin);
+    }
+
+    public int getGameMemoryMax() {
+        return H2CO3Tools.getH2CO3LauncherValue("game_memory_max", 2048, Integer.class);
+    }
+
+    public void setGameMemoryMax(float memoryMax) {
+        H2CO3Tools.setH2CO3LauncherValue("game_memory_max", memoryMax);
+    }
+
+    public float getWindowResolution() {
+        return H2CO3Tools.getH2CO3LauncherValue("window_resolution", 100, Integer.class);
+    }
+
+    public void setWindowResolution(int resolution) {
+        H2CO3Tools.setH2CO3LauncherValue("window_resolution", resolution);
+    }
+
+    public String getJoinServer() {
+        return H2CO3Tools.getH2CO3LauncherValue("join_server", "", String.class);
+    }
+
+    public void setJoinServer(String server) {
+        H2CO3Tools.setH2CO3LauncherValue("join_server", server);
     }
 }

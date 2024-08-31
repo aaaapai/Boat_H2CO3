@@ -145,7 +145,7 @@
     </style>
 
     <style name="Theme.H2CO3.CardContent">
-        <item name="android:textAppearance">?textAppearanceBodyMedium</item>
+        <item name="android:textAppearance">?textAppearanceBodySmall</item>
         <item name="android:textColor">?android:textColorSecondary</item>
     </style>
 

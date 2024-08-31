@@ -22,6 +22,8 @@ import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 import org.koishi.launcher.h2co3.ui.fragment.manage.ManageFragment;
 import org.koishi.launcher.h2co3.ui.fragment.terminal.TerminalFragment;
 
+import java.util.Objects;
+
 public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private H2CO3ToolBar toolbar;
@@ -45,11 +47,13 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.navigation_home);
-        getSupportActionBar().setTitle(getString(org.koishi.launcher.h2co3.library.R.string.app_name));
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getString(org.koishi.launcher.h2co3.library.R.string.app_name));
 
         preLoadFragments();
 
-        switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.library.R.string.app_name);
+        if (savedInstanceState == null) {
+            switchFragment(getHomeFragment(), org.koishi.launcher.h2co3.library.R.string.app_name);
+        }
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -134,7 +138,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
 
     private void switchFragment(H2CO3Fragment fragment, int resID) {
         initFragment(fragment);
-        getSupportActionBar().setTitle(getString(resID));
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getString(resID));
     }
 
     private void setNavigationItemChecked(int itemId) {

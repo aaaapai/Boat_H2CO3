@@ -52,7 +52,6 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
 
     private final Map<String, RemoteVersion> map = new HashMap<>();
     private final H2CO3Settings gameHelper;
-    private H2CO3CustomViewDialog chooseInstallerVersionDialog;
     private View view;
     private TextInputEditText versionNameEditText;
     private AppCompatImageButton backButton, downloadButton;
@@ -66,14 +65,14 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
     private DownloadProviders downloadProviders;
     private AlertDialog chooseInstallerVersionDialogAlert;
     private H2CO3DownloadTaskDialog taskListPane;
-    private final ChooseMcVersionFragment chooseMcVersionFragment;
+    private final MinecraftVersionListFragment minecraftVersionListFragment;
     private AlertDialog taskListPaneAlert;
     private final Bundle args;
     private H2CO3LinearProgress progressBar;
 
-    public EditDownloadInfoFragment(ChooseMcVersionFragment chooseMcVersionFragment, Bundle bundle) {
+    public EditDownloadInfoFragment(MinecraftVersionListFragment minecraftVersionListFragment, Bundle bundle) {
         super();
-        this.chooseMcVersionFragment = chooseMcVersionFragment;
+        this.minecraftVersionListFragment = minecraftVersionListFragment;
         this.args = bundle;
         this.gameHelper = new H2CO3Settings();
     }
@@ -130,7 +129,7 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
         getParentFragmentManager().beginTransaction()
                 .setCustomAnimations(org.koishi.launcher.h2co3.library.R.anim.fragment_enter, org.koishi.launcher.h2co3.library.R.anim.fragment_exit, org.koishi.launcher.h2co3.library.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.library.R.anim.fragment_exit_pop)
                 .remove(EditDownloadInfoFragment.this)
-                .show(chooseMcVersionFragment)
+                .show(minecraftVersionListFragment)
                 .commit();
     }
 
@@ -223,7 +222,7 @@ public class EditDownloadInfoFragment extends H2CO3Fragment {
     private void showChooseInstallerVersionDialog(String libId) {
         isChooseInstallerVersionDialogShowing = true;
 
-        chooseInstallerVersionDialog = new H2CO3CustomViewDialog(requireActivity());
+        H2CO3CustomViewDialog chooseInstallerVersionDialog = new H2CO3CustomViewDialog(requireActivity());
         chooseInstallerVersionDialog.setCustomView(R.layout.dialog_installer_version);
         chooseInstallerVersionDialog.setCancelable(false);
         chooseInstallerVersionDialog.setTitle(org.koishi.launcher.h2co3.library.R.string.dialog_title_choose_installer_version);

@@ -47,6 +47,7 @@ import org.koishi.launcher.h2co3.core.login.other.LoginUtils;
 import org.koishi.launcher.h2co3.core.login.other.Servers;
 import org.koishi.launcher.h2co3.core.message.H2CO3MessageManager;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
+import org.koishi.launcher.h2co3.handler.HomeLoginHandler;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Button;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
@@ -55,7 +56,6 @@ import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3ProgressDialog;
 import org.koishi.launcher.h2co3.ui.H2CO3LauncherClientActivity;
 import org.koishi.launcher.h2co3.ui.MicrosoftLoginActivity;
 import org.koishi.launcher.h2co3.ui.fragment.H2CO3Fragment;
-import org.koishi.launcher.h2co3.handler.HomeLoginHandler;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -394,18 +394,24 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     }
 
     private void showInputDialog(int selection) {
-        TextInputLayout textInputLayout = new TextInputLayout(requireActivity());
-        TextInputEditText textInputEditText = new TextInputEditText(requireActivity());
-        textInputLayout.addView(textInputEditText);
-        textInputEditText.setMaxLines(1);
-        textInputEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("提示")
+                .setView(R.layout.edit_text)
+                .setPositiveButton(
+                        getString(org.koishi.launcher.h2co3.library.R.string.button_ok),
+                        (dialog, which) -> {
+                            TextInputEditText input = ((AlertDialog) dialog).findViewById(R.id.input);
+                            if (input != null) {
+                                input.setMaxLines(1);
+                                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                                handleServerSelection(selection, String.valueOf(input.getText()));
+                            }else{
+                                H2CO3Tools.showMessage(H2CO3MessageManager.NotificationItem.Type.WARNING,  "输入内容不能为空");
+                            }
 
-        MaterialAlertDialogBuilder inputDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
-        inputDialogBuilder.setTitle("提示");
-        inputDialogBuilder.setView(textInputLayout);
-        inputDialogBuilder.setPositiveButton(getString(org.koishi.launcher.h2co3.library.R.string.button_ok), (dialogInterface, i) -> handleServerSelection(selection, textInputEditText.getText().toString()));
-        inputDialogBuilder.setNegativeButton(getString(org.koishi.launcher.h2co3.library.R.string.button_cancel), null);
-        inputDialogBuilder.show();
+                        })
+                .setNegativeButton(getString(org.koishi.launcher.h2co3.library.R.string.button_cancel), null)
+                .show();
     }
 
     private void handleServerSelection(int selection, String inputText) {

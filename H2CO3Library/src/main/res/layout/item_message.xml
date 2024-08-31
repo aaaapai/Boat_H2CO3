@@ -11,7 +11,7 @@
         style="@style/Theme.H2CO3.CardViewElevated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:alpha="0.7"
+        android:alpha="0.95"
         app:h2co3_color_message_warning="?colorTertiaryFixedDim"
         app:h2co3_color_message_info="?attr/colorPrimary"
         app:h2co3_color_message_debug="?attr/colorInactive"

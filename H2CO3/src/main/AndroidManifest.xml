@@ -67,11 +67,6 @@
             android:screenOrientation="sensorLandscape"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.TerminalActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
-            android:screenOrientation="sensorLandscape"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
             android:name=".ui.H2CO3LauncherClientActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"

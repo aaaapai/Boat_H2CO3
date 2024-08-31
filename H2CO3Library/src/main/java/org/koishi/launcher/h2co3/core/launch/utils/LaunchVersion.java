@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
 import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
@@ -181,5 +182,11 @@ public class LaunchVersion {
     public String parseLibNameToPath(String libName) {
         String[] tmp = libName.split(":");
         return tmp[0].replace(".", "/") + "/" + tmp[1] + "/" + tmp[2] + "/" + tmp[1] + "-" + tmp[2] + ".jar";
+    }
+
+    public int getMajorVersion(H2CO3Settings settings) throws Exception {
+        JSONObject jsonObject = new JSONObject(FileTools.readFile(settings.getGameCurrentVersion() + "/" + id + ".json"));
+        JSONObject javaVersion = jsonObject.getJSONObject("javaVersion");
+        return javaVersion.getInt("majorVersion");
     }
 }
