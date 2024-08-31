@@ -193,4 +193,5 @@
     <string name="title_game_memory">游戏运行内存 (MB)</string>
     <string name="title_window_resolution">窗口分辨率 (%)</string>
     <string name="title_join_server">Server address</string>
+    <string name="title_enable_monet">Material monet</string>
 </resources>

@@ -233,5 +233,6 @@
     <string name="title_game_memory">Game memory (MB)</string>
     <string name="title_window_resolution">Window resolution (%)</string>
     <string name="title_join_server">Server address</string>
+    <string name="title_enable_monet">Material monet</string>
 
 </resources>

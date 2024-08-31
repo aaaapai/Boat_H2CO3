@@ -15,9 +15,9 @@ import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 
 public class H2CO3SwitchPreference extends H2CO3CardView {
 
-    private MaterialSwitch switchView;
+    public MaterialSwitch switchView;
     private TextView titleView;
-    private H2CO3CardView rootView;
+    public H2CO3CardView rootView;
     private String key;
     private boolean isChecked;
     private OnPreferenceChangeListener onPreferenceChangeListener;
