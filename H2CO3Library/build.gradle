@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'org.koishi.launcher.h2co3.library'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdk 26
@@ -21,11 +21,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '21'
     }
 }
 
@@ -40,7 +40,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.7.7'
     implementation 'androidx.navigation:navigation-ui:2.7.7'
     implementation 'androidx.browser:browser:1.8.0'
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.core:core-ktx:1.15.0-alpha02'
     implementation 'androidx.fragment:fragment-ktx:1.6.2'
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
@@ -92,7 +92,7 @@ dependencies {
     implementation 'com.atlassian.commonmark:commonmark-ext-gfm-tables:0.17.0'
     implementation 'org.jenkins-ci:constant-pool-scanner:1.2'
     implementation 'com.moandjiezana.toml:toml4j:0.7.2'
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.core:core-ktx:1.15.0-alpha02'
 
     implementation 'me.zhanghai.android.fastscroll:library:1.3.0'
 }
